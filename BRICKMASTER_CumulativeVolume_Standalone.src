@@ -1,0 +1,219 @@
+// ============================================================================
+// BRICKMASTER — MÓDULO CUMULATIVE VOLUME ANÔMALO v2
+// ----------------------------------------------------------------------------
+// Autor: Carlos Andrade
+// Plataforma: Profit One / Nelogica — Carregar como INDICADOR (não estratégia)
+// Linguagem: NTSL — Manual v4.2 (20/01/2026) + Módulo Estratégias v76
+// ----------------------------------------------------------------------------
+// Objetivo:
+// Acumular o volume financeiro negociado desde a abertura do dia e comparar,
+// a cada fechamento de janela horária, contra a média histórica de volume
+// acumulado naquela mesma janela em pregões anteriores.
+// Detecta dias com volume anômalo — crescimento fora do padrão histórico —
+// sem depender de número fixo de candles (funciona com qualquer gráfico de
+// ticks, incluindo 5000T onde o WIN gera ~1000 candles por pregão).
+// ----------------------------------------------------------------------------
+// Arquitetura:
+// 8 janelas horárias cobrindo 09:00–17:30.
+// Para cada janela: guarda o volume acumulado até o fechamento daquela janela
+// e compara com a média histórica desse mesmo período em dias anteriores.
+// A média é atualizada de forma incremental (Welford) — sem precisar guardar
+// todos os dias, só a média corrente e o contador de dias contribuintes.
+// ----------------------------------------------------------------------------
+// O que plota:
+// Plot1  — Volume acumulado do dia (linha branca)
+// Plot2  — Referência histórica da janela atual (linha aqua)
+// Plot3  — Ratio atual vs histórico (linha amarela) — painel separado abaixo
+// PaintBar AMBER quando AlertaVolumeAnomalo = true
+// ----------------------------------------------------------------------------
+// Como interpretar:
+// - Linha branca ACIMA da linha aqua = hoje tem mais volume que o padrão
+// - Linha branca ABAIXO da linha aqua = hoje tem menos volume que o padrão
+// - Candle AMBER = volume acumulado ultrapassou FatorAlertaAnomalia × histórico
+// - Plot3 (ratio) acima de 1.0 = volume acima do padrão. Acima de 2.0 = anomalia
+// - NÃO indica direção. Indica intensidade fora do comum.
+// ----------------------------------------------------------------------------
+// Uso integrado com o V10.1:
+// Quando AlertaVolumeAnomalo = true, o V10.1 EXEC pode usar esse estado como
+// filtro adicional: exigir confirmação extra, reduzir tamanho da posição,
+// ou simplesmente registrar no painel que o dia tem caráter anômalo.
+// ----------------------------------------------------------------------------
+// Limitação:
+// As médias históricas são zeradas quando o indicador é recarregado ou o
+// Profit é reiniciado — NTSL não persiste arrays entre sessões. Quanto mais
+// dias o indicador rodar sem interrupção (replay ou pregão ao vivo), mais
+// precisa fica a média histórica. Mínimo de MinimoDiasParaComparar pregões
+// antes de confiar no alerta.
+// ============================================================================
+
+input
+  FatorAlertaAnomalia(2.0);          // ratio vol.hoje / histórico para disparar alerta
+  MinimoDiasParaComparar(5);         // dias mínimos de histórico antes de alertar
+  ExibirRatioPainelSeparado(true);   // plota o ratio em painel abaixo do gráfico
+
+  // Limites de cada janela horária (formato HHMM)
+  JanelaFim1(1000);
+  JanelaFim2(1100);
+  JanelaFim3(1200);
+  JanelaFim4(1300);
+  JanelaFim5(1400);
+  JanelaFim6(1500);
+  JanelaFim7(1600);
+  JanelaFim8(1730);
+
+var
+  NovoDia                    : Boolean;
+  JanelaAtual                : Integer;
+  JanelaAnterior             : Integer;
+  FechouJanela               : Boolean;
+
+  VolumeAcumuladoHoje         : Float;
+  RefHistoricaAtual           : Float;
+  RatioAtual                  : Float;
+  AlertaVolumeAnomalo         : Boolean;
+
+  // Histórico — médias incrementais por janela horária (8 janelas)
+  MediaVolJanela             : Array[1..8] Of Float;
+  DiasJanela                 : Array[1..8] Of Integer;
+
+  // Volume acumulado registrado no fechamento de cada janela do dia atual
+  VolNoFimJanela             : Array[1..8] Of Float;
+
+  // Auxiliares
+  i                          : Integer;
+  NovoValor                  : Float;
+
+begin
+
+  // ==========================================================================
+  // 1. CONTROLE DE NOVO DIA
+  // ==========================================================================
+
+  NovoDia := false;
+  if Date <> Date[1] then
+    NovoDia := true;
+
+  if NovoDia then
+  begin
+    // --- Ao virar o dia, atualiza o histórico com os dados do dia anterior ---
+    // Usa os valores registrados em VolNoFimJanela[] do dia que terminou
+
+    for i := 1 to 8 do
+    begin
+      if VolNoFimJanela[i] > 0 then
+      begin
+        if DiasJanela[i] = 0 then
+        begin
+          // Primeira ocorrência — inicializa a média
+          MediaVolJanela[i] := VolNoFimJanela[i];
+          DiasJanela[i] := 1;
+        end
+        else
+        begin
+          // Média incremental de Welford — sem acumular todos os dias
+          // NovaMedia = MediaAntiga + (NovoValor - MediaAntiga) / (N + 1)
+          NovoValor := VolNoFimJanela[i];
+          MediaVolJanela[i] := MediaVolJanela[i] +
+            ((NovoValor - MediaVolJanela[i]) / (DiasJanela[i] + 1));
+          DiasJanela[i] := DiasJanela[i] + 1;
+        end;
+      end;
+    end;
+
+    // Reset dos registros do novo dia
+    VolumeAcumuladoHoje := Volume;
+
+    for i := 1 to 8 do
+      VolNoFimJanela[i] := 0;
+  end
+  else
+  begin
+    VolumeAcumuladoHoje := VolumeAcumuladoHoje[1] + Volume;
+  end;
+
+  // ==========================================================================
+  // 2. IDENTIFICAR JANELA HORÁRIA ATUAL
+  // ==========================================================================
+
+  JanelaAtual := 0;
+
+  if Time < JanelaFim1 then JanelaAtual := 1
+  else if Time < JanelaFim2 then JanelaAtual := 2
+  else if Time < JanelaFim3 then JanelaAtual := 3
+  else if Time < JanelaFim4 then JanelaAtual := 4
+  else if Time < JanelaFim5 then JanelaAtual := 5
+  else if Time < JanelaFim6 then JanelaAtual := 6
+  else if Time < JanelaFim7 then JanelaAtual := 7
+  else JanelaAtual := 8;
+
+  JanelaAnterior := JanelaAtual[1];
+  FechouJanela := (JanelaAtual <> JanelaAnterior) and (not NovoDia);
+
+  // ==========================================================================
+  // 3. REGISTRAR VOLUME NO FECHAMENTO DE CADA JANELA
+  // Quando a janela vira, registra o volume acumulado naquele momento —
+  // esse será o dado que alimentará a média histórica no virar do dia.
+  // ==========================================================================
+
+  if FechouJanela then
+  begin
+    if JanelaAnterior >= 1 then
+      if JanelaAnterior <= 8 then
+        VolNoFimJanela[JanelaAnterior] := VolumeAcumuladoHoje[1];
+  end;
+
+  // Registra também o estado atual da janela em curso (sobrescrito a cada candle)
+  if JanelaAtual >= 1 then
+    if JanelaAtual <= 8 then
+      VolNoFimJanela[JanelaAtual] := VolumeAcumuladoHoje;
+
+  // ==========================================================================
+  // 4. COMPARAÇÃO — VOLUME HOJE VS MÉDIA HISTÓRICA DA JANELA ATUAL
+  // ==========================================================================
+
+  RefHistoricaAtual := 0;
+  RatioAtual := 1;
+  AlertaVolumeAnomalo := false;
+
+  if JanelaAtual >= 1 then
+    if JanelaAtual <= 8 then
+      RefHistoricaAtual := MediaVolJanela[JanelaAtual];
+
+  if DiasJanela[JanelaAtual] >= MinimoDiasParaComparar then
+  begin
+    if RefHistoricaAtual > 0 then
+    begin
+      RatioAtual := VolumeAcumuladoHoje / RefHistoricaAtual;
+
+      if RatioAtual >= FatorAlertaAnomalia then
+        AlertaVolumeAnomalo := true;
+    end;
+  end;
+
+  // ==========================================================================
+  // 5. PLOTAGEM
+  // ==========================================================================
+
+  // Plot1 — Volume acumulado hoje
+  Plot(VolumeAcumuladoHoje);
+  SetPlotColor(1, clWhite);
+  SetPlotWidth(1, 2);
+
+  // Plot2 — Referência histórica da janela atual
+  Plot2(RefHistoricaAtual);
+  SetPlotColor(2, clAqua);
+  SetPlotWidth(2, 2);
+
+  // Plot3 — Ratio (painel separado abaixo do gráfico principal)
+  if ExibirRatioPainelSeparado then
+  begin
+    Plot3(RatioAtual);
+    SetPlotColor(3, clYellow);
+    SetPlotWidth(3, 1);
+  end;
+
+  // PaintBar AMBER quando alerta ativo
+  if AlertaVolumeAnomalo then
+    PaintBar(RGB(255, 191, 0));
+
+end;
