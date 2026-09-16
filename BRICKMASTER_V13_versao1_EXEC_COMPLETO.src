@@ -1,0 +1,3775 @@
+// ============================================================================
+// BRICKMASTER: UM SISTEMA OPERACIONAL EM DESENVOLVIMENTO — V13_versao1
+// ----------------------------------------------------------------------------
+// Autor: Carlos Andrade
+// Plataforma: Profit One / Nelogica — CARREGAR COMO ESTRATÉGIA, NÃO INDICADOR
+// Linguagem: NTSL — Manual v4.2 (20/01/2026) + Módulo Estratégias v76
+// ----------------------------------------------------------------------------
+// PRINCÍPIO ARQUITETURAL OBRIGATÓRIO (Carlos, Set/2026, não negociável):
+// Brickmaster é um sistema de MONITORAMENTO TOTAL DO PREGÃO (60.000 ticks,
+// 09:00-18:00 B3). Todo evento relevante que aparece no gráfico precisa ser:
+// (1) validado por regra clara, (2) medido/pesado no Score, (3) sinalizado no
+// candle exato de origem, (4) ter tudo relacionado a ele plotado. Nenhum
+// evento deve ser removido/silenciado por parecer redundante.
+// ----------------------------------------------------------------------------
+// CHANGELOG V12_versao7 -> V12_versao8 (revisão de coerência, Set/2026):
+// 1. Rejeição Confirmada ±1% CONFIRMADA como comportamento intencional (gera
+//    ordem via UsarSinalRejeicaoConfirmada) — decisão operacional de Carlos;
+//    documentação do manual corrigida para refletir isso (não é mais tratado
+//    como inconsistência).
+// 2. Alerta ±1% não confirmado (ArmadilhaMais1/Menos1) MANTÉM peso +2 no Score
+//    (proposital — decisão operacional), mas agora tem cor de PaintBar própria
+//    (âmbar/azul-royal), distinta de ±2%/±3% (que não pontuam), e o PlotText
+//    anuncia explicitamente "(+2 Score)" — cobertura de eventos obrigatória.
+// 3. Rejeição não confirmada ±1% (RejeitouMais1/Menos1) pontuava +1 no Score
+//    de forma TOTALMENTE INVISÍVEL (sem PaintBar, sem PlotText, sem Alert).
+//    Corrigido: ganhou PaintBar (pêssego/azul-céu claro) e PlotText próprios.
+// 4. CORRIGIDO — trava de perda/ganho diário EM PONTOS (TravaPerdaAtiva/
+//    TravaGanhoAtiva) estava morta: ResultadoDiario nunca recebia valor real,
+//    então a trava nunca podia disparar. Implementada captura de resultado
+//    realizado por operação fechada (via BuyPrice()/SellPrice()), somando ao
+//    acumulado do dia. Os dois sistemas de trava (pontos e R$) ficam ativos
+//    em paralelo, por decisão operacional — redundância, não substituição.
+// 5. BUG CRÍTICO DESCOBERTO NA IMPLEMENTAÇÃO DO ITEM 4 — após ReversePosition,
+//    HasPosition nunca vira false (só troca de lado), então PrecoEntradaRegistrado
+//    NUNCA era resetado: o Stop/Alvo/Trailing da posição NOVA pós-reversão
+//    continuava calculado sobre o preço de entrada da posição ANTIGA. Corrigido
+//    no mesmo bloco (E4.5): PrecoEntradaRegistrado agora é zerado no candle
+//    exato da reversão, forçando recaptura do preço real da posição nova.
+// 6. Novo PlotText "[$] OPERACAO ENCERRADA" a cada fechamento de operação,
+//    mostrando resultado da operação e o acumulado do dia — ResultadoDiario
+//    deixa de ser uma variável interna invisível e passa a ser auditável.
+// 7. Linha vertical (VerticalLineCustom) em N3 Confirmação foi testada e
+//    REMOVIDA a pedido de Carlos — poluía demais o gráfico. Os alertas de
+//    N3 (Alert/PlotText) permanecem normalmente, só a linha foi tirada.
+// 8. ACHADO 6 (mantido) — Rejeição Confirmada (todas as bandas) tinha PaintBar
+//    mas NENHUM Alert/PlotText no bloco N3. Corrigido com o bloco N3.5 novo,
+//    independente da decisão sobre linha vertical do item 7 acima.
+// 9. ACHADOS 7-12 (mandato "sem exceção" de Carlos) — auditoria completa de
+//    silenciamento de eventos:
+//    - Achado 7: Toque N1 usava um único flag por banda cobrindo os dois
+//      lados (Baixa/Alta) — depois do 1º toque do dia em qualquer lado, o
+//      toque do lado OPOSTO nunca mais alertava. Corrigido: flag por lado.
+//    - Achado 8: Rejeição não confirmada só tinha alerta em ±1%. Meio, ±2%
+//      e ±3% nunca tiveram nenhuma sinalização. Corrigido: Alert/PlotText/
+//      PaintBar adicionados para as 6 variações que faltavam.
+//    - Achado 9: Alerta de Volume Anômalo travava por DIA inteiro, mas a
+//      anomalia é por JANELA horária (8/dia) — uma anomalia na janela 3
+//      silenciava anomalias reais em janelas seguintes. Convertido para
+//      array por janela (AlertVolAnomaloPorJanela[1..8]).
+//    - Achado 10: ativação do Trailing (Fase 2) mudava o modo de gestão de
+//      risco sem nenhum Alert/PlotText. Adicionado, resetado por trade.
+//    - Achado 11: Dia Direcional só tinha PaintBar. Como é recalculado a
+//      cada candle (pode ligar/desligar várias vezes no pregão), foi
+//      implementado com borda de subida via [1], igual ao Achado 12.
+//    - Achado 12: Score Comprador/Vendedor (Contexto) e Permissão de Entrada
+//      tinham trava única por dia, mas Score é recalculado do zero a cada
+//      candle — Contexto pode virar várias vezes no pregão. Bug real
+//      descoberto de quebra: com até 4 operações/dia permitidas, só a 1ª
+//      entrada gerava o alerta "ENVIADO"; a 2ª/3ª/4ª ficavam mudas.
+//      Corrigido: borda de subida via [1] em ambos, dispara toda vez.
+// 10. NÚMERO DO CANDLE NOS ALERTAS — Carlos pediu ContadorDeCandle() (Seção
+//     20.39 do Manual NTSL v4.1) em toda flag de alerta, pra desambiguar
+//     eventos mesmo quando o texto se sobrepõe visualmente. Adicionado ao
+//     prefixo compartilhado DataTextoAlerta (cobre 50 dos 59 PlotText) + os
+//     8 casos de Toque N1 que não usavam esse prefixo, unificados.
+// 11. SOBREPOSIÇÃO DE ALERTAS — Contexto Comprador/Vendedor e Dia Direcional
+//     (os que mais disparam, recalculados a cada candle) ganharam offset
+//     vertical ROTATIVO via Mod(CurrentBar, 6), espalhando alertas próximos
+//     em faixas de preço diferentes. Frequência e texto mantidos como
+//     estavam — só o posicionamento mudou, a pedido de Carlos.
+// 12. NOVO MÓDULO — ACEITAÇÃO/REJEIÇÃO DA ABERTURA. Trata o preço de
+//     abertura (AberturaDia) como uma banda "zero", mas só conta quando
+//     precedido de um toque em ±Meio no mesmo dia (TocouMaisMeioHoje/
+//     TocouMenosMeioHoje, novo). Dois eventos, ambos reais e distintos:
+//     - Aceitação (virada de lado): tocou ±Meio, voltou até a Abertura,
+//       cruzou e fechou do lado oposto.
+//     - Rejeição (reteste confirmando direção): tocou ±Meio, voltou até a
+//       Abertura, pavio forte, fechou continuando o lado original.
+//     Confirmação em 2 candles, mesmo filtro de VWAP/CVD/Divergência das
+//     outras bandas. Peso +3 no Score — o MAIOR do sistema (corrigindo erro
+//     de comunicação: Meio na verdade vale +0,5, não +2 como foi dito antes
+//     de decidir o peso). Só leitura — nunca gera ordem. PaintBar em
+//     prioridade P0, acima de tudo. Armadilha da Abertura NÃO incluída
+//     nesta rodada — Carlos pediu especificamente Aceitação e Rejeição;
+//     decisão de escopo, não omissão.
+// ----------------------------------------------------------------------------
+// CHANGELOG V12_versao8 -> V12_versao9 (Set/2026):
+// 13. NOVO MÓDULO — MÓDULO DE RECUSA. Baseado em código fornecido por Carlos
+//     (gerado com apoio de ChatGPT), auditado e corrigido antes de acoplar:
+//     - PlotText original passava um preço no parâmetro Position (bug real —
+//       sintaxe correta é Content/Color/Position/FontSize/Price).
+//     - NoPlot(5) excede o limite da função (só aceita 1-4, Seção 19.17).
+//     - Os 9 slots de Plot do Brickmaster já estavam ocupados pelas bandas/
+//       médias — DE/RI/URE/LRE/State não são plotados como linha própria,
+//       viram Score + PaintBar + Alert, como o resto do sistema já funciona.
+//     Analisa estrutura do candle (corpo/pavio/eficiência DE/RI), progressão
+//     e persistência da rejeição numa janela de 5 candles, confirmação por
+//     volume (MediaExp) e delta de agressão — máquina de estados 0 a 7
+//     (Estado 7 = Candidato a Reversão). MinWick calibrado de 25 -> 35
+//     (mais rigoroso, alinhado ao Corpo*1.5 já usado nas outras bandas).
+//     GATE OBRIGATÓRIO (decisão de Carlos): só pesa Score se o candle também
+//     tocar uma banda existente (Meio/±1/±2/±3/Abertura) — não roda solto.
+//     Peso +3 no Score (empata com Abertura, o maior do sistema). Só
+//     leitura — nunca gera ordem. 4 inputs ajustáveis (MinRIRecusa,
+//     MinWickRecusa, MinEvidenceRecusa, MinVolumeRatioRecusa); o resto dos
+//     limiares (Janela, MinSlope, MinAcceleration, MinPersistence,
+//     VolumeMedia, MinDeltaDivergence) ficou fixo no código por decisão
+//     de Carlos.
+// ----------------------------------------------------------------------------
+// CHANGELOG V12_versao9 -> V12_versao10 (Set/2026):
+// 14. Sem mudança de código/lógica. Ajuste apenas no MANUAL: o índice não
+//     tinha entradas para os Achados 7-12, os ajustes de legibilidade, o
+//     Módulo Abertura nem o Módulo de Recusa — as quatro seções existiam no
+//     HTML mas sem âncora nem link no sumário. Corrigido, e o "Mapa de
+//     Módulos" da Visão Geral passou a listar Abertura (1.8) e Recusa (1.9).
+//     Versão do .src incrementada só para manter .src e manual sincronizados
+//     (regra de geração em par definida por Carlos).
+// ----------------------------------------------------------------------------
+// CHANGELOG V12_versao10 -> V12_versao11 (Set/2026) — NÃO COMPILAVA:
+// 15. ERRO DE COMPILAÇÃO — AgressionVolBuy/Sell/Balance exigem o opcional
+//     "Indicadores Scalper" da Nelogica, indisponível na conta atual. A NTSL
+//     valida isso na COMPILAÇÃO, não em runtime — então mesmo dentro de um
+//     "if UsarAgressaoUltra" que nunca executava, a simples presença das
+//     chamadas quebrava a compilação inteira (achado já latente desde antes
+//     desta sessão, nunca tinha sido testado numa conta sem Scalper).
+//     DECISÃO DE CARLOS: não excluir o módulo, ISOLAR. O bloco original foi
+//     comentado (preservado por completo, linha por linha) na Parte 1, com
+//     instrução de como reativar. O "Proxy de Fluxo (Fallback) — VWAP +
+//     Posição no Range" que já existia como fallback virou o caminho ÚNICO
+//     e incondicional (antes era um "else" condicional). UsarAgressaoUltra
+//     mudou o default para false, refletindo o estado real.
+// 16. Mesmo problema no Módulo de Recusa (V12_versao9) — DeltaAtualRecusa
+//     chamava AgressionVolBalance() direto. Isolado da mesma forma: reusa a
+//     variável AgressaoBalance (0 no proxy) em vez de chamar a função
+//     restrita. Efeito: FlowDivergenceRecusa fica sempre 0 sem Scalper — a
+//     Confirmação de Fluxo do módulo passa a depender só do Volume Ratio.
+// 17. BUG DE SINTAXE — Estado 3 do Módulo de Recusa tinha uma comparação
+//     dupla sem parênteses individuais: "(URERecusa >= MinEvidenceRecusa or
+//     LRERecusa >= MinEvidenceRecusa)". A NTSL tentava calcular "or" entre
+//     dois Floats antes do ">=" ser aplicado — erro herdado do código
+//     original do ChatGPT, não pego na auditoria anterior. Corrigido:
+//     "((URERecusa >= MinEvidenceRecusa) or (LRERecusa >= MinEvidenceRecusa))".
+// ----------------------------------------------------------------------------
+// Este arquivo combina:
+// PARTE 1   — Indicador V12_versao7 ULTRA (bandas, médias, score, proxy de fluxo, painel)
+// PARTE 1.5 — Cumulative Volume Anômalo (8 janelas horárias, média histórica)
+// PARTE 1.6 — Módulo de Recusa (estrutura de candle, gate por banda) [V12_versao9]
+// PARTE 2   — Módulo de Execução (sinal -> permissão -> execução)
+// PARTE 2.5 — Trailing Stop em duas fases (stop fixo -> trailing M9)
+// PARTE 3   — Plotagem (V12_versao7 ULTRA — bandas completas ±0.5/±1/±2/±3 + volume)
+// ----------------------------------------------------------------------------
+// CHANGELOG V12_versao11 -> V12_versao12 (Set/2026):
+// 18. Sem mudança de código/lógica. Correção apenas no MANUAL: a Seção 24
+//     ("Módulo Ultra — Agressão Real") continuava descrevendo o módulo como
+//     ativo com UsarAgressaoUltra=true (default antigo), contradizendo a
+//     seção de isolamento adicionada na versao11 (default agora é false).
+//     Adicionado aviso no topo da Seção 24 apontando para o estado real, e
+//     corrigidas duas outras menções desatualizadas (Visão Geral — requisito
+//     de plataforma; Proxy de Fluxo — descrito como "fallback condicional"
+//     quando na verdade é o caminho único e incondicional agora). Versão do
+//     .src incrementada só para manter .src e manual sincronizados (regra
+//     de geração em par).
+// ----------------------------------------------------------------------------
+// CHANGELOG V12_versao12 -> V13_versao0 (Set/2026) — MUDANÇA DE MAJOR VERSION:
+// 19. MUDANÇA DE PLATAFORMA: Carlos não tem mais Profit Ultra — agora usa
+//     Profit One. Numeração reiniciada de V12 para V13_versao0, marcando o
+//     início dessa nova fase. Título/identidade atualizados para "BRICKMASTER:
+//     UM SISTEMA OPERACIONAL EM DESENVOLVIMENTO" no lugar do antigo formato
+//     "V12_versaoX ULTRA — [lista de features]".
+// 20. PRINCÍPIO ARQUITETURAL NOVO — LIVRE DE AMARRAS DE TERCEIROS (não
+//     negociável): o Brickmaster deve rodar no Profit One e em TODAS as
+//     outras versões do Profit, sem depender de nenhuma função/plugin/módulo
+//     opcional que exija assinatura ou licença adicional de terceiros. O
+//     módulo Agressão Real (Ultra), já isolado na V12_versao11 por depender
+//     do opcional Indicadores Scalper, permanece isolado/comentado sob essa
+//     mesma filosofia — não é mais visto como "temporariamente indisponível",
+//     e sim como um caminho que o Brickmaster nunca deve depender por design.
+//     O caminho ativo continua sendo o Proxy de Fluxo nativo (VWAP + Posição
+//     no Range, Volume), que já não usa nenhuma função de terceiros.
+//     Nenhuma mudança de lógica/código nesta rodada — só identidade e
+//     documentação do novo princípio.
+// ----------------------------------------------------------------------------
+// CHANGELOG V13_versao0 -> V13_versao1 (Set/2026) — REORGANIZAÇÃO DE MÓDULOS:
+// 21. Carlos pediu organização clara: Indicador Base -> Médias Móveis ->
+//     as duas VWAP's, nessa ordem, sempre. Bandas (Indicador Base) e Médias
+//     (M9/M25) já estavam nessa sequência; a VWAP estava "escondida" dentro
+//     do módulo de Divergência, no meio do arquivo (depois de Agressão
+//     Isolada). Extraída para um MÓDULO: VWAP próprio, na 3ª posição.
+//     Efeito colateral positivo: VWAPAbertura/VWAPFechamento (que antes só
+//     calculavam se UsarDivergenciaVWAP=true) agora são incondicionais —
+//     disponíveis pra qualquer módulo futuro que precisar delas, não só
+//     Divergência. Nenhuma mudança de comportamento com a config padrão
+//     (UsarDivergenciaVWAP já era true por default).
+//     Dependências validadas antes de mover: VWAP só depende de NovoDia
+//     (Indicador Base, 1ª posição) — seguro mover pra antes de Estrutura
+//     do Candle, Volume proxy, Agressão e Divergência, que não afetam nem
+//     são afetados pela posição da VWAP.
+// ----------------------------------------------------------------------------
+// Sistema único de operação real. O CAR_AVGPRICE_RENKOv5 fica arquivado
+// como material de estudo/backtest — não roda em paralelo a este.
+// ----------------------------------------------------------------------------
+// Regras de segurança ativas (não comentadas):
+// - Filtro de horário (duas janelas operacionais)
+// - Limite de perda diária (trava automática)
+// - Limite de operações por dia
+// - Controle de reprocessamento de candle via CurrentBar()
+// - CancelPendingOrders antes de qualquer novo envio
+// - Stop fixo + Alvo fixo na Fase 1 (até lucro mínimo de trailing)
+// - Trailing pela Média Curta (M9) na Fase 2, com folga mínima e
+//   trava de não-regressão (o stop nunca pode afrouxar)
+// - Zeragem forçada no fim do pregão
+// - Quando AlertaVolumeAnomalo ativo: exige DiferencaMinimaScore + 2 pontos
+//   antes de liberar ContextoComprador/ContextoVendedor (filtro B+D)
+// ----------------------------------------------------------------------------
+// Validar em SIMULADOR por no mínimo 20 pregões antes de qualquer real.
+// O alerta de volume anômalo só fica confiável após MinimoDiasParaComparar
+// pregões rodando sem interrupção (a média histórica zera ao reiniciar).
+// ============================================================================
+
+input
+  // --- Indicador V12_versao7 ULTRA — Bandas ---
+  PercentualMeio(0.50);
+  PercentualAlvo1(1.00);
+  PercentualAlvo2(2.00);
+  PercentualAlvo3(3.00);
+
+  // --- Indicador V12_versao7 ULTRA — Médias ---
+  PeriodoMediaBandasCurta(9);
+  PeriodoMediaBandasLonga(25);
+
+  // --- Indicador V12_versao7 ULTRA — Volume (proxy de fluxo, candle a candle) ---
+  PeriodoMediaVolume(20);
+  FatorVolumeForte(1.30);
+
+  // --- MÓDULO ULTRA — AgressionVol (Pro/Ultra/Scalper) ---
+  UsarAgressaoUltra(false);         // ISOLADO (V12_versao11) — requer Scalper, não disponível na conta atual. Ver bloco comentado na Parte 1. Proxy clássico ativo no lugar.
+  FatorAgressaoForte(1.50);         // ratio AgressaoBuy/Sell para considerar fluxo direcional
+  PesoAgressaoScore(1.0);           // peso do AgressionVolBalance no Score (Float)
+  MostrarCVDReal(true);             // plota CVD real (AgressionVolBalance) no Plot13
+  DistanciaTrailingAgressao(25.0);  // pts de folga quando trailing acelerado por agressão contrária
+
+  // --- MÓDULO DIVERGÊNCIA VWAP — Abertura vs Fechamento (customizado) ---
+  UsarDivergenciaVWAP(true);        // habilita o módulo de VWAP-Abertura vs VWAP-Fechamento
+  DivergenciaMinimaPontos(10.0);    // pontos mínimos de gap entre as duas VWAPs para considerar válido
+  DivergenciaMinimaCandles(5);      // candles consecutivos na mesma direção para validar
+  PesoDivergenciaScore(1.0);        // peso da divergência válida no Score (Float)
+  MostrarDivergenciaVWAP(true);     // plota VWAPAbertura (Plot14) e VWAPFechamento (Plot15)
+
+  // --- MÓDULO ULTRA — Gestão financeira real (DailyResult em R$) ---
+  UsarTravaDiariaFinanceira(true);  // usa DailyResult() em R$ no lugar de pontos acumulados
+  PerdaMaximaDiariaRS(300.0);       // limite de perda diária em R$ (padrão: 1 contrato WIN)
+  GanhoMaximoDiarioRS(600.0);       // limite de ganho diário em R$ (opcional)
+  UsarTravaGanhoRS(false);          // habilita trava de ganho em R$
+
+  // --- MÓDULO ULTRA — Reversão automática ---
+  UsarReversaoAutomatica(true);     // ReversePosition() em armadilha confirmada contra posição
+
+  // --- MÓDULO DE RASTREAMENTO — Performance ±1%/±2%/±3% via PlotText ---
+  UsarRastreamento23(true);         // habilita registro de ACERTO/ERRO no candle de origem
+  CandlesParaAvaliar(15);           // candles decorridos até avaliar o resultado do sinal
+  PontosMinimosAcerto(30.0);        // pontos mínimos a favor para considerar ACERTO
+
+  // --- Indicador V12_versao7 ULTRA — Velocidade ---
+  CandlesRapido1(12);
+  CandlesRapido2(24);
+
+  // --- Indicador V12_versao7 ULTRA — Score ---
+  DiferencaMinimaScore(3.0);
+
+  // --- Indicador V12_versao7 ULTRA — Visual ---
+  MostrarMeioAlvo(true);
+  MostrarAlvo2(true);
+  MostrarAlvo3(true);
+  MostrarMediaBandasCurta(true);
+  MostrarMediaBandasLonga(true);
+  MostrarPainelPorCandle(true);
+  PintarCandles(true);
+
+  // --- Cumulative Volume Anômalo — janelas horárias ---
+  FatorAlertaAnomalia(2.0);
+  MinimoDiasParaComparar(5);
+  ReforcoScoreEmAlerta(2.0);          // soma ao DiferencaMinimaScore quando alerta ativo
+  JanelaFim1(1000);
+  JanelaFim2(1100);
+  JanelaFim3(1200);
+  JanelaFim4(1300);
+  JanelaFim5(1400);
+  JanelaFim6(1500);
+  JanelaFim7(1600);
+  JanelaFim8(1730);
+
+  // --- Força do Volume (0-100) — validação de entrada por intensidade ---
+  PesoForcaCandle(0.40);
+  PesoForcaDia(0.60);
+  MostrarForcaVolume(true);
+
+  // --- Execução — Origem do sinal ---
+  UsarSinalRejeicaoConfirmada(true);
+  UsarSinalArmadilhaConfirmada(true);
+  UsarSinalArmadilhaMeio(true);     // Armadilha confirmada em ±0,5% gera ordem (Camada 1)
+  UsarSinalDiaDirecional(false);
+
+  // --- Execução — Gestão de risco por operação (Fase 1) ---
+  StopPontos(50.0);
+  AlvoPontos(80.0);
+  OffsetExecucao(5);
+
+  // --- Execução — Trailing Stop (Fase 2) ---
+  LucroMinimoParaTrailing(40.0);
+  DistanciaMinimaTrailing(15.0);
+
+  // --- Execução — Limites diários ---
+  PerdaMaximaDiaria(300.0);
+  GanhoMaximoDiario(600.0);
+  UsarTravaDeGanho(false);
+  MaxOperacoesPorDia(4);
+
+  // --- Execução — Filtro de horário ---
+  HorarioInicioM1(905);
+  HorarioFimM1(1200);
+  HorarioInicioM2(1430);
+  HorarioFimM2(1730);
+
+  // --- Execução — Zeragem ---
+  ZerarNoFimDoPregao(true);
+  HorarioZeragem(1745);
+
+  // --- V12_versao9 — Módulo de Recusa (Rejection) — só leitura/Score ---
+  // Baseado em análise de estrutura de candle (corpo/pavio/eficiência),
+  // progressão, persistência e confirmação de fluxo. Só conta quando o
+  // candle também toca uma banda existente (Meio/±1/±2/±3/Abertura).
+  MinRIRecusa(30.0);           // % mínima do range em pavio (100 - eficiência)
+  MinWickRecusa(35.0);         // % mínima de pavio sobre o range (ajustado de 25 -> 35)
+  MinEvidenceRecusa(30.0);     // evidência mínima de rejeição (pavio x falha no fechamento)
+  MinVolumeRatioRecusa(1.20);  // volume mínimo vs. média para confirmar fluxo
+
+var
+  // ===== INDICADOR V12_versao7 ULTRA =====
+  NovoDia                   : Boolean;
+  Contador                  : Integer;
+  LimiteLoop                : Integer;
+  PintouEvento              : Boolean;
+
+  AberturaDia               : Float;
+  LinhaMaisMeio             : Float;
+  LinhaMenosMeio            : Float;
+  LinhaMais1                : Float;
+  LinhaMenos1               : Float;
+  LinhaMais2                : Float;
+  LinhaMenos2               : Float;
+  LinhaMais3                : Float;
+  LinhaMenos3               : Float;
+  VariacaoAtual             : Float;
+
+  SomaVariacaoCurta         : Float;
+  SomaVariacaoLonga         : Float;
+  MediaVariacaoBandasCurta  : Float;
+  MediaVariacaoBandasLonga  : Float;
+  MediaBandasCurta          : Float;
+  MediaBandasLonga          : Float;
+
+  MediaCurtaSubindo         : Boolean;
+  MediaCurtaCaindo          : Boolean;
+  MediaLongaSubindo         : Boolean;
+  MediaLongaCaindo          : Boolean;
+  CurtaAcimaLonga           : Boolean;
+  CurtaAbaixoLonga          : Boolean;
+  CruzouCurtaParaCima       : Boolean;
+  CruzouCurtaParaBaixo      : Boolean;
+
+  SomaVolume                : Float;
+  MediaVolume               : Float;
+  VolumeForte               : Boolean;
+
+  Corpo                     : Float;
+  CorpoMinimo               : Float;
+  RangeCandle               : Float;
+  PavioSuperior             : Float;
+  PavioInferior             : Float;
+  CandleAlta                : Boolean;
+  CandleBaixa               : Boolean;
+
+  ClosePosicaoNoRange       : Float;
+  PressaoCompradora        : Boolean;
+  PressaoVendedora         : Boolean;
+  VWAPDiario                : Float;
+
+  // Módulo Divergência VWAP (Abertura vs Fechamento)
+  SomaOpenVol                    : Float;
+  SomaCloseVol                   : Float;
+  SomaVolVWAP                    : Float;
+  VWAPAbertura                   : Float;
+  VWAPFechamento                 : Float;
+  DivergenciaVWAP                : Float;
+  ContadorDivergenciaCompradora  : Integer;
+  ContadorDivergenciaVendedora   : Integer;
+  DivergenciaCompradoraValida    : Boolean;
+  DivergenciaVendedoraValida     : Boolean;
+  CruzouVWAPParaCima             : Boolean;
+  CruzouVWAPParaBaixo            : Boolean;
+  PrecoAcimaVWAP            : Boolean;
+  PrecoAbaixoVWAP           : Boolean;
+
+  TocouMaisMeio              : Boolean;
+  TocouMenosMeio             : Boolean;
+  TocouMais1                : Boolean;
+  TocouMenos1                : Boolean;
+  TocouMais2                 : Boolean;
+  TocouMenos2                : Boolean;
+  TocouMais3                 : Boolean;
+  TocouMenos3                : Boolean;
+
+  AceitouMaisMeio              : Boolean;
+  AceitouMenosMeio             : Boolean;
+  AceitouMais1                : Boolean;
+  AceitouMenos1                : Boolean;
+  AceitouMais2                 : Boolean;
+  AceitouMenos2                : Boolean;
+  AceitouMais3                 : Boolean;
+  AceitouMenos3                : Boolean;
+
+  RejeitouMaisMeio               : Boolean;
+  RejeitouMenosMeio              : Boolean;
+  RejeitouMais1                 : Boolean;
+  RejeitouMenos1                : Boolean;
+  RejeitouMais2                  : Boolean;
+  RejeitouMenos2                 : Boolean;
+  RejeitouMais3                  : Boolean;
+  RejeitouMenos3                 : Boolean;
+
+  ArmadilhaMaisMeio                : Boolean;
+  ArmadilhaMenosMeio               : Boolean;
+  ArmadilhaMais1                  : Boolean;
+  ArmadilhaMenos1                 : Boolean;
+  ArmadilhaMais2                  : Boolean;
+  ArmadilhaMenos2                 : Boolean;
+  ArmadilhaMais3                  : Boolean;
+  ArmadilhaMenos3                 : Boolean;
+
+  ConfirmouRejeicaoMaisMeio           : Boolean;
+  ConfirmouRejeicaoMenosMeio          : Boolean;
+  ConfirmouArmadilhaMaisMeio           : Boolean;
+  ConfirmouArmadilhaMenosMeio          : Boolean;
+  ConfirmouRejeicaoMais1            : Boolean;
+  ConfirmouRejeicaoMenos1           : Boolean;
+  ConfirmouArmadilhaMais1            : Boolean;
+  ConfirmouArmadilhaMenos1           : Boolean;
+  ConfirmouRejeicaoMais2              : Boolean;
+  ConfirmouRejeicaoMenos2             : Boolean;
+  ConfirmouArmadilhaMais2              : Boolean;
+  ConfirmouArmadilhaMenos2             : Boolean;
+  ConfirmouRejeicaoMais3              : Boolean;
+  ConfirmouRejeicaoMenos3             : Boolean;
+  ConfirmouArmadilhaMais3              : Boolean;
+  ConfirmouArmadilhaMenos3             : Boolean;
+
+  BarrasDoDia                        : Integer;
+  BarrasAteMais1                     : Integer;
+  BarrasAteMenos1                    : Integer;
+  BarrasAteMais2                     : Integer;
+  BarrasAteMenos2                    : Integer;
+  BarrasAteMais3                     : Integer;
+  BarrasAteMenos3                    : Integer;
+  TocouMais1Hoje                     : Boolean;
+  TocouMenos1Hoje                    : Boolean;
+
+  // ===== V12_versao8 — MÓDULO ACEITAÇÃO/REJEIÇÃO DA ABERTURA =====
+  // Banda "zero": o próprio preço de abertura, tratado com o mesmo ciclo das
+  // outras bandas, mas SÓ conta quando precedido de um toque em ±Meio no
+  // mesmo dia (decisão de Carlos — Set/2026). Só leitura/Score, sem ordem.
+  TocouMaisMeioHoje                  : Boolean;  // ±Meio já foi tocado hoje?
+  TocouMenosMeioHoje                 : Boolean;
+  TocouAbertura                      : Boolean;  // candle cruza o preço exato de abertura
+  RetornouAberturaDeCima             : Boolean;  // tocou +Meio hoje E voltou até a Abertura
+  RetornouAberturaDeBaixo            : Boolean;  // tocou -Meio hoje E voltou até a Abertura
+  AceitouAberturaCima                : Boolean;  // virada de lado: veio de baixo, fechou acima
+  AceitouAberturaBaixo               : Boolean;  // virada de lado: veio de cima, fechou abaixo
+  RejeitouAberturaCima               : Boolean;  // reteste: Abertura segurou como suporte
+  RejeitouAberturaBaixo              : Boolean;  // reteste: Abertura segurou como resistência
+  ConfirmouAceitacaoAberturaCima     : Boolean;
+  ConfirmouAceitacaoAberturaBaixo    : Boolean;
+  ConfirmouRejeicaoAberturaCima      : Boolean;
+  ConfirmouRejeicaoAberturaBaixo     : Boolean;
+  AlertAceitAbertC                   : Boolean;
+  AlertAceitAbertB                   : Boolean;
+  AlertRejAbertC                     : Boolean;
+  AlertRejAbertB                     : Boolean;
+  TocouMais2Hoje                     : Boolean;
+  TocouMenos2Hoje                    : Boolean;
+  TocouMais3Hoje                     : Boolean;
+  TocouMenos3Hoje                    : Boolean;
+  MovimentoRapidoMais1                : Boolean;
+  MovimentoRapidoMenos1               : Boolean;
+  MovimentoRapidoMais2                 : Boolean;
+  MovimentoRapidoMenos2                : Boolean;
+  MovimentoRapidoMais3                 : Boolean;
+  MovimentoRapidoMenos3                : Boolean;
+
+  ScoreComprador                       : Float;
+  ScoreVendedor                        : Float;
+  ContextoComprador                    : Boolean;
+  ContextoVendedor                     : Boolean;
+  ContextoNeutro                       : Boolean;
+  DiaDirecionalCompra                  : Boolean;
+  DiaDirecionalVenda                   : Boolean;
+
+  SaldoScore                           : Float;
+  ForcaDirecional                      : Float;
+  PainelCompraForte                    : Boolean;
+  PainelVendaForte                     : Boolean;
+  PainelNeutro                         : Boolean;
+
+  // ===== CUMULATIVE VOLUME ANÔMALO =====
+  JanelaAtual                          : Integer;
+  JanelaAnterior                       : Integer;
+  FechouJanela                         : Boolean;
+
+  VolumeAcumuladoHoje                  : Float;
+  RefHistoricaAtual                    : Float;
+  RatioVolumeAnomalo                   : Float;
+  AlertaVolumeAnomalo                  : Boolean;
+
+  MediaVolJanela                       : Array[1..8] Of Float;
+  DiasJanela                           : Array[1..8] Of Integer;
+  VolNoFimJanela                       : Array[1..8] Of Float;
+
+  iJanela                              : Integer;
+  NovoValorJanela                      : Float;
+
+  DiferencaMinimaScoreEfetiva          : Float;
+
+  // ===== FORÇA DO VOLUME (0-100) =====
+  ForcaCandle                          : Float;
+  ForcaDia                             : Float;
+  ForcaVolume                          : Float;
+  CorForcaVolume                       : Integer;
+
+  // ===== MÓDULO ULTRA — AGRESSÃO REAL (Pro/Ultra/Scalper) =====
+  AgressaoBuy                          : Float;
+  AgressaoSell                         : Float;
+  AgressaoBalance                      : Float;
+  AgressaoBalanceAnterior              : Float;
+  MediaAgressaoBuy                     : Float;
+  MediaAgressaoSell                    : Float;
+  FluxoComprador                       : Boolean;  // AgressaoBuy > AgressaoSell * Fator
+  FluxoVendedor                        : Boolean;  // AgressaoSell > AgressaoBuy * Fator
+  CVDSubindo                           : Boolean;  // AgressaoBalance > AgressaoBalance[1]
+  CVDCaindo                            : Boolean;  // AgressaoBalance < AgressaoBalance[1]
+  AgressaoContraCompra                 : Boolean;  // venda forte com posição comprada
+  AgressaoContraVenda                  : Boolean;  // compra forte com posição vendida
+
+  // ===== MÓDULO ULTRA — GESTÃO FINANCEIRA REAL =====
+  ResultadoFinanceiroHoje              : Float;   // DailyResult() em R$
+  TravaFinanceiraAtiva                 : Boolean;
+  TravaGanhoFinanceiraAtiva            : Boolean;
+
+  // ===== MÓDULO ULTRA — CONTROLE DE REVERSÃO =====
+  ReversaoExecutada                    : Boolean;
+
+  // ===== V12_versao8 — CAPTURA DE RESULTADO REALIZADO (trava de pontos real) =====
+  PosicaoAbertaAnterior                 : Boolean;  // estado da posição no candle anterior
+  PosicaoTipoAnterior                   : Integer;  // 1 = comprada, -1 = vendida, 0 = nenhuma
+  PrecoSaidaRegistrado                  : Float;    // preço real de saída (BuyPrice/SellPrice no fechamento)
+  ResultadoOperacaoPontos               : Float;    // resultado da última operação fechada, em pontos
+  HouveFechamentoNoCandle               : Boolean;  // true no candle exato em que uma posição fechou/reverteu
+  FechouPosicaoAntiga                   : Boolean;  // auxiliar — detecta fechamento total OU reversão
+
+  // ===== V12_versao8 — VISIBILIDADE DE EVENTOS ±1% (cobertura total obrigatória) =====
+  AlertRej1B                            : Boolean;  // Rejeição não confirmada +1% (Baixa) já sinalizada?
+  AlertRej1A                            : Boolean;  // Rejeição não confirmada -1% (Alta) já sinalizada?
+
+  // V12_versao8 — Achado 8: Rejeição não confirmada só tinha alerta em ±1%.
+  // Meio, ±2% e ±3% nunca tiveram NENHUMA sinalização para esse evento.
+  AlertRejMeioB                          : Boolean;
+  AlertRejMeioA                          : Boolean;
+  AlertRej2B                             : Boolean;
+  AlertRej2A                             : Boolean;
+  AlertRej3B                             : Boolean;
+  AlertRej3A                             : Boolean;
+
+  // ===== MÓDULO DE RASTREAMENTO — PERFORMANCE ±2%/±3% =====
+  // Registra via PlotText fixo no candle de origem o resultado (ACERTO/ERRO)
+  // de cada Armadilha Confirmada em ±1%/±2%/±3%, avaliado N candles depois.
+  // Até 60 sinais pendentes simultâneos (array circular) — ±1% é mais frequente.
+  PrecoRefTrack        : Array[1..60] Of Float;   // preço de referência no candle da confirmação
+  CandleOrigemTrack    : Array[1..60] Of Integer; // índice do candle onde a confirmação ocorreu
+  DirecaoTrack         : Array[1..60] Of Integer; // 1 = compra, -1 = venda
+  BandaTrack           : Array[1..60] Of Integer; // 1, 2 ou 3 (±1%, ±2% ou ±3%)
+  AtivoTrack           : Array[1..60] Of Boolean; // slot em uso
+  IndiceProximoTrack   : Integer;                  // próximo slot livre (circular)
+  ContadorCandlesTrack : Integer;                  // candles desde a origem, por slot (calculado via CurrentBar)
+  IndiceRastreamento   : Integer;                  // índice de loop do array de rastreamento
+  VariacaoTrack        : Float;                    // variação de preço na direção do sinal
+  TextoResultadoTrack  : String;                   // texto final ACERTO/ERRO/NEUTRO
+  CorResultadoTrack    : Integer;                  // cor do resultado (verde/vermelho/cinza)
+
+  // ===== SISTEMA DE ALERTAS (Alert + PlotText) =====
+  // Flags de controle — cada alerta toca/plota UMA VEZ por evento por dia
+  // Reset obrigatório no bloco NovoDia
+
+  // Toques (Nível 1)
+  // V12_versao8 — Achado 7: eram flags únicos por banda cobrindo os DOIS lados
+  // (Baixa/Alta). Depois do 1º toque do dia em qualquer lado, o toque do lado
+  // OPOSTO nunca mais alertava. Corrigido: um flag por lado, como as outras
+  // camadas (N2/N3) já faziam corretamente.
+  AlertTocouMeioB      : Boolean;
+  AlertTocouMeioA      : Boolean;
+  AlertTocou1B         : Boolean;
+  AlertTocou1A         : Boolean;
+  AlertTocou2B         : Boolean;
+  AlertTocou2A         : Boolean;
+  AlertTocou3B         : Boolean;
+  AlertTocou3A         : Boolean;
+
+  // Alertas não confirmados (Nível 2)
+  AlertArmMeioB        : Boolean;
+  AlertArmMeioA        : Boolean;
+  AlertArm1B           : Boolean;
+  AlertArm1A           : Boolean;
+  AlertArm2B           : Boolean;
+  AlertArm2A           : Boolean;
+  AlertArm3B           : Boolean;
+  AlertArm3A           : Boolean;
+
+  // Confirmações (Nível 3)
+  AlertConfMeioB       : Boolean;
+  AlertConfMeioA       : Boolean;
+  AlertConf1B          : Boolean;
+  AlertConf1A          : Boolean;
+  AlertConf2B          : Boolean;
+  AlertConf2A          : Boolean;
+  AlertConf3B          : Boolean;
+  AlertConf3A          : Boolean;
+
+  // ===== V12_versao8 — Achado 6: Rejeição Confirmada tinha PaintBar mas NENHUM
+  // Alert/PlotText no bloco N3 — corrigido junto com a linha vertical =====
+  AlertRejConfMeioB    : Boolean;
+  AlertRejConfMeioA    : Boolean;
+  AlertRejConf1B       : Boolean;
+  AlertRejConf1A       : Boolean;
+  AlertRejConf2B       : Boolean;
+  AlertRejConf2A       : Boolean;
+  AlertRejConf3B       : Boolean;
+  AlertRejConf3A       : Boolean;
+
+  // Execução e gestão (Nível 4)
+  // AlertEntradaC/AlertEntradaV, AlertScoreComprador/AlertScoreVendedor
+  // removidos na V12_versao8 (Achado 12) — substituídos por detecção de
+  // borda de subida via [1], que dispara em toda ocorrência, sem exceção.
+  AlertTravaDia        : Boolean;
+  // V12_versao8 — Achado 9: AlertVolAnomalo travava por DIA inteiro, mas a
+  // anomalia é por JANELA horária (8/dia) — uma anomalia na janela 3 travava
+  // e silenciava anomalias reais em janelas seguintes. Convertido para array.
+  AlertVolAnomaloPorJanela : Array[1..8] Of Boolean;
+  // AlertScoreComprador/AlertScoreVendedor removidos (ver nota acima).
+  AlertExecucaoPendente   : Boolean; // true no candle em que a posição abriu, ainda não alertado
+  AlertExecucaoConfirmada : Boolean; // true após o alerta de execução real já ter sido plotado
+  AlertDivergenciaCompradora : Boolean;
+  AlertDivergenciaVendedora  : Boolean;
+
+  // Espaçamento anti-sobreposição de PlotText
+  EspacoTexto          : Float;
+
+  // Identificação de dia nos textos de alerta (anti-ambiguidade visual)
+  DiaAtual             : Integer;
+  MesAtual             : Integer;
+  DataTextoAlerta      : String;
+
+  // ===== MÓDULO DE EXECUÇÃO =====
+  CandleAtual                          : Integer;
+  UltimoCandleProcessado               : Integer;
+  PodeProcessarCandle                  : Boolean;
+
+  ResultadoDiario                      : Float;
+  OperacoesHoje                        : Integer;
+  TravaPerdaAtiva                      : Boolean;
+  TravaGanhoAtiva                      : Boolean;
+  PrecoEntradaRegistrado               : Float;
+
+  SinalCompra                          : Boolean;
+  SinalVenda                           : Boolean;
+
+  DentroHorarioOperacional             : Boolean;
+  PermissaoOperar                      : Boolean;
+  PermissaoCompra                      : Boolean;
+  PermissaoVenda                       : Boolean;
+  PermissaoReversaoCompra              : Boolean;
+  PermissaoReversaoVenda               : Boolean;
+
+  PrecoStopCompra                      : Float;
+  PrecoAlvoCompra                      : Float;
+  PrecoStopVenda                       : Float;
+  PrecoAlvoVenda                       : Float;
+
+  // ===== TRAILING STOP (M9 com folga mínima) =====
+  TrailingAtivoCompra                  : Boolean;
+  TrailingAtivoVenda                   : Boolean;
+  // V12_versao8 — Achado 10: ativação do Trailing (Fase 2) mudava o modo de
+  // gestão de risco sem nenhum Alert/PlotText. Reset por trade (junto com
+  // TrailingAtivoCompra/Venda), não por dia.
+  AlertTrailingC                       : Boolean;
+  AlertTrailingV                       : Boolean;
+  LucroAtualPontosCompra               : Float;
+  LucroAtualPontosVenda                : Float;
+  StopTrailingCompra                   : Float;
+  StopTrailingVenda                    : Float;
+  StopTrailingAnteriorC                : Float;
+  StopTrailingAnteriorV                : Float;
+  DistanciaM9AoPreco                   : Float;
+
+  // ===== V12_versao9 — MÓDULO DE RECUSA (estrutura de candle, ChatGPT + auditoria) =====
+  // Preço/estrutura
+  RngRecusa           : Float;
+  BodyRecusa          : Float;
+  DispRecusa          : Float;
+  DERecusa            : Float;
+  RIRecusa            : Float;
+  UpperWickRecusa     : Float;
+  LowerWickRecusa     : Float;
+  UpperWickPctRecusa  : Float;
+  LowerWickPctRecusa  : Float;
+  CloseLocationRecusa : Float;
+  HighFailureRecusa   : Float;
+  LowFailureRecusa    : Float;
+  URERecusa           : Float;
+  LRERecusa           : Float;
+  // Progressão
+  UREPrevRecusa       : Float;
+  LREPrevRecusa       : Float;
+  URPRecusa           : Float;
+  LRPRecusa           : Float;
+  URPPrevRecusa       : Float;
+  LRPPrevRecusa       : Float;
+  URSlopeRecusa       : Float;
+  LRSlopeRecusa       : Float;
+  URAccelRecusa       : Float;
+  LRAccelRecusa       : Float;
+  // Persistência
+  CountUpperRecusa       : Integer;
+  CountLowerRecusa       : Integer;
+  PersistentUpperRecusa  : Boolean;
+  PersistentLowerRecusa  : Boolean;
+  // Extreme Rejection Divergence
+  ERDUpRecusa         : Boolean;
+  ERDDownRecusa       : Boolean;
+  // Volume
+  VolMediaRecusa      : Float;
+  VolumeRatioRecusa   : Float;
+  // Delta
+  DeltaAtualRecusa    : Float;
+  DeltaAnteriorRecusa : Float;
+  DeltaChangeRecusa   : Float;
+  PriceChangeRecusa   : Float;
+  FlowDivergenceRecusa : Integer;
+  // Estados
+  StateRecusa            : Integer;
+  UpperRejectionRecusa   : Boolean;
+  LowerRejectionRecusa   : Boolean;
+  ProgressiveRecusa      : Boolean;
+  PersistentRecusa       : Boolean;
+  FlowConfirmedRecusa    : Boolean;
+  ReversalCandidateRecusa : Boolean;
+  // Controle
+  iRecusa             : Integer;
+  // V12_versao9 — gate obrigatório: só conta se coincidir com banda existente
+  RecusaGateBanda     : Boolean;
+  TextoBandaRecusa    : String;
+
+begin
+
+  // ##########################################################################
+  // PARTE 1 — INDICADOR BRICKMASTER V12_versao7 ULTRA
+  // ##########################################################################
+
+  // ==========================================================================
+  // 1. CONTROLE DE NOVO DIA
+  // ==========================================================================
+
+  NovoDia := false;
+  if Date <> Date[1] then
+    NovoDia := true;
+
+  // --- Data formatada DD/MM — calculada cedo para estar disponível em
+  //     qualquer bloco do candle (alertas, rastreamento de performance) ---
+  DiaAtual := DayOfMonth(Date);
+  MesAtual := Month(Date);
+  // V12_versao8 — Carlos pediu o número do candle em que cada evento
+  // aconteceu, usando ContadorDeCandle() (Seção 20.39 do Manual NTSL v4.1).
+  // Isso também ajuda a desambiguar alertas que se sobrepõem visualmente:
+  // mesmo empilhados na tela, cada um agora carrega um identificador único.
+  DataTextoAlerta := FloatToString(DiaAtual, 0) + "/" + FloatToString(MesAtual, 0)
+                      + " [C" + FloatToString(ContadorDeCandle(), 0) + "] ";
+
+  if NovoDia then
+  begin
+    AberturaDia     := Open;
+    BarrasDoDia     := 1;
+    BarrasAteMais1  := 0;
+    BarrasAteMenos1 := 0;
+    BarrasAteMais2  := 0;
+    BarrasAteMenos2 := 0;
+    BarrasAteMais3  := 0;
+    BarrasAteMenos3 := 0;
+    TocouMais1Hoje  := false;
+    TocouMenos1Hoje := false;
+    TocouMaisMeioHoje  := false;
+    TocouMenosMeioHoje := false;
+    AlertAceitAbertC := false; AlertAceitAbertB := false;
+    AlertRejAbertC   := false; AlertRejAbertB   := false;
+    TocouMais2Hoje  := false;
+    TocouMenos2Hoje := false;
+    TocouMais3Hoje  := false;
+    TocouMenos3Hoje := false;
+
+    // --- Reset do sistema de alertas ---
+    AlertTocouMeioB     := false; AlertTocouMeioA := false;
+    AlertTocou1B        := false; AlertTocou1A    := false;
+    AlertTocou2B        := false; AlertTocou2A    := false;
+    AlertTocou3B        := false; AlertTocou3A    := false;
+    AlertArmMeioB       := false; AlertArmMeioA   := false;
+    AlertArm1B          := false; AlertArm1A      := false;
+    AlertArm2B          := false; AlertArm2A      := false;
+    AlertArm3B          := false; AlertArm3A      := false;
+    AlertConfMeioB      := false; AlertConfMeioA  := false;
+    AlertConf1B         := false; AlertConf1A     := false;
+    AlertConf2B         := false; AlertConf2A     := false;
+    AlertConf3B         := false; AlertConf3A     := false;
+    AlertRejConfMeioB   := false; AlertRejConfMeioA := false;
+    AlertRejConf1B      := false; AlertRejConf1A    := false;
+    AlertRejConf2B      := false; AlertRejConf2A    := false;
+    AlertRejConf3B      := false; AlertRejConf3A    := false;
+    AlertTravaDia       := false;
+    for iJanela := 1 to 8 do
+      AlertVolAnomaloPorJanela[iJanela] := false;
+    AlertExecucaoPendente := false; AlertExecucaoConfirmada := false;
+    AlertDivergenciaCompradora := false; AlertDivergenciaVendedora := false;
+
+    // --- Reset módulos Ultra ---
+    TravaFinanceiraAtiva      := false;
+    TravaGanhoFinanceiraAtiva := false;
+    ReversaoExecutada         := false;
+
+    // --- Reset V12_versao8 — captura de resultado realizado ---
+    PosicaoAbertaAnterior := false;
+    PosicaoTipoAnterior   := 0;
+    AlertRej1B            := false;
+    AlertRej1A            := false;
+    AlertRejMeioB         := false; AlertRejMeioA := false;
+    AlertRej2B            := false; AlertRej2A    := false;
+    AlertRej3B            := false; AlertRej3A    := false;
+
+    // --- Reset do módulo de rastreamento — sinais não avaliados até o fim do dia se perdem ---
+    for IndiceRastreamento := 1 to 60 do
+      AtivoTrack[IndiceRastreamento] := false;
+    IndiceProximoTrack := 1;
+
+    ResultadoDiario  := 0;
+    OperacoesHoje    := 0;
+    TravaPerdaAtiva  := false;
+    TravaGanhoAtiva  := false;
+    UltimoCandleProcessado := -1;
+  end
+  else
+  begin
+    AberturaDia     := AberturaDia[1];
+    BarrasDoDia     := BarrasDoDia[1] + 1;
+    BarrasAteMais1  := BarrasAteMais1[1];
+    BarrasAteMenos1 := BarrasAteMenos1[1];
+    BarrasAteMais2  := BarrasAteMais2[1];
+    BarrasAteMenos2 := BarrasAteMenos2[1];
+    BarrasAteMais3  := BarrasAteMais3[1];
+    BarrasAteMenos3 := BarrasAteMenos3[1];
+    TocouMais1Hoje  := TocouMais1Hoje[1];
+    TocouMenos1Hoje := TocouMenos1Hoje[1];
+    TocouMaisMeioHoje  := TocouMaisMeioHoje[1];
+    TocouMenosMeioHoje := TocouMenosMeioHoje[1];
+    TocouMais2Hoje  := TocouMais2Hoje[1];
+    TocouMenos2Hoje := TocouMenos2Hoje[1];
+    TocouMais3Hoje  := TocouMais3Hoje[1];
+    TocouMenos3Hoje := TocouMenos3Hoje[1];
+
+    ResultadoDiario  := ResultadoDiario[1];
+    OperacoesHoje    := OperacoesHoje[1];
+    TravaPerdaAtiva  := TravaPerdaAtiva[1];
+    TravaGanhoAtiva  := TravaGanhoAtiva[1];
+    UltimoCandleProcessado := UltimoCandleProcessado[1];
+
+    PosicaoAbertaAnterior := PosicaoAbertaAnterior[1];
+    PosicaoTipoAnterior   := PosicaoTipoAnterior[1];
+  end;
+
+  // ##########################################################################
+  // MÓDULO: INDICADOR BASE (V13_versao1 — 1ª posição, sempre)
+  // ==========================================================================
+  // 2. BANDAS PERCENTUAIS
+  // ==========================================================================
+
+  LinhaMaisMeio  := AberturaDia * (1 + (PercentualMeio  / 100));
+  LinhaMenosMeio := AberturaDia * (1 - (PercentualMeio  / 100));
+  LinhaMais1     := AberturaDia * (1 + (PercentualAlvo1  / 100));
+  LinhaMenos1    := AberturaDia * (1 - (PercentualAlvo1  / 100));
+  LinhaMais2     := AberturaDia * (1 + (PercentualAlvo2  / 100));
+  LinhaMenos2    := AberturaDia * (1 - (PercentualAlvo2  / 100));
+  LinhaMais3     := AberturaDia * (1 + (PercentualAlvo3  / 100));
+  LinhaMenos3    := AberturaDia * (1 - (PercentualAlvo3  / 100));
+
+  if AberturaDia > 0 then
+    VariacaoAtual := ((Close - AberturaDia) / AberturaDia) * 100
+  else
+    VariacaoAtual := 0;
+
+  // ##########################################################################
+  // MÓDULO: MÉDIAS MÓVEIS (V13_versao1 — 2ª posição, sempre)
+  // ==========================================================================
+  // 3. MÉDIA CURTA — LIMITADA AO DIA ATUAL
+  // ==========================================================================
+
+  SomaVariacaoCurta := 0;
+  Contador          := 0;
+  LimiteLoop        := Min(PeriodoMediaBandasCurta, BarrasDoDia);
+
+  while Contador < LimiteLoop do
+  begin
+    SomaVariacaoCurta := SomaVariacaoCurta + VariacaoAtual[Contador];
+    Contador := Contador + 1;
+  end;
+
+  if LimiteLoop > 0 then
+    MediaVariacaoBandasCurta := SomaVariacaoCurta / LimiteLoop
+  else
+    MediaVariacaoBandasCurta := VariacaoAtual;
+
+  MediaBandasCurta := AberturaDia * (1 + (MediaVariacaoBandasCurta / 100));
+
+  // ==========================================================================
+  // 4. MÉDIA LONGA — LIMITADA AO DIA ATUAL
+  // ==========================================================================
+
+  SomaVariacaoLonga := 0;
+  Contador          := 0;
+  LimiteLoop        := Min(PeriodoMediaBandasLonga, BarrasDoDia);
+
+  while Contador < LimiteLoop do
+  begin
+    SomaVariacaoLonga := SomaVariacaoLonga + VariacaoAtual[Contador];
+    Contador := Contador + 1;
+  end;
+
+  if LimiteLoop > 0 then
+    MediaVariacaoBandasLonga := SomaVariacaoLonga / LimiteLoop
+  else
+    MediaVariacaoBandasLonga := VariacaoAtual;
+
+  MediaBandasLonga := AberturaDia * (1 + (MediaVariacaoBandasLonga / 100));
+
+  // ##########################################################################
+  // MÓDULO: VWAP (V13_versao1 — extraído e elevado à 3ª posição, a pedido de
+  // Carlos: Indicador Base -> Médias Móveis -> VWAP's, nessa ordem sempre)
+  // ----------------------------------------------------------------------------
+  // VWAPDiario: função nativa do NTSL (período diário).
+  // VWAPAbertura/VWAPFechamento: reconstruídas manualmente, porque a função
+  // nativa VWAP() não expõe parâmetro de "preço típico" (só período). Antes
+  // ficavam calculadas dentro do módulo de Divergência (mais abaixo) e só
+  // rodavam se UsarDivergenciaVWAP estivesse ligado — agora são incondicionais,
+  // como uma base de VWAP deve ser, disponíveis pra qualquer módulo que
+  // precisar delas (Divergência continua sendo a única consumidora hoje).
+  // ##########################################################################
+
+  VWAPDiario      := VWAP(1);
+  PrecoAcimaVWAP  := Close > VWAPDiario;
+  PrecoAbaixoVWAP := Close < VWAPDiario;
+
+  if NovoDia then
+  begin
+    SomaOpenVol  := Open * Volume;
+    SomaCloseVol := Close * Volume;
+    SomaVolVWAP  := Volume;
+  end
+  else
+  begin
+    SomaOpenVol  := SomaOpenVol[1]  + (Open * Volume);
+    SomaCloseVol := SomaCloseVol[1] + (Close * Volume);
+    SomaVolVWAP  := SomaVolVWAP[1]  + Volume;
+  end;
+
+  if SomaVolVWAP > 0 then
+  begin
+    VWAPAbertura   := SomaOpenVol / SomaVolVWAP;
+    VWAPFechamento := SomaCloseVol / SomaVolVWAP;
+  end
+  else
+  begin
+    VWAPAbertura   := Close;
+    VWAPFechamento := Close;
+  end;
+
+  // ==========================================================================
+  // 5. MÉDIA DE VOLUME (PROXY DE FLUXO CANDLE A CANDLE) — LIMITADA AO DIA
+  // ==========================================================================
+
+  SomaVolume := 0;
+  Contador   := 1;
+  LimiteLoop := Min(PeriodoMediaVolume, BarrasDoDia - 1);
+
+  while Contador <= LimiteLoop do
+  begin
+    SomaVolume := SomaVolume + Volume[Contador];
+    Contador   := Contador + 1;
+  end;
+
+  if LimiteLoop > 0 then
+    MediaVolume := SomaVolume / LimiteLoop
+  else
+    MediaVolume := Volume;
+
+  VolumeForte := false;
+  if Volume >= (MediaVolume * FatorVolumeForte) then
+    VolumeForte := true;
+
+  // ==========================================================================
+  // 6. ESTRUTURA DO CANDLE
+  // ==========================================================================
+
+  CandleAlta  := Close > Open;
+  CandleBaixa := Close < Open;
+
+  if Close >= Open then
+  begin
+    Corpo         := Close - Open;
+    PavioSuperior := High - Close;
+    PavioInferior := Open - Low;
+  end
+  else
+  begin
+    Corpo         := Open - Close;
+    PavioSuperior := High - Open;
+    PavioInferior := Close - Low;
+  end;
+
+  RangeCandle := High - Low;
+
+  if RangeCandle > 0 then
+    CorpoMinimo := RangeCandle * 0.25
+  else
+    CorpoMinimo := 1;
+
+  // ==========================================================================
+  // 7. MÓDULO ULTRA — AGRESSÃO REAL (AgressionVolBuy/Sell/Balance)
+  // ----------------------------------------------------------------------------
+  // Substitui o proxy de fluxo baseado em posição do Close no range.
+  // Requer módulo Pro/Ultra/Scalper — disponível no Profit Ultra.
+  // AgressionVolBuy()     = volume negociado que bateu no Ask (agressão compradora)
+  // AgressionVolSell()    = volume negociado que bateu no Bid (agressão vendedora)
+  // AgressionVolBalance() = saldo acumulado (Buy - Sell) desde a abertura
+  // ==========================================================================
+
+  // ##########################################################################
+  // MÓDULO AGRESSÃO REAL (ULTRA) — ISOLADO (V12_versao11)
+  // ----------------------------------------------------------------------------
+  // Requer o opcional "Indicadores Scalper" da Nelogica, que a conta atual
+  // não tem. A NTSL valida a disponibilidade de AgressionVolBuy/Sell/Balance
+  // na COMPILAÇÃO, não em tempo de execução — então mesmo dentro de um "if"
+  // que nunca roda, a simples presença da chamada quebra a compilação
+  // inteira. Por decisão de Carlos, o bloco original foi ISOLADO (comentado
+  // abaixo), NÃO excluído — para reativar no futuro (ex: se o Scalper ficar
+  // disponível no Profit One), descomente e restaure a estrutura if/else.
+  //
+  // if UsarAgressaoUltra then
+  // begin
+  //   AgressaoBuy     := AgressionVolBuy();
+  //   AgressaoSell    := AgressionVolSell();
+  //   AgressaoBalance := AgressionVolBalance();
+  //
+  //   // Fluxo direcional — agressão de um lado supera o outro pelo fator configurado
+  //   FluxoComprador := false;
+  //   if AgressaoSell > 0 then
+  //     if (AgressaoBuy / AgressaoSell) >= FatorAgressaoForte then
+  //       FluxoComprador := true;
+  //
+  //   FluxoVendedor := false;
+  //   if AgressaoBuy > 0 then
+  //     if (AgressaoSell / AgressaoBuy) >= FatorAgressaoForte then
+  //       FluxoVendedor := true;
+  //
+  //   // CVD direcional — saldo acumulado subindo ou caindo
+  //   CVDSubindo := AgressaoBalance > AgressaoBalance[1];
+  //   CVDCaindo  := AgressaoBalance < AgressaoBalance[1];
+  //
+  //   // Pressão compradora/vendedora REAL (substitui o proxy)
+  //   PressaoCompradora := FluxoComprador and CVDSubindo;
+  //   PressaoVendedora  := FluxoVendedor  and CVDCaindo;
+  //
+  //   // Agressão contrária à posição aberta (sinal de trailing acelerado)
+  //   AgressaoContraCompra := IsBought and FluxoVendedor;
+  //   AgressaoContraVenda  := IsSold   and FluxoComprador;
+  // end
+  // else
+  // begin
+  // ##########################################################################
+
+  // --- Proxy de Fluxo (Fallback) — VWAP + Posição no Range — ATIVO ---
+  if RangeCandle > 0 then
+    ClosePosicaoNoRange := (Close - Low) / RangeCandle
+  else
+    ClosePosicaoNoRange := 0.5;
+
+  PressaoCompradora := false;
+  if ClosePosicaoNoRange >= 0.67 then
+    if VolumeForte then
+      PressaoCompradora := true;
+
+  PressaoVendedora := false;
+  if ClosePosicaoNoRange <= 0.33 then
+    if VolumeForte then
+      PressaoVendedora := true;
+
+  CVDSubindo := false;
+  CVDCaindo  := false;
+  AgressaoBalance := 0;
+  AgressaoContraCompra := false;
+  AgressaoContraVenda  := false;
+  // fim do bloco proxy (equivalente ao "else" original, agora incondicional)
+
+  // ##########################################################################
+  // MÓDULO DIVERGÊNCIA VWAP — VWAP-Abertura vs VWAP-Fechamento
+  // ----------------------------------------------------------------------------
+  // VWAPDiario/VWAPAbertura/VWAPFechamento agora vêm do MÓDULO: VWAP (3ª
+  // posição, logo após Médias Móveis) — este bloco só consome os valores e
+  // faz a análise de divergência/persistência, não recalcula mais nada.
+  //
+  // Racional: VWAPFechamento > VWAPAbertura de forma persistente sugere que,
+  // candle a candle, o mercado fecha sistematicamente acima de onde abriu —
+  // indício estrutural de aceitação compradora intrabarra. O inverso indica
+  // aceitação vendedora. Complementa (não substitui) a Agressão Real.
+  // ##########################################################################
+
+  if UsarDivergenciaVWAP then
+  begin
+    if NovoDia then
+    begin
+      ContadorDivergenciaCompradora := 0;
+      ContadorDivergenciaVendedora  := 0;
+    end;
+
+    DivergenciaVWAP := VWAPFechamento - VWAPAbertura;
+
+    // Persistência: divergência precisa se manter na mesma direção por
+    // DivergenciaMinimaCandles consecutivos para ser considerada válida —
+    // evita reagir a ruído de 1-2 candles isolados
+    if DivergenciaVWAP > (MinPriceIncrement * DivergenciaMinimaPontos) then
+    begin
+      if DivergenciaVWAP[1] > (MinPriceIncrement * DivergenciaMinimaPontos) then
+        ContadorDivergenciaCompradora := ContadorDivergenciaCompradora[1] + 1
+      else
+        ContadorDivergenciaCompradora := 1;
+      ContadorDivergenciaVendedora := 0;
+    end
+    else if DivergenciaVWAP < (0 - (MinPriceIncrement * DivergenciaMinimaPontos)) then
+    begin
+      if DivergenciaVWAP[1] < (0 - (MinPriceIncrement * DivergenciaMinimaPontos)) then
+        ContadorDivergenciaVendedora := ContadorDivergenciaVendedora[1] + 1
+      else
+        ContadorDivergenciaVendedora := 1;
+      ContadorDivergenciaCompradora := 0;
+    end
+    else
+    begin
+      ContadorDivergenciaCompradora := 0;
+      ContadorDivergenciaVendedora  := 0;
+    end;
+
+    DivergenciaCompradoraValida := ContadorDivergenciaCompradora >= DivergenciaMinimaCandles;
+    DivergenciaVendedoraValida  := ContadorDivergenciaVendedora  >= DivergenciaMinimaCandles;
+
+    // --- Cruzamento Confirmado — VWAPFechamento cruza VWAPAbertura ---
+    // Detecta a TRANSIÇÃO (borda de subida) de DivergenciaXValida: false->true.
+    // Com DivergenciaMinimaCandles=5, este é o candle exato em que a divergência
+    // completa 5 candles consecutivos pela primeira vez — o "nascimento" da
+    // divergência válida, não sua simples continuação.
+    CruzouVWAPParaCima  := DivergenciaCompradoraValida and (not DivergenciaCompradoraValida[1]);
+    CruzouVWAPParaBaixo := DivergenciaVendedoraValida  and (not DivergenciaVendedoraValida[1]);
+  end
+  else
+  begin
+    DivergenciaVWAP := 0;
+    DivergenciaCompradoraValida := false;
+    DivergenciaVendedoraValida  := false;
+    CruzouVWAPParaCima  := false;
+    CruzouVWAPParaBaixo := false;
+  end;
+
+  // ==========================================================================
+  // 8. TOQUE NAS BANDAS + VELOCIDADE
+  // ==========================================================================
+
+  TocouMaisMeio  := High >= LinhaMaisMeio;
+  TocouMenosMeio := Low  <= LinhaMenosMeio;
+
+  // V12_versao8 — persistência "hoje" da Meio, necessária como gatilho do
+  // módulo de Aceitação/Rejeição da Abertura (precisa saber se ±Meio já foi
+  // tocado antes de contar o retorno à Abertura).
+  if TocouMaisMeio then
+    TocouMaisMeioHoje := true;
+
+  if TocouMenosMeio then
+    TocouMenosMeioHoje := true;
+
+  TocouMais1  := High >= LinhaMais1;
+  TocouMenos1 := Low  <= LinhaMenos1;
+  TocouMais2  := High >= LinhaMais2;
+  TocouMenos2 := Low  <= LinhaMenos2;
+  TocouMais3  := High >= LinhaMais3;
+  TocouMenos3 := Low  <= LinhaMenos3;
+
+  if TocouMais1 then
+    if TocouMais1Hoje = false then
+    begin
+      TocouMais1Hoje  := true;
+      BarrasAteMais1  := BarrasDoDia;
+    end;
+
+  if TocouMenos1 then
+    if TocouMenos1Hoje = false then
+    begin
+      TocouMenos1Hoje := true;
+      BarrasAteMenos1 := BarrasDoDia;
+    end;
+
+  if TocouMais2 then
+    if TocouMais2Hoje = false then
+    begin
+      TocouMais2Hoje  := true;
+      BarrasAteMais2  := BarrasDoDia;
+    end;
+
+  if TocouMenos2 then
+    if TocouMenos2Hoje = false then
+    begin
+      TocouMenos2Hoje := true;
+      BarrasAteMenos2 := BarrasDoDia;
+    end;
+
+  if TocouMais3 then
+    if TocouMais3Hoje = false then
+    begin
+      TocouMais3Hoje  := true;
+      BarrasAteMais3  := BarrasDoDia;
+    end;
+
+  if TocouMenos3 then
+    if TocouMenos3Hoje = false then
+    begin
+      TocouMenos3Hoje := true;
+      BarrasAteMenos3 := BarrasDoDia;
+    end;
+
+  MovimentoRapidoMais1  := TocouMais1Hoje  and (BarrasAteMais1  > 0) and (BarrasAteMais1  <= CandlesRapido1);
+  MovimentoRapidoMenos1 := TocouMenos1Hoje and (BarrasAteMenos1 > 0) and (BarrasAteMenos1 <= CandlesRapido1);
+  MovimentoRapidoMais2  := TocouMais2Hoje  and (BarrasAteMais2  > 0) and (BarrasAteMais2  <= CandlesRapido2);
+  MovimentoRapidoMenos2 := TocouMenos2Hoje and (BarrasAteMenos2 > 0) and (BarrasAteMenos2 <= CandlesRapido2);
+  MovimentoRapidoMais3  := TocouMais3Hoje  and (BarrasAteMais3  > 0) and (BarrasAteMais3  <= CandlesRapido2);
+  MovimentoRapidoMenos3 := TocouMenos3Hoje and (BarrasAteMenos3 > 0) and (BarrasAteMenos3 <= CandlesRapido2);
+
+  // ==========================================================================
+  // 9. ACEITAÇÃO
+  // ==========================================================================
+
+  AceitouMaisMeio  := Close >= LinhaMaisMeio;
+  AceitouMenosMeio := Close <= LinhaMenosMeio;
+  AceitouMais1  := Close >= LinhaMais1;
+  AceitouMenos1 := Close <= LinhaMenos1;
+  AceitouMais2  := Close >= LinhaMais2;
+  AceitouMenos2 := Close <= LinhaMenos2;
+  AceitouMais3  := Close >= LinhaMais3;
+  AceitouMenos3 := Close <= LinhaMenos3;
+
+  // ==========================================================================
+  // 9.5. MÓDULO ACEITAÇÃO/REJEIÇÃO DA ABERTURA (V12_versao8)
+  // ----------------------------------------------------------------------------
+  // Só conta se o preço já tocou ±Meio HOJE e voltou até a Abertura — sem
+  // esse precursor, o evento não é medido nem sinalizado (decisão de Carlos).
+  // Aceitação = virada de lado (cruzou e fechou do lado oposto de onde veio).
+  // ==========================================================================
+
+  TocouAbertura := (High >= AberturaDia) and (Low <= AberturaDia);
+
+  RetornouAberturaDeCima  := TocouAbertura and TocouMaisMeioHoje;
+  RetornouAberturaDeBaixo := TocouAbertura and TocouMenosMeioHoje;
+
+  AceitouAberturaBaixo := RetornouAberturaDeCima  and (Close < AberturaDia); // uptrend falhou, virou vendedor
+  AceitouAberturaCima  := RetornouAberturaDeBaixo and (Close > AberturaDia); // downtrend falhou, virou comprador
+
+  // ==========================================================================
+  // 10. REJEIÇÃO — CORPO MÍNIMO ADAPTATIVO
+  // ==========================================================================
+
+  RejeitouMaisMeio  := false;
+  RejeitouMenosMeio := false;
+  RejeitouMais1  := false;
+  RejeitouMenos1 := false;
+  RejeitouMais2  := false;
+  RejeitouMenos2 := false;
+  RejeitouMais3  := false;
+  RejeitouMenos3 := false;
+
+  if TocouMaisMeio then
+    if Close < LinhaMaisMeio then
+      if Corpo >= CorpoMinimo then
+        if PavioSuperior >= (Corpo * 1.50) then
+          RejeitouMaisMeio := true;
+
+  if TocouMenosMeio then
+    if Close > LinhaMenosMeio then
+      if Corpo >= CorpoMinimo then
+        if PavioInferior >= (Corpo * 1.50) then
+          RejeitouMenosMeio := true;
+
+  if TocouMais1 then
+    if Close < LinhaMais1 then
+      if Corpo >= CorpoMinimo then
+        if PavioSuperior >= (Corpo * 1.50) then
+          RejeitouMais1 := true;
+
+  if TocouMenos1 then
+    if Close > LinhaMenos1 then
+      if Corpo >= CorpoMinimo then
+        if PavioInferior >= (Corpo * 1.50) then
+          RejeitouMenos1 := true;
+
+  if TocouMais2 then
+    if Close < LinhaMais2 then
+      if Corpo >= CorpoMinimo then
+        if PavioSuperior >= (Corpo * 1.50) then
+          RejeitouMais2 := true;
+
+  if TocouMenos2 then
+    if Close > LinhaMenos2 then
+      if Corpo >= CorpoMinimo then
+        if PavioInferior >= (Corpo * 1.50) then
+          RejeitouMenos2 := true;
+
+  if TocouMais3 then
+    if Close < LinhaMais3 then
+      if Corpo >= CorpoMinimo then
+        if PavioSuperior >= (Corpo * 1.50) then
+          RejeitouMais3 := true;
+
+  if TocouMenos3 then
+    if Close > LinhaMenos3 then
+      if Corpo >= CorpoMinimo then
+        if PavioInferior >= (Corpo * 1.50) then
+          RejeitouMenos3 := true;
+
+  // --- V12_versao8: Rejeição da Abertura (reteste confirmando direção) ---
+  // Espelha a lógica das bandas: pavio forte no sentido contrário ao retorno,
+  // fechando ainda do lado ORIGINAL (Abertura segurou como suporte/resistência).
+  RejeitouAberturaCima  := false;
+  RejeitouAberturaBaixo := false;
+
+  if RetornouAberturaDeCima then
+    if Close > AberturaDia then
+      if Corpo >= CorpoMinimo then
+        if PavioInferior >= (Corpo * 1.50) then
+          RejeitouAberturaCima := true; // Abertura segurou como suporte — alta confirmada
+
+  if RetornouAberturaDeBaixo then
+    if Close < AberturaDia then
+      if Corpo >= CorpoMinimo then
+        if PavioSuperior >= (Corpo * 1.50) then
+          RejeitouAberturaBaixo := true; // Abertura segurou como resistência — baixa confirmada
+
+  // ==========================================================================
+  // 11. ARMADILHAS
+  // ==========================================================================
+
+  ArmadilhaMaisMeio  := (Close[1] >= LinhaMaisMeio[1])  and (Close < LinhaMaisMeio);
+  ArmadilhaMenosMeio := (Close[1] <= LinhaMenosMeio[1]) and (Close > LinhaMenosMeio);
+  ArmadilhaMais1  := (Close[1] >= LinhaMais1[1])  and (Close < LinhaMais1);
+  ArmadilhaMenos1 := (Close[1] <= LinhaMenos1[1]) and (Close > LinhaMenos1);
+  ArmadilhaMais2  := (Close[1] >= LinhaMais2[1])  and (Close < LinhaMais2);
+  ArmadilhaMenos2 := (Close[1] <= LinhaMenos2[1]) and (Close > LinhaMenos2);
+  ArmadilhaMais3  := (Close[1] >= LinhaMais3[1])  and (Close < LinhaMais3);
+  ArmadilhaMenos3 := (Close[1] <= LinhaMenos3[1]) and (Close > LinhaMenos3);
+
+  // ==========================================================================
+  // 12. CONFIRMAÇÕES
+  // ==========================================================================
+
+  ConfirmouRejeicaoMaisMeio   := false;
+  ConfirmouRejeicaoMenosMeio  := false;
+  ConfirmouArmadilhaMaisMeio  := false;
+  ConfirmouArmadilhaMenosMeio := false;
+  ConfirmouRejeicaoMais1   := false;
+  ConfirmouRejeicaoMenos1  := false;
+  ConfirmouArmadilhaMais1  := false;
+  ConfirmouArmadilhaMenos1 := false;
+
+  if RejeitouMaisMeio[1] then
+    if Close < Low[1] then
+      if Close < MediaBandasCurta then
+        if PrecoAbaixoVWAP or PressaoVendedora then
+          if (not UsarAgressaoUltra) or PressaoVendedora or CVDCaindo then
+          if (not UsarDivergenciaVWAP) or DivergenciaVendedoraValida or (not DivergenciaCompradoraValida) then
+            ConfirmouRejeicaoMaisMeio := true;
+
+  if RejeitouMenosMeio[1] then
+    if Close > High[1] then
+      if Close > MediaBandasCurta then
+        if PrecoAcimaVWAP or PressaoCompradora then
+          if (not UsarAgressaoUltra) or PressaoCompradora or CVDSubindo then
+          if (not UsarDivergenciaVWAP) or DivergenciaCompradoraValida or (not DivergenciaVendedoraValida) then
+            ConfirmouRejeicaoMenosMeio := true;
+
+  if ArmadilhaMaisMeio[1] then
+    if Close < Low[1] then
+      if Close < MediaBandasCurta then
+        if PrecoAbaixoVWAP or PressaoVendedora then
+          if (not UsarAgressaoUltra) or PressaoVendedora or CVDCaindo then
+          if (not UsarDivergenciaVWAP) or DivergenciaVendedoraValida or (not DivergenciaCompradoraValida) then
+            ConfirmouArmadilhaMaisMeio := true;
+
+  if ArmadilhaMenosMeio[1] then
+    if Close > High[1] then
+      if Close > MediaBandasCurta then
+        if PrecoAcimaVWAP or PressaoCompradora then
+          if (not UsarAgressaoUltra) or PressaoCompradora or CVDSubindo then
+          if (not UsarDivergenciaVWAP) or DivergenciaCompradoraValida or (not DivergenciaVendedoraValida) then
+            ConfirmouArmadilhaMenosMeio := true;
+
+  // --- V12_versao8 — Confirmação do módulo Aceitação/Rejeição da Abertura ---
+  // Mesmo filtro de VWAP/CVD/Divergência das outras confirmações. Peso +3
+  // (mais que a Meio, +2) — decisão de Carlos, por exigir o precursor ±Meio.
+  ConfirmouAceitacaoAberturaCima  := false;
+  ConfirmouAceitacaoAberturaBaixo := false;
+  ConfirmouRejeicaoAberturaCima   := false;
+  ConfirmouRejeicaoAberturaBaixo  := false;
+
+  if AceitouAberturaCima[1] then
+    if Close > High[1] then
+      if Close > MediaBandasCurta then
+        if PrecoAcimaVWAP or PressaoCompradora then
+          if (not UsarAgressaoUltra) or PressaoCompradora or CVDSubindo then
+          if (not UsarDivergenciaVWAP) or DivergenciaCompradoraValida or (not DivergenciaVendedoraValida) then
+            ConfirmouAceitacaoAberturaCima := true;
+
+  if AceitouAberturaBaixo[1] then
+    if Close < Low[1] then
+      if Close < MediaBandasCurta then
+        if PrecoAbaixoVWAP or PressaoVendedora then
+          if (not UsarAgressaoUltra) or PressaoVendedora or CVDCaindo then
+          if (not UsarDivergenciaVWAP) or DivergenciaVendedoraValida or (not DivergenciaCompradoraValida) then
+            ConfirmouAceitacaoAberturaBaixo := true;
+
+  if RejeitouAberturaCima[1] then
+    if Close > High[1] then
+      if Close > MediaBandasCurta then
+        if PrecoAcimaVWAP or PressaoCompradora then
+          if (not UsarAgressaoUltra) or PressaoCompradora or CVDSubindo then
+          if (not UsarDivergenciaVWAP) or DivergenciaCompradoraValida or (not DivergenciaVendedoraValida) then
+            ConfirmouRejeicaoAberturaCima := true;
+
+  if RejeitouAberturaBaixo[1] then
+    if Close < Low[1] then
+      if Close < MediaBandasCurta then
+        if PrecoAbaixoVWAP or PressaoVendedora then
+          if (not UsarAgressaoUltra) or PressaoVendedora or CVDCaindo then
+          if (not UsarDivergenciaVWAP) or DivergenciaVendedoraValida or (not DivergenciaCompradoraValida) then
+            ConfirmouRejeicaoAberturaBaixo := true;
+
+  if RejeitouMais1[1] then
+    if Close < Low[1] then
+      if Close < MediaBandasCurta then
+        if PrecoAbaixoVWAP or PressaoVendedora then
+          if (not UsarAgressaoUltra) or PressaoVendedora or CVDCaindo then
+          if (not UsarDivergenciaVWAP) or DivergenciaVendedoraValida or (not DivergenciaCompradoraValida) then
+            ConfirmouRejeicaoMais1 := true;
+
+  if RejeitouMenos1[1] then
+    if Close > High[1] then
+      if Close > MediaBandasCurta then
+        if PrecoAcimaVWAP or PressaoCompradora then
+          if (not UsarAgressaoUltra) or PressaoCompradora or CVDSubindo then
+          if (not UsarDivergenciaVWAP) or DivergenciaCompradoraValida or (not DivergenciaVendedoraValida) then
+            ConfirmouRejeicaoMenos1 := true;
+
+  if ArmadilhaMais1[1] then
+    if Close < Low[1] then
+      if Close < MediaBandasCurta then
+        if PrecoAbaixoVWAP or PressaoVendedora then
+          if (not UsarAgressaoUltra) or PressaoVendedora or CVDCaindo then
+          if (not UsarDivergenciaVWAP) or DivergenciaVendedoraValida or (not DivergenciaCompradoraValida) then
+            ConfirmouArmadilhaMais1 := true;
+
+  if ArmadilhaMenos1[1] then
+    if Close > High[1] then
+      if Close > MediaBandasCurta then
+        if PrecoAcimaVWAP or PressaoCompradora then
+          if (not UsarAgressaoUltra) or PressaoCompradora or CVDSubindo then
+          if (not UsarDivergenciaVWAP) or DivergenciaCompradoraValida or (not DivergenciaVendedoraValida) then
+            ConfirmouArmadilhaMenos1 := true;
+
+  // --- Confirmações ±2% ---
+  ConfirmouRejeicaoMais2   := false;
+  ConfirmouRejeicaoMenos2  := false;
+  ConfirmouArmadilhaMais2  := false;
+  ConfirmouArmadilhaMenos2 := false;
+
+  if RejeitouMais2[1] then
+    if Close < Low[1] then
+      if Close < MediaBandasCurta then
+        if PrecoAbaixoVWAP or PressaoVendedora then
+          if (not UsarAgressaoUltra) or PressaoVendedora or CVDCaindo then
+          if (not UsarDivergenciaVWAP) or DivergenciaVendedoraValida or (not DivergenciaCompradoraValida) then
+            ConfirmouRejeicaoMais2 := true;
+
+  if RejeitouMenos2[1] then
+    if Close > High[1] then
+      if Close > MediaBandasCurta then
+        if PrecoAcimaVWAP or PressaoCompradora then
+          if (not UsarAgressaoUltra) or PressaoCompradora or CVDSubindo then
+          if (not UsarDivergenciaVWAP) or DivergenciaCompradoraValida or (not DivergenciaVendedoraValida) then
+            ConfirmouRejeicaoMenos2 := true;
+
+  if ArmadilhaMais2[1] then
+    if Close < Low[1] then
+      if Close < MediaBandasCurta then
+        if PrecoAbaixoVWAP or PressaoVendedora then
+          if (not UsarAgressaoUltra) or PressaoVendedora or CVDCaindo then
+          if (not UsarDivergenciaVWAP) or DivergenciaVendedoraValida or (not DivergenciaCompradoraValida) then
+            ConfirmouArmadilhaMais2 := true;
+
+  if ArmadilhaMenos2[1] then
+    if Close > High[1] then
+      if Close > MediaBandasCurta then
+        if PrecoAcimaVWAP or PressaoCompradora then
+          if (not UsarAgressaoUltra) or PressaoCompradora or CVDSubindo then
+          if (not UsarDivergenciaVWAP) or DivergenciaCompradoraValida or (not DivergenciaVendedoraValida) then
+            ConfirmouArmadilhaMenos2 := true;
+
+  // --- Confirmações ±3% ---
+  ConfirmouRejeicaoMais3   := false;
+  ConfirmouRejeicaoMenos3  := false;
+  ConfirmouArmadilhaMais3  := false;
+  ConfirmouArmadilhaMenos3 := false;
+
+  if RejeitouMais3[1] then
+    if Close < Low[1] then
+      if Close < MediaBandasCurta then
+        if PrecoAbaixoVWAP or PressaoVendedora then
+          if (not UsarAgressaoUltra) or PressaoVendedora or CVDCaindo then
+          if (not UsarDivergenciaVWAP) or DivergenciaVendedoraValida or (not DivergenciaCompradoraValida) then
+            ConfirmouRejeicaoMais3 := true;
+
+  if RejeitouMenos3[1] then
+    if Close > High[1] then
+      if Close > MediaBandasCurta then
+        if PrecoAcimaVWAP or PressaoCompradora then
+          if (not UsarAgressaoUltra) or PressaoCompradora or CVDSubindo then
+          if (not UsarDivergenciaVWAP) or DivergenciaCompradoraValida or (not DivergenciaVendedoraValida) then
+            ConfirmouRejeicaoMenos3 := true;
+
+  if ArmadilhaMais3[1] then
+    if Close < Low[1] then
+      if Close < MediaBandasCurta then
+        if PrecoAbaixoVWAP or PressaoVendedora then
+          if (not UsarAgressaoUltra) or PressaoVendedora or CVDCaindo then
+          if (not UsarDivergenciaVWAP) or DivergenciaVendedoraValida or (not DivergenciaCompradoraValida) then
+            ConfirmouArmadilhaMais3 := true;
+
+  if ArmadilhaMenos3[1] then
+    if Close > High[1] then
+      if Close > MediaBandasCurta then
+        if PrecoAcimaVWAP or PressaoCompradora then
+          if (not UsarAgressaoUltra) or PressaoCompradora or CVDSubindo then
+          if (not UsarDivergenciaVWAP) or DivergenciaCompradoraValida or (not DivergenciaVendedoraValida) then
+            ConfirmouArmadilhaMenos3 := true;
+
+  // ==========================================================================
+  // 12.5 — MÓDULO DE RASTREAMENTO: REGISTRAR NOVOS SINAIS ±2%/±3%
+  // ----------------------------------------------------------------------------
+  // Cada Armadilha Confirmada em ±1%/±2%/±3% grava sua ocorrência num slot do
+  // array circular (1..60). O resultado é avaliado e plotado N candles depois
+  // (Bloco 12.6), diretamente no candle de origem via PlotText.
+  // ==========================================================================
+
+  if NovoDia then
+    IndiceProximoTrack := 1;
+
+  if UsarRastreamento23 then
+  begin
+    if ConfirmouArmadilhaMais1 then
+    begin
+      PrecoRefTrack[IndiceProximoTrack]     := Close;
+      CandleOrigemTrack[IndiceProximoTrack] := CurrentBar();
+      DirecaoTrack[IndiceProximoTrack]      := -1; // venda
+      BandaTrack[IndiceProximoTrack]        := 1;
+      AtivoTrack[IndiceProximoTrack]        := true;
+      IndiceProximoTrack := IndiceProximoTrack + 1;
+      if IndiceProximoTrack > 60 then IndiceProximoTrack := 1;
+    end;
+
+    if ConfirmouArmadilhaMenos1 then
+    begin
+      PrecoRefTrack[IndiceProximoTrack]     := Close;
+      CandleOrigemTrack[IndiceProximoTrack] := CurrentBar();
+      DirecaoTrack[IndiceProximoTrack]      := 1;  // compra
+      BandaTrack[IndiceProximoTrack]        := 1;
+      AtivoTrack[IndiceProximoTrack]        := true;
+      IndiceProximoTrack := IndiceProximoTrack + 1;
+      if IndiceProximoTrack > 60 then IndiceProximoTrack := 1;
+    end;
+
+    if ConfirmouArmadilhaMais2 then
+    begin
+      PrecoRefTrack[IndiceProximoTrack]     := Close;
+      CandleOrigemTrack[IndiceProximoTrack] := CurrentBar();
+      DirecaoTrack[IndiceProximoTrack]      := -1; // venda
+      BandaTrack[IndiceProximoTrack]        := 2;
+      AtivoTrack[IndiceProximoTrack]        := true;
+      IndiceProximoTrack := IndiceProximoTrack + 1;
+      if IndiceProximoTrack > 60 then IndiceProximoTrack := 1;
+    end;
+
+    if ConfirmouArmadilhaMenos2 then
+    begin
+      PrecoRefTrack[IndiceProximoTrack]     := Close;
+      CandleOrigemTrack[IndiceProximoTrack] := CurrentBar();
+      DirecaoTrack[IndiceProximoTrack]      := 1;  // compra
+      BandaTrack[IndiceProximoTrack]        := 2;
+      AtivoTrack[IndiceProximoTrack]        := true;
+      IndiceProximoTrack := IndiceProximoTrack + 1;
+      if IndiceProximoTrack > 60 then IndiceProximoTrack := 1;
+    end;
+
+    if ConfirmouArmadilhaMais3 then
+    begin
+      PrecoRefTrack[IndiceProximoTrack]     := Close;
+      CandleOrigemTrack[IndiceProximoTrack] := CurrentBar();
+      DirecaoTrack[IndiceProximoTrack]      := -1;
+      BandaTrack[IndiceProximoTrack]        := 3;
+      AtivoTrack[IndiceProximoTrack]        := true;
+      IndiceProximoTrack := IndiceProximoTrack + 1;
+      if IndiceProximoTrack > 60 then IndiceProximoTrack := 1;
+    end;
+
+    if ConfirmouArmadilhaMenos3 then
+    begin
+      PrecoRefTrack[IndiceProximoTrack]     := Close;
+      CandleOrigemTrack[IndiceProximoTrack] := CurrentBar();
+      DirecaoTrack[IndiceProximoTrack]      := 1;
+      BandaTrack[IndiceProximoTrack]        := 3;
+      AtivoTrack[IndiceProximoTrack]        := true;
+      IndiceProximoTrack := IndiceProximoTrack + 1;
+      if IndiceProximoTrack > 60 then IndiceProximoTrack := 1;
+    end;
+  end;
+
+  // ==========================================================================
+  // 12.6 — MÓDULO DE RASTREAMENTO: AVALIAR E PLOTAR RESULTADOS PENDENTES
+  // ----------------------------------------------------------------------------
+  // Para cada slot ativo, verifica se já se passaram CandlesParaAvaliar desde
+  // a origem. Se sim, compara o preço atual com o de referência e plota o
+  // resultado (ACERTO/ERRO) diretamente no candle de origem, usando o mesmo
+  // preço/candle salvo — não no candle atual.
+  // ==========================================================================
+
+  if UsarRastreamento23 then
+  begin
+    for IndiceRastreamento := 1 to 60 do
+    begin
+      if AtivoTrack[IndiceRastreamento] then
+      begin
+        ContadorCandlesTrack := CurrentBar() - CandleOrigemTrack[IndiceRastreamento];
+
+        if ContadorCandlesTrack >= CandlesParaAvaliar then
+        begin
+          VariacaoTrack := (Close - PrecoRefTrack[IndiceRastreamento]) * DirecaoTrack[IndiceRastreamento];
+
+          if VariacaoTrack >= PontosMinimosAcerto then
+          begin
+            TextoResultadoTrack := "ACERTO +" + FloatToString(VariacaoTrack, 0) + "pts (±"
+                                    + FloatToString(BandaTrack[IndiceRastreamento], 0) + "%)";
+            CorResultadoTrack := RGB(11, 218, 94);
+          end
+          else if VariacaoTrack <= (0 - PontosMinimosAcerto) then
+          begin
+            TextoResultadoTrack := "ERRO " + FloatToString(VariacaoTrack, 0) + "pts (±"
+                                    + FloatToString(BandaTrack[IndiceRastreamento], 0) + "%)";
+            CorResultadoTrack := RGB(218, 11, 11);
+          end
+          else
+          begin
+            TextoResultadoTrack := "NEUTRO " + FloatToString(VariacaoTrack, 0) + "pts (±"
+                                    + FloatToString(BandaTrack[IndiceRastreamento], 0) + "%)";
+            CorResultadoTrack := clGray;
+          end;
+
+          // Plota no PREÇO DE REFERÊNCIA da origem, offset abaixo/acima conforme direção,
+          // permanece fixo no candle histórico correspondente (Position=3 usa o preço,
+          // não reposiciona pelo candle atual)
+          if DirecaoTrack[IndiceRastreamento] = 1 then
+            PlotText(DataTextoAlerta + TextoResultadoTrack, CorResultadoTrack, 3, 8,
+                     PrecoRefTrack[IndiceRastreamento] - (EspacoTexto * 7))
+          else
+            PlotText(DataTextoAlerta + TextoResultadoTrack, CorResultadoTrack, 3, 8,
+                     PrecoRefTrack[IndiceRastreamento] + (EspacoTexto * 7));
+
+          AtivoTrack[IndiceRastreamento] := false;
+        end;
+      end;
+    end;
+  end;
+
+  // ==========================================================================
+  // 13. LEITURA DAS MÉDIAS
+  // ==========================================================================
+
+  MediaCurtaSubindo    := MediaBandasCurta > MediaBandasCurta[1];
+  MediaCurtaCaindo     := MediaBandasCurta < MediaBandasCurta[1];
+  MediaLongaSubindo    := MediaBandasLonga > MediaBandasLonga[1];
+  MediaLongaCaindo     := MediaBandasLonga < MediaBandasLonga[1];
+  CurtaAcimaLonga      := MediaBandasCurta > MediaBandasLonga;
+  CurtaAbaixoLonga     := MediaBandasCurta < MediaBandasLonga;
+  CruzouCurtaParaCima  := (MediaBandasCurta > MediaBandasLonga) and (MediaBandasCurta[1] <= MediaBandasLonga[1]);
+  CruzouCurtaParaBaixo := (MediaBandasCurta < MediaBandasLonga) and (MediaBandasCurta[1] >= MediaBandasLonga[1]);
+
+  // ##########################################################################
+  // PARTE 1.5 — CUMULATIVE VOLUME ANÔMALO (8 janelas horárias)
+  // Precisa rodar ANTES do cálculo do Score (Bloco 14), pois o resultado
+  // (AlertaVolumeAnomalo) influencia o limiar de contexto usado no Score.
+  // ##########################################################################
+
+  // --- Atualização do histórico ao virar o dia ---
+  if NovoDia then
+  begin
+    for iJanela := 1 to 8 do
+    begin
+      if VolNoFimJanela[iJanela] > 0 then
+      begin
+        if DiasJanela[iJanela] = 0 then
+        begin
+          MediaVolJanela[iJanela] := VolNoFimJanela[iJanela];
+          DiasJanela[iJanela] := 1;
+        end
+        else
+        begin
+          NovoValorJanela := VolNoFimJanela[iJanela];
+          MediaVolJanela[iJanela] := MediaVolJanela[iJanela] +
+            ((NovoValorJanela - MediaVolJanela[iJanela]) / (DiasJanela[iJanela] + 1));
+          DiasJanela[iJanela] := DiasJanela[iJanela] + 1;
+        end;
+      end;
+    end;
+
+    VolumeAcumuladoHoje := Volume;
+
+    for iJanela := 1 to 8 do
+      VolNoFimJanela[iJanela] := 0;
+  end
+  else
+  begin
+    VolumeAcumuladoHoje := VolumeAcumuladoHoje[1] + Volume;
+  end;
+
+  // --- Identificação da janela horária atual ---
+  JanelaAtual := 0;
+
+  if Time < JanelaFim1 then JanelaAtual := 1
+  else if Time < JanelaFim2 then JanelaAtual := 2
+  else if Time < JanelaFim3 then JanelaAtual := 3
+  else if Time < JanelaFim4 then JanelaAtual := 4
+  else if Time < JanelaFim5 then JanelaAtual := 5
+  else if Time < JanelaFim6 then JanelaAtual := 6
+  else if Time < JanelaFim7 then JanelaAtual := 7
+  else JanelaAtual := 8;
+
+  JanelaAnterior := JanelaAtual[1];
+  FechouJanela := (JanelaAtual <> JanelaAnterior) and (not NovoDia);
+
+  // --- Registrar volume no fechamento/curso da janela ---
+  if FechouJanela then
+  begin
+    if JanelaAnterior >= 1 then
+      if JanelaAnterior <= 8 then
+        VolNoFimJanela[JanelaAnterior] := VolumeAcumuladoHoje[1];
+  end;
+
+  if JanelaAtual >= 1 then
+    if JanelaAtual <= 8 then
+      VolNoFimJanela[JanelaAtual] := VolumeAcumuladoHoje;
+
+  // --- Comparação contra a média histórica da janela ---
+  RefHistoricaAtual := 0;
+  RatioVolumeAnomalo := 1;
+  AlertaVolumeAnomalo := false;
+
+  if JanelaAtual >= 1 then
+    if JanelaAtual <= 8 then
+      RefHistoricaAtual := MediaVolJanela[JanelaAtual];
+
+  if DiasJanela[JanelaAtual] >= MinimoDiasParaComparar then
+  begin
+    if RefHistoricaAtual > 0 then
+    begin
+      RatioVolumeAnomalo := VolumeAcumuladoHoje / RefHistoricaAtual;
+
+      if RatioVolumeAnomalo >= FatorAlertaAnomalia then
+        AlertaVolumeAnomalo := true;
+    end;
+  end;
+
+  // --- Limiar de Score dinâmico (reforço B do filtro B+D) ---
+  if AlertaVolumeAnomalo then
+    DiferencaMinimaScoreEfetiva := DiferencaMinimaScore + ReforcoScoreEmAlerta
+  else
+    DiferencaMinimaScoreEfetiva := DiferencaMinimaScore;
+
+  // ##########################################################################
+  // PARTE 1.6 — FORÇA DO VOLUME (0-100)
+  // ----------------------------------------------------------------------------
+  // Combina a força do candle individual (vs média de PeriodoMediaVolume)
+  // com a força do dia acumulado (vs histórico da janela horária atual),
+  // em uma única nota contínua de 0 a 100. Não bloqueia nada — é informação
+  // visual para validação manual da qualidade de uma entrada.
+  //
+  // ForcaCandle: Volume/MediaVolume normalizado — ratio 1.0 (na média) = 50.
+  // ForcaDia: RatioVolumeAnomalo normalizado — mesma lógica.
+  // Pesos: 40% candle, 60% dia (contexto geral pesa mais que o candle isolado).
+  // ##########################################################################
+
+  if MediaVolume > 0 then
+    ForcaCandle := Min((Volume / MediaVolume) * 50, 100)
+  else
+    ForcaCandle := 50;
+
+  ForcaDia := Min(RatioVolumeAnomalo * 50, 100);
+
+  ForcaVolume := (PesoForcaCandle * ForcaCandle) + (PesoForcaDia * ForcaDia);
+
+  // --- Faixas de cor por intensidade (escala de calor — não compete com
+  //     a paleta de eventos do PaintBar principal) ---
+  if ForcaVolume < 20 then
+    CorForcaVolume := RGB(90, 95, 105)      // Fraco — cinza-azulado
+  else if ForcaVolume < 40 then
+    CorForcaVolume := RGB(120, 140, 80)     // Médio — verde-oliva
+  else if ForcaVolume < 60 then
+    CorForcaVolume := RGB(220, 200, 60)     // Bom — amarelo
+  else if ForcaVolume < 80 then
+    CorForcaVolume := RGB(240, 140, 40)     // Forte — laranja
+  else
+    CorForcaVolume := RGB(240, 60, 40);     // Extremo — vermelho-quente
+
+  // ==========================================================================
+  // 14. SCORE BRICKMASTER
+  // ==========================================================================
+
+  ScoreComprador := 0;
+  ScoreVendedor  := 0;
+
+  if Close > AberturaDia then ScoreComprador := ScoreComprador + 1;
+  if Close < AberturaDia then ScoreVendedor  := ScoreVendedor  + 1;
+
+  if MediaCurtaSubindo    then ScoreComprador := ScoreComprador + 1;
+  if MediaCurtaCaindo     then ScoreVendedor  := ScoreVendedor  + 1;
+  if MediaLongaSubindo    then ScoreComprador := ScoreComprador + 1;
+  if MediaLongaCaindo     then ScoreVendedor  := ScoreVendedor  + 1;
+  if CurtaAcimaLonga      then ScoreComprador := ScoreComprador + 1;
+  if CurtaAbaixoLonga     then ScoreVendedor  := ScoreVendedor  + 1;
+
+  if CruzouCurtaParaCima  then ScoreComprador := ScoreComprador + 2;
+  if CruzouCurtaParaBaixo then ScoreVendedor  := ScoreVendedor  + 2;
+
+  // --- Banda Meio (±0,5%) — peso leve, conforme decisão operacional ---
+  if ConfirmouRejeicaoMenosMeio   then ScoreComprador := ScoreComprador + 0.5;
+  if ConfirmouRejeicaoMaisMeio    then ScoreVendedor  := ScoreVendedor  + 0.5;
+  if ConfirmouArmadilhaMenosMeio  then ScoreComprador := ScoreComprador + 0.5;
+  if ConfirmouArmadilhaMaisMeio   then ScoreVendedor  := ScoreVendedor  + 0.5;
+
+  // --- V12_versao8 — Módulo Abertura: maior peso do sistema (+3), exige o
+  // precursor ±Meio já ter sido tocado no dia. Só Score — nunca gera ordem.
+  if ConfirmouAceitacaoAberturaCima   then ScoreComprador := ScoreComprador + 3;
+  if ConfirmouAceitacaoAberturaBaixo  then ScoreVendedor  := ScoreVendedor  + 3;
+  if ConfirmouRejeicaoAberturaCima    then ScoreComprador := ScoreComprador + 3;
+  if ConfirmouRejeicaoAberturaBaixo   then ScoreVendedor  := ScoreVendedor  + 3;
+
+  // --- V12_versao9 — Módulo de Recusa: só pesa se coincidir com uma banda ---
+  if LowerRejectionRecusa and ReversalCandidateRecusa and RecusaGateBanda then
+    ScoreComprador := ScoreComprador + 3;
+
+  if UpperRejectionRecusa and ReversalCandidateRecusa and RecusaGateBanda then
+    ScoreVendedor := ScoreVendedor + 3;
+
+
+  // --- Banda ±1% ---
+  if AceitouMais1         then ScoreComprador := ScoreComprador + 1;
+  if AceitouMenos1        then ScoreVendedor  := ScoreVendedor  + 1;
+
+  if RejeitouMenos1       then ScoreComprador := ScoreComprador + 1;
+  if RejeitouMais1        then ScoreVendedor  := ScoreVendedor  + 1;
+
+  if ArmadilhaMenos1      then ScoreComprador := ScoreComprador + 2;
+  if ArmadilhaMais1       then ScoreVendedor  := ScoreVendedor  + 2;
+
+  if ConfirmouRejeicaoMenos1   then ScoreComprador := ScoreComprador + 2;
+  if ConfirmouRejeicaoMais1    then ScoreVendedor  := ScoreVendedor  + 2;
+  if ConfirmouArmadilhaMenos1  then ScoreComprador := ScoreComprador + 2;
+  if ConfirmouArmadilhaMais1   then ScoreVendedor  := ScoreVendedor  + 2;
+
+  // --- Bandas ±2% — peso 1 (menor que ±1% mas operacionalmente relevante) ---
+  if ConfirmouRejeicaoMenos2   then ScoreComprador := ScoreComprador + 1;
+  if ConfirmouRejeicaoMais2    then ScoreVendedor  := ScoreVendedor  + 1;
+  if ConfirmouArmadilhaMenos2  then ScoreComprador := ScoreComprador + 1;
+  if ConfirmouArmadilhaMais2   then ScoreVendedor  := ScoreVendedor  + 1;
+
+  // --- Bandas ±3% — peso 1.5 (evento raro, força institucional elevada) ---
+  if ConfirmouRejeicaoMenos3   then ScoreComprador := ScoreComprador + 1.5;
+  if ConfirmouRejeicaoMais3    then ScoreVendedor  := ScoreVendedor  + 1.5;
+  if ConfirmouArmadilhaMenos3  then ScoreComprador := ScoreComprador + 1.5;
+  if ConfirmouArmadilhaMais3   then ScoreVendedor  := ScoreVendedor  + 1.5;
+
+  if VolumeForte then
+  begin
+    if CandleAlta  then ScoreComprador := ScoreComprador + 1;
+    if CandleBaixa then ScoreVendedor  := ScoreVendedor  + 1;
+  end;
+
+  if PressaoCompradora then ScoreComprador := ScoreComprador + 1;
+  if PressaoVendedora  then ScoreVendedor  := ScoreVendedor  + 1;
+
+  if PrecoAcimaVWAP   then ScoreComprador := ScoreComprador + 1;
+  if PrecoAbaixoVWAP  then ScoreVendedor  := ScoreVendedor  + 1;
+
+  // --- Peso de agressão real (Ultra) ---
+  if UsarAgressaoUltra then
+  begin
+    if PressaoCompradora then ScoreComprador := ScoreComprador + PesoAgressaoScore;
+    if PressaoVendedora  then ScoreVendedor  := ScoreVendedor  + PesoAgressaoScore;
+    if CVDSubindo        then ScoreComprador := ScoreComprador + (PesoAgressaoScore * 0.5);
+    if CVDCaindo         then ScoreVendedor  := ScoreVendedor  + (PesoAgressaoScore * 0.5);
+  end;
+
+  // --- Peso de Divergência VWAP (Abertura vs Fechamento) ---
+  if UsarDivergenciaVWAP then
+  begin
+    if DivergenciaCompradoraValida then ScoreComprador := ScoreComprador + PesoDivergenciaScore;
+    if DivergenciaVendedoraValida  then ScoreVendedor  := ScoreVendedor  + PesoDivergenciaScore;
+
+    // --- Reforço extra no candle exato do Cruzamento Confirmado ---
+    // Mesmo peso da divergência contínua (conforme decisão operacional),
+    // aplicado APENAS no candle em que a divergência nasce (borda de subida) —
+    // soma-se ao peso de continuação acima, gerando um pico de Score naquele
+    // candle específico, sem alterar a lógica de continuação nos demais.
+    if CruzouVWAPParaCima  then ScoreComprador := ScoreComprador + PesoDivergenciaScore;
+    if CruzouVWAPParaBaixo then ScoreVendedor  := ScoreVendedor  + PesoDivergenciaScore;
+  end;
+
+  if MovimentoRapidoMais1  and AceitouMais1  then ScoreComprador := ScoreComprador + 1;
+  if MovimentoRapidoMenos1 and AceitouMenos1 then ScoreVendedor  := ScoreVendedor  + 1;
+  if MovimentoRapidoMais2  and AceitouMais2  then ScoreComprador := ScoreComprador + 2;
+  if MovimentoRapidoMenos2 and AceitouMenos2 then ScoreVendedor  := ScoreVendedor  + 2;
+
+  // --- Contexto usa o limiar EFETIVO (reforçado se alerta de volume ativo) ---
+  ContextoComprador := ScoreComprador >= (ScoreVendedor + DiferencaMinimaScoreEfetiva);
+  ContextoVendedor  := ScoreVendedor  >= (ScoreComprador + DiferencaMinimaScoreEfetiva);
+  ContextoNeutro    := not ContextoComprador and not ContextoVendedor;
+
+  // ==========================================================================
+  // 15. DIA DIRECIONAL
+  // ==========================================================================
+
+  DiaDirecionalCompra := false;
+  DiaDirecionalVenda  := false;
+
+  if ContextoComprador then
+    if CurtaAcimaLonga then
+      if MediaCurtaSubindo then
+        if AceitouMais1 then
+          if PrecoAcimaVWAP then
+            DiaDirecionalCompra := true;
+
+  if ContextoVendedor then
+    if CurtaAbaixoLonga then
+      if MediaCurtaCaindo then
+        if AceitouMenos1 then
+          if PrecoAbaixoVWAP then
+            DiaDirecionalVenda := true;
+
+  // ==========================================================================
+  // 16. PAINEL OPERACIONAL INTERNO
+  // ==========================================================================
+
+  SaldoScore      := ScoreComprador - ScoreVendedor;
+  ForcaDirecional := Abs(SaldoScore);
+
+  PainelCompraForte := ContextoComprador and (ForcaDirecional >= DiferencaMinimaScoreEfetiva);
+  PainelVendaForte  := ContextoVendedor  and (ForcaDirecional >= DiferencaMinimaScoreEfetiva);
+  PainelNeutro      := not PainelCompraForte and not PainelVendaForte;
+
+  // ##########################################################################
+  // 1.6. MÓDULO DE RECUSA (V12_versao9)
+  // ----------------------------------------------------------------------------
+  // Base: código fornecido por Carlos (gerado com apoio de ChatGPT), auditado
+  // e corrigido antes de acoplar. Analisa estrutura do candle (corpo/pavio/
+  // eficiência), progressão e persistência da rejeição numa janela de 5
+  // candles, e confirmação por volume + delta de agressão.
+  //
+  // CORREÇÕES FEITAS NA AUDITORIA (não estavam no código original):
+  // 1. PlotText original passava um PREÇO no parâmetro Position (3º arg) —
+  //    a sintaxe real é PlotText(Content, Color, Position, FontSize, Price).
+  //    Removido: este módulo não usa PlotText próprio, ver N-tier abaixo.
+  // 2. NoPlot(5) excede o limite da função (só aceita 1 a 4, Seção 19.17 do
+  //    Manual NTSL v4.1) — e os 9 slots de Plot do Brickmaster já estão
+  //    ocupados pelas bandas/médias. DE/RI/URE/LRE/State NÃO são plotados
+  //    como linha própria — viram Score + PaintBar + Alert, como o resto
+  //    do sistema já funciona.
+  // 3. Limiares fixos no código (não-input, por decisão de Carlos): Janela=5,
+  //    MinSlope=2.0, MinAcceleration=1.0, MinPersistence=4, VolumeMedia=20,
+  //    MinDeltaDivergence=0.0. MinWick calibrado de 25 -> 35 (mais rigoroso,
+  //    alinhado ao Corpo*1.5 que o resto do Brickmaster já usa como pavio).
+  // 4. GATE OBRIGATÓRIO (decisão de Carlos): só conta/pesa Score se o candle
+  //    também tocar uma banda existente (Meio/±1/±2/±3/Abertura) — não é um
+  //    módulo independente rodando solto no gráfico.
+  // ##########################################################################
+
+  if CurrentBar > 5 then
+  begin
+
+    RngRecusa  := High - Low;
+    BodyRecusa := Abs(Close - Open);
+    DispRecusa := Close - Open;
+
+    if RngRecusa > 0 then
+    begin
+      DERecusa := (BodyRecusa / RngRecusa) * 100.0;
+      RIRecusa := 100.0 - DERecusa;
+
+      UpperWickRecusa := High - Max(Open, Close);
+      LowerWickRecusa := Min(Open, Close) - Low;
+
+      UpperWickPctRecusa := (UpperWickRecusa / RngRecusa) * 100.0;
+      LowerWickPctRecusa := (LowerWickRecusa / RngRecusa) * 100.0;
+
+      CloseLocationRecusa := ((Close - Low) / RngRecusa) * 100.0;
+      HighFailureRecusa   := 100.0 - CloseLocationRecusa;
+      LowFailureRecusa    := CloseLocationRecusa;
+
+      URERecusa := UpperWickPctRecusa * (HighFailureRecusa / 100.0);
+      LRERecusa := LowerWickPctRecusa * (LowFailureRecusa / 100.0);
+    end
+    else
+    begin
+      DERecusa := 0; RIRecusa := 0;
+      UpperWickRecusa := 0; LowerWickRecusa := 0;
+      UpperWickPctRecusa := 0; LowerWickPctRecusa := 0;
+      CloseLocationRecusa := 50; HighFailureRecusa := 50; LowFailureRecusa := 50;
+      URERecusa := 0; LRERecusa := 0;
+    end;
+
+    // --- Progressão (janela fixa de 5) ---
+    UREPrevRecusa := URERecusa[1];
+    LREPrevRecusa := LRERecusa[1];
+
+    URPRecusa := URERecusa - UREPrevRecusa;
+    LRPRecusa := LRERecusa - LREPrevRecusa;
+
+    URPPrevRecusa := URERecusa[1] - URERecusa[2];
+    LRPPrevRecusa := LRERecusa[1] - LRERecusa[2];
+
+    URSlopeRecusa := (URERecusa - URERecusa[5]) / 5;
+    LRSlopeRecusa := (LRERecusa - LRERecusa[5]) / 5;
+
+    URAccelRecusa := URPRecusa - URPPrevRecusa;
+    LRAccelRecusa := LRPRecusa - LRPPrevRecusa;
+
+    // --- Persistência (4 de 5 candles) ---
+    CountUpperRecusa := 0;
+    CountLowerRecusa := 0;
+
+    for iRecusa := 0 to 4 do
+    begin
+      if URERecusa[iRecusa] >= MinEvidenceRecusa then
+        CountUpperRecusa := CountUpperRecusa + 1;
+      if LRERecusa[iRecusa] >= MinEvidenceRecusa then
+        CountLowerRecusa := CountLowerRecusa + 1;
+    end;
+
+    PersistentUpperRecusa := CountUpperRecusa >= 4;
+    PersistentLowerRecusa := CountLowerRecusa >= 4;
+
+    // --- Extreme Rejection Divergence ---
+    ERDUpRecusa   := false;
+    ERDDownRecusa := false;
+
+    if CurrentBar > 1 then
+    begin
+      if (High > High[1]) and (URERecusa > URERecusa[1]) and (DERecusa < DERecusa[1]) then
+        ERDUpRecusa := true;
+
+      if (Low < Low[1]) and (LRERecusa > LRERecusa[1]) and (DERecusa < DERecusa[1]) then
+        ERDDownRecusa := true;
+    end;
+
+    // --- Volume relativo ---
+    VolMediaRecusa := MediaExp(20, Volume);
+
+    if VolMediaRecusa > 0 then
+      VolumeRatioRecusa := Volume / VolMediaRecusa
+    else
+      VolumeRatioRecusa := 1.0;
+
+    // --- Delta de agressão (ISOLADO — V12_versao11) ---
+    // AgressionVolBalance() requer Scalper, indisponível na conta atual.
+    // Reaproveita AgressaoBalance (já calculado no proxy acima, sempre 0
+    // sem Scalper) em vez de chamar a função restrita de novo. Efeito:
+    // FlowDivergenceRecusa fica permanentemente 0 no proxy — a divergência
+    // de delta não contribui, mas a Confirmação de Fluxo continua funcionando
+    // via Volume Ratio (MinVolumeRatioRecusa), como o resto do sistema já
+    // faz quando Ultra está isolado. Para reativar com Scalper: trocar
+    // "AgressaoBalance" por "AgressionVolBalance()" abaixo.
+    DeltaAtualRecusa    := AgressaoBalance;
+    DeltaAnteriorRecusa := DeltaAtualRecusa[1];
+    DeltaChangeRecusa   := DeltaAtualRecusa - DeltaAnteriorRecusa;
+    PriceChangeRecusa   := Close - Close[1];
+
+    FlowDivergenceRecusa := 0;
+
+    if (PriceChangeRecusa > 0) and (DeltaChangeRecusa < 0.0) then
+      FlowDivergenceRecusa := -1;
+
+    if (PriceChangeRecusa < 0) and (DeltaChangeRecusa > 0.0) then
+      FlowDivergenceRecusa := 1;
+
+    // --- Classificação primária ---
+    UpperRejectionRecusa := false;
+    LowerRejectionRecusa := false;
+
+    if (RIRecusa >= MinRIRecusa) and (UpperWickPctRecusa >= MinWickRecusa) and (URERecusa >= MinEvidenceRecusa) then
+      UpperRejectionRecusa := true;
+
+    if (RIRecusa >= MinRIRecusa) and (LowerWickPctRecusa >= MinWickRecusa) and (LRERecusa >= MinEvidenceRecusa) then
+      LowerRejectionRecusa := true;
+
+    // --- Progressão (limiares fixos: slope>=2.0, aceleração>=1.0) ---
+    ProgressiveRecusa := false;
+
+    if ((UpperRejectionRecusa and (URSlopeRecusa >= 2.0) and (URAccelRecusa >= 1.0))
+        or (LowerRejectionRecusa and (LRSlopeRecusa >= 2.0) and (LRAccelRecusa >= 1.0))) then
+      ProgressiveRecusa := true;
+
+    // --- Persistência ---
+    PersistentRecusa := false;
+
+    if ((UpperRejectionRecusa and PersistentUpperRecusa) or (LowerRejectionRecusa and PersistentLowerRecusa)) then
+      PersistentRecusa := true;
+
+    // --- Confirmação de fluxo (volume + delta) ---
+    FlowConfirmedRecusa := false;
+
+    if UpperRejectionRecusa
+       and ((FlowDivergenceRecusa = -1) or (DeltaAtualRecusa < DeltaAnteriorRecusa))
+       and (VolumeRatioRecusa >= MinVolumeRatioRecusa) then
+      FlowConfirmedRecusa := true;
+
+    if LowerRejectionRecusa
+       and ((FlowDivergenceRecusa = 1) or (DeltaAtualRecusa > DeltaAnteriorRecusa))
+       and (VolumeRatioRecusa >= MinVolumeRatioRecusa) then
+      FlowConfirmedRecusa := true;
+
+    // --- Máquina de estados (0-7) ---
+    StateRecusa := 0;
+
+    if RIRecusa >= MinRIRecusa then
+      StateRecusa := 1;
+
+    if UpperRejectionRecusa or LowerRejectionRecusa then
+      StateRecusa := 2;
+
+    if (UpperRejectionRecusa or LowerRejectionRecusa) and ((URERecusa >= MinEvidenceRecusa) or (LRERecusa >= MinEvidenceRecusa)) then
+      StateRecusa := 3;
+
+    if ProgressiveRecusa then
+      StateRecusa := 4;
+
+    if PersistentRecusa then
+      StateRecusa := 5;
+
+    if FlowConfirmedRecusa then
+      StateRecusa := 6;
+
+    // --- Candidato a reversão (Estado 7) ---
+    ReversalCandidateRecusa := false;
+
+    if UpperRejectionRecusa and ProgressiveRecusa and PersistentRecusa and FlowConfirmedRecusa then
+      ReversalCandidateRecusa := true;
+
+    if LowerRejectionRecusa and ProgressiveRecusa and PersistentRecusa and FlowConfirmedRecusa then
+      ReversalCandidateRecusa := true;
+
+    if ReversalCandidateRecusa then
+      StateRecusa := 7;
+
+    // --- V12_versao9: GATE OBRIGATÓRIO — só conta se bater numa banda ---
+    RecusaGateBanda := TocouMaisMeio or TocouMenosMeio
+                        or TocouMais1 or TocouMenos1
+                        or TocouMais2 or TocouMenos2
+                        or TocouMais3 or TocouMenos3
+                        or TocouAbertura;
+
+    TextoBandaRecusa := "";
+    if TocouMaisMeio or TocouMenosMeio then TextoBandaRecusa := TextoBandaRecusa + "Meio ";
+    if TocouMais1 or TocouMenos1       then TextoBandaRecusa := TextoBandaRecusa + "1% ";
+    if TocouMais2 or TocouMenos2       then TextoBandaRecusa := TextoBandaRecusa + "2% ";
+    if TocouMais3 or TocouMenos3       then TextoBandaRecusa := TextoBandaRecusa + "3% ";
+    if TocouAbertura                  then TextoBandaRecusa := TextoBandaRecusa + "Abertura ";
+
+  end;
+
+  // ##########################################################################
+  // PARTE 2 — MÓDULO DE EXECUÇÃO
+  // Tudo abaixo depende das variáveis calculadas nas Partes 1 e 1.5.
+  // ##########################################################################
+
+  // ==========================================================================
+  // E0. CONTROLE DE REPROCESSAMENTO DE CANDLE
+  // ==========================================================================
+
+  CandleAtual := CurrentBar();
+  PodeProcessarCandle := false;
+
+  if CandleAtual <> UltimoCandleProcessado then
+  begin
+    PodeProcessarCandle := true;
+    UltimoCandleProcessado := CandleAtual;
+  end;
+
+  // ==========================================================================
+  // E1. SINAL
+  // ==========================================================================
+
+  SinalCompra := false;
+  SinalVenda  := false;
+
+  if UsarSinalRejeicaoConfirmada then
+  begin
+    if ConfirmouRejeicaoMenos1 then SinalCompra := true;
+    if ConfirmouRejeicaoMais1  then SinalVenda  := true;
+  end;
+
+  if UsarSinalArmadilhaConfirmada then
+  begin
+    if ConfirmouArmadilhaMenos1 then SinalCompra := true;
+    if ConfirmouArmadilhaMais1  then SinalVenda  := true;
+  end;
+
+  // --- Banda Meio (±0,5%) — Armadilha Confirmada entra na Camada 1 ---
+  if UsarSinalArmadilhaMeio then
+  begin
+    if ConfirmouArmadilhaMenosMeio then SinalCompra := true;
+    if ConfirmouArmadilhaMaisMeio  then SinalVenda  := true;
+  end;
+
+  if UsarSinalDiaDirecional then
+  begin
+    if DiaDirecionalCompra then SinalCompra := true;
+    if DiaDirecionalVenda  then SinalVenda  := true;
+  end;
+
+  // ==========================================================================
+  // E2. PERMISSÃO
+  // ==========================================================================
+
+  DentroHorarioOperacional := false;
+
+  if (Time >= HorarioInicioM1) and (Time <= HorarioFimM1) then
+    DentroHorarioOperacional := true;
+
+  if (Time >= HorarioInicioM2) and (Time <= HorarioFimM2) then
+    DentroHorarioOperacional := true;
+
+  if ResultadoDiario <= (0 - PerdaMaximaDiaria) then
+    TravaPerdaAtiva := true;
+
+  if UsarTravaDeGanho then
+    if ResultadoDiario >= GanhoMaximoDiario then
+      TravaGanhoAtiva := true;
+
+  // --- Trava financeira real (Ultra) — DailyResult() em R$ ---
+  if UsarTravaDiariaFinanceira then
+  begin
+    ResultadoFinanceiroHoje := DailyResult(true); // inclui resultado da posição em aberto
+
+    if ResultadoFinanceiroHoje <= (0 - PerdaMaximaDiariaRS) then
+      TravaFinanceiraAtiva := true;
+
+    if UsarTravaGanhoRS then
+      if ResultadoFinanceiroHoje >= GanhoMaximoDiarioRS then
+        TravaGanhoFinanceiraAtiva := true;
+  end;
+
+  PermissaoOperar := true;
+
+  if not DentroHorarioOperacional then
+    PermissaoOperar := false;
+
+  if TravaPerdaAtiva then
+    PermissaoOperar := false;
+
+  if TravaGanhoAtiva then
+    PermissaoOperar := false;
+
+  if UsarTravaDiariaFinanceira then
+  begin
+    if TravaFinanceiraAtiva then
+      PermissaoOperar := false;
+
+    if TravaGanhoFinanceiraAtiva then
+      PermissaoOperar := false;
+  end;
+
+  if OperacoesHoje >= MaxOperacoesPorDia then
+    PermissaoOperar := false;
+
+  if not PodeProcessarCandle then
+    PermissaoOperar := false;
+
+  PermissaoCompra := PermissaoOperar and SinalCompra and (not HasPosition);
+  PermissaoVenda  := PermissaoOperar and SinalVenda  and (not HasPosition);
+
+  // --- Ultra: condições de reversão (posição aberta no lado errado) ---
+  PermissaoReversaoCompra := false;
+  PermissaoReversaoVenda  := false;
+
+  if UsarReversaoAutomatica then
+  begin
+    if PermissaoOperar then
+    begin
+      if SinalCompra and IsSold then
+        PermissaoReversaoCompra := true;
+
+      if SinalVenda and IsBought then
+        PermissaoReversaoVenda := true;
+    end;
+  end;
+
+  // ==========================================================================
+  // E3. EXECUÇÃO
+  // ==========================================================================
+
+  if PermissaoCompra then
+  begin
+    CancelPendingOrders;
+    BuyStop(Close + (OffsetExecucao * MinPriceIncrement),
+            Close + (OffsetExecucao * MinPriceIncrement) + (OffsetExecucao * MinPriceIncrement));
+    OperacoesHoje := OperacoesHoje + 1;
+  end;
+
+  if PermissaoVenda then
+  begin
+    CancelPendingOrders;
+    SellShortStop(Close - (OffsetExecucao * MinPriceIncrement),
+                  Close - (OffsetExecucao * MinPriceIncrement) - (OffsetExecucao * MinPriceIncrement));
+    OperacoesHoje := OperacoesHoje + 1;
+  end;
+
+  // ==========================================================================
+  // E4 — REVERSÃO AUTOMÁTICA (Ultra — ReversePosition)
+  // ----------------------------------------------------------------------------
+  // Armadilha confirmada no sentido oposto à posição aberta. Em vez de esperar
+  // o stop, inverte imediatamente via ReversePosition(). Requer confirmação
+  // completa (mesmos filtros de PermissaoCompra/Venda), não apenas o sinal.
+  // ==========================================================================
+
+  if PermissaoReversaoCompra and not ReversaoExecutada then
+  begin
+    CancelPendingOrders;
+    ReversePosition();
+    OperacoesHoje := OperacoesHoje + 1;
+    ReversaoExecutada := true;
+  end;
+
+  if PermissaoReversaoVenda and not ReversaoExecutada then
+  begin
+    CancelPendingOrders;
+    ReversePosition();
+    OperacoesHoje := OperacoesHoje + 1;
+    ReversaoExecutada := true;
+  end;
+
+  if not HasPosition then
+    ReversaoExecutada := false;
+
+  // ##########################################################################
+  // PARTE 2.5 — SAÍDA: STOP FIXO (FASE 1) E TRAILING M9 (FASE 2)
+  // ##########################################################################
+
+  if not HasPosition then
+  begin
+    TrailingAtivoCompra   := false;
+    TrailingAtivoVenda    := false;
+    AlertTrailingC        := false;
+    AlertTrailingV        := false;
+    StopTrailingAnteriorC := 0;
+    StopTrailingAnteriorV := 0;
+  end;
+
+  // --- POSIÇÃO COMPRADA ---
+  if IsBought then
+  begin
+    LucroAtualPontosCompra := Close - PrecoEntradaRegistrado;
+
+    if LucroAtualPontosCompra >= LucroMinimoParaTrailing then
+      TrailingAtivoCompra := true;
+
+    // V12_versao8 — Achado 10: ativação do Trailing muda o modo de gestão de
+    // risco (de Stop fixo pra Stop dinâmico) — evento real, precisa aparecer.
+    if TrailingAtivoCompra and not AlertTrailingC then
+    begin
+      Alert(RGB(11, 218, 94));
+      PlotText(DataTextoAlerta + "[C] TRAILING ATIVADO | Lucro " + FloatToString(LucroAtualPontosCompra, 0)
+               + "pts | Stop passa a seguir M9",
+               RGB(11, 218, 94), 3, 9, Low - (EspacoTexto * 6));
+      AlertTrailingC := true;
+    end;
+
+    if not TrailingAtivoCompra then
+    begin
+      PrecoStopCompra := PrecoEntradaRegistrado - StopPontos;
+      PrecoAlvoCompra := PrecoEntradaRegistrado + AlvoPontos;
+
+      SellToCoverStop(PrecoStopCompra, PrecoStopCompra - (OffsetExecucao * MinPriceIncrement));
+      SellToCoverLimit(PrecoAlvoCompra);
+    end
+    else
+    begin
+      DistanciaM9AoPreco := Close - MediaBandasCurta;
+
+      if DistanciaM9AoPreco >= DistanciaMinimaTrailing then
+        StopTrailingCompra := MediaBandasCurta
+      else
+        StopTrailingCompra := Close - DistanciaMinimaTrailing;
+
+      // --- Ultra: agressão vendedora forte contra a posição = trailing acelerado ---
+      if UsarAgressaoUltra then
+        if AgressaoContraCompra then
+          if (Close - DistanciaTrailingAgressao) > StopTrailingCompra then
+            StopTrailingCompra := Close - DistanciaTrailingAgressao;
+
+      if StopTrailingAnteriorC > 0 then
+        if StopTrailingCompra < StopTrailingAnteriorC then
+          StopTrailingCompra := StopTrailingAnteriorC;
+
+      StopTrailingAnteriorC := StopTrailingCompra;
+
+      SellToCoverStop(StopTrailingCompra, StopTrailingCompra - (OffsetExecucao * MinPriceIncrement));
+    end;
+  end;
+
+  // --- POSIÇÃO VENDIDA (espelhado) ---
+  if IsSold then
+  begin
+    LucroAtualPontosVenda := PrecoEntradaRegistrado - Close;
+
+    if LucroAtualPontosVenda >= LucroMinimoParaTrailing then
+      TrailingAtivoVenda := true;
+
+    if TrailingAtivoVenda and not AlertTrailingV then
+    begin
+      Alert(RGB(218, 11, 11));
+      PlotText(DataTextoAlerta + "[V] TRAILING ATIVADO | Lucro " + FloatToString(LucroAtualPontosVenda, 0)
+               + "pts | Stop passa a seguir M9",
+               RGB(218, 11, 11), 3, 9, High + (EspacoTexto * 6));
+      AlertTrailingV := true;
+    end;
+
+    if not TrailingAtivoVenda then
+    begin
+      PrecoStopVenda := PrecoEntradaRegistrado + StopPontos;
+      PrecoAlvoVenda := PrecoEntradaRegistrado - AlvoPontos;
+
+      BuyToCoverStop(PrecoStopVenda, PrecoStopVenda + (OffsetExecucao * MinPriceIncrement));
+      BuyToCoverLimit(PrecoAlvoVenda);
+    end
+    else
+    begin
+      DistanciaM9AoPreco := MediaBandasCurta - Close;
+
+      if DistanciaM9AoPreco >= DistanciaMinimaTrailing then
+        StopTrailingVenda := MediaBandasCurta
+      else
+        StopTrailingVenda := Close + DistanciaMinimaTrailing;
+
+      // --- Ultra: agressão compradora forte contra a posição = trailing acelerado ---
+      if UsarAgressaoUltra then
+        if AgressaoContraVenda then
+          if (Close + DistanciaTrailingAgressao) < StopTrailingVenda then
+            StopTrailingVenda := Close + DistanciaTrailingAgressao;
+
+      if StopTrailingAnteriorV > 0 then
+        if StopTrailingVenda > StopTrailingAnteriorV then
+          StopTrailingVenda := StopTrailingAnteriorV;
+
+      StopTrailingAnteriorV := StopTrailingVenda;
+
+      BuyToCoverStop(StopTrailingVenda, StopTrailingVenda + (OffsetExecucao * MinPriceIncrement));
+    end;
+  end;
+
+  // ==========================================================================
+  // E4.5 — CAPTURA DE RESULTADO REALIZADO (V12_versao8)
+  // ----------------------------------------------------------------------------
+  // Sem isso, ResultadoDiario nunca recebia valor e TravaPerdaAtiva/TravaGanhoAtiva
+  // (trava de perda/ganho diário EM PONTOS) nunca disparavam — ficavam mortas.
+  // Aqui detectamos a transição de posição aberta -> fechada (inclui fechamento
+  // total E reversão via ReversePosition, onde HasPosition permanece true mas
+  // o lado muda) e capturamos o resultado real via BuyPrice()/SellPrice(),
+  // somando ao acumulado do dia. Mantido em paralelo à trava financeira em R$
+  // (DailyResult) — os dois sistemas de trava ficam ativos, por decisão
+  // operacional (redundância de proteção, não substituição).
+  //
+  // BUG CRÍTICO CORRIGIDO AQUI: após ReversePosition(), HasPosition nunca vira
+  // false (só troca de lado), então PrecoEntradaRegistrado nunca era resetado
+  // e o Stop/Alvo/Trailing da posição NOVA continuava calculado sobre o preço
+  // de entrada da posição ANTIGA. O reset abaixo (FechouPosicaoAntiga) força a
+  // recaptura do preço real da posição nova no próximo bloco.
+  // ==========================================================================
+
+  HouveFechamentoNoCandle := false;
+  FechouPosicaoAntiga     := false;
+
+  if PosicaoAbertaAnterior then
+  begin
+    if not HasPosition then
+      FechouPosicaoAntiga := true;
+
+    if HasPosition then
+      if ((PosicaoTipoAnterior = 1) and IsSold) or ((PosicaoTipoAnterior = -1) and IsBought) then
+        FechouPosicaoAntiga := true;
+  end;
+
+  if FechouPosicaoAntiga then
+  begin
+    if PosicaoTipoAnterior = 1 then
+      PrecoSaidaRegistrado := SellPrice()
+    else if PosicaoTipoAnterior = -1 then
+      PrecoSaidaRegistrado := BuyPrice();
+
+    if PosicaoTipoAnterior = 1 then
+      ResultadoOperacaoPontos := PrecoSaidaRegistrado - PrecoEntradaRegistrado
+    else if PosicaoTipoAnterior = -1 then
+      ResultadoOperacaoPontos := PrecoEntradaRegistrado - PrecoSaidaRegistrado;
+
+    ResultadoDiario := ResultadoDiario + ResultadoOperacaoPontos;
+    HouveFechamentoNoCandle := true;
+
+    // Força recaptura do preço real da posição nova (caso de reversão)
+    PrecoEntradaRegistrado  := 0;
+    AlertExecucaoConfirmada := false;
+  end;
+
+  if HasPosition then
+  begin
+    if IsBought then PosicaoTipoAnterior := 1
+    else if IsSold then PosicaoTipoAnterior := -1;
+  end
+  else
+    PosicaoTipoAnterior := 0;
+
+  PosicaoAbertaAnterior := HasPosition;
+
+  if HasPosition then
+  begin
+    if PrecoEntradaRegistrado = 0 then
+    begin
+      // Preço real de execução — BuyPrice()/SellPrice() refletem o preço
+      // efetivamente preenchido, não apenas o preço de disparo da ordem stop
+      if IsBought then
+        PrecoEntradaRegistrado := BuyPrice()
+      else if IsSold then
+        PrecoEntradaRegistrado := SellPrice();
+
+      AlertExecucaoPendente := true;
+    end;
+  end
+  else
+  begin
+    PrecoEntradaRegistrado := 0;
+    AlertExecucaoConfirmada := false;
+  end;
+
+  // ==========================================================================
+  // E5. ZERAGEM FORÇADA NO FIM DO PREGÃO
+  // ==========================================================================
+
+  if ZerarNoFimDoPregao then
+    if Time >= HorarioZeragem then
+      if HasPosition then
+        ClosePosition;
+
+  // ##########################################################################
+  // PARTE 3 — PLOTAGEM
+  // ##########################################################################
+
+  // ==========================================================================
+  // 17. PLOTAGEM DAS BANDAS
+  // ----------------------------------------------------------------------------
+  // Cores das bandas mantidas em tons neutros/sutis — são referência fixa de
+  // mapa, não eventos. Verde/vermelho puro ficam reservados exclusivamente
+  // para os PaintBars de evento confirmado (Bloco 19), evitando que a banda
+  // "grite" tanto quanto um sinal real de entrada.
+  // ==========================================================================
+
+  Plot(AberturaDia);
+  SetPlotColor(1, clWhite);
+  SetPlotWidth(1, 2);
+
+  if MostrarMeioAlvo then
+  begin
+    Plot4(LinhaMaisMeio);
+    SetPlotColor(4, clYellow);
+    SetPlotWidth(4, 1);
+
+    Plot5(LinhaMenosMeio);
+    SetPlotColor(5, clYellow);
+    SetPlotWidth(5, 1);
+  end;
+
+  Plot2(LinhaMais1);
+  SetPlotColor(2, RGB(90, 140, 90)); // verde-acinzentado — referência de banda, não evento
+  SetPlotWidth(2, 2);
+
+  Plot3(LinhaMenos1);
+  SetPlotColor(3, RGB(150, 90, 90)); // vermelho-acinzentado — referência de banda, não evento
+  SetPlotWidth(3, 2);
+
+  if MostrarAlvo2 then
+  begin
+    Plot6(LinhaMais2);
+    SetPlotColor(6, RGB(70, 120, 70)); // verde-acinzentado escuro — banda estendida ±2%
+    SetPlotWidth(6, 2);
+
+    Plot7(LinhaMenos2);
+    SetPlotColor(7, RGB(130, 70, 70)); // vermelho-acinzentado escuro — banda estendida ±2%
+    SetPlotWidth(7, 2);
+  end;
+
+  if MostrarAlvo3 then
+  begin
+    Plot11(LinhaMais3);
+    SetPlotColor(11, RGB(50, 90, 50)); // verde muito escuro — banda ±3%
+    SetPlotWidth(11, 2);
+
+    Plot12(LinhaMenos3);
+    SetPlotColor(12, RGB(100, 50, 50)); // vermelho muito escuro — banda ±3%
+    SetPlotWidth(12, 2);
+  end;
+
+  // ==========================================================================
+  // 18. PLOTAGEM DAS MÉDIAS
+  // ==========================================================================
+
+  if MostrarMediaBandasCurta then
+  begin
+    Plot8(MediaBandasCurta);
+    SetPlotColor(8, clAqua);
+    SetPlotWidth(8, 3);
+  end;
+
+  if MostrarMediaBandasLonga then
+  begin
+    Plot9(MediaBandasLonga);
+    SetPlotColor(9, clFuchsia);
+    SetPlotWidth(9, 2);
+  end;
+
+  // ==========================================================================
+  // 18.5 PLOTAGEM DA FORÇA DO VOLUME (0-100)
+  // ----------------------------------------------------------------------------
+  // Plot10 traz a nota de 0 a 100 com cor dinâmica por faixa de intensidade.
+  // RECOMENDA-SE mover este Plot para uma janela/painel separado no Profit
+  // (clique direito no plot no gráfico → mover para nova janela), pois sua
+  // escala (0-100) é incompatível com a escala de preço do candle.
+  // ==========================================================================
+
+  if MostrarForcaVolume then
+  begin
+    Plot10(ForcaVolume);
+    SetPlotColor(10, CorForcaVolume);
+    SetPlotWidth(10, 3);
+  end;
+
+  // ==========================================================================
+  // 18.6 PLOTAGEM DO CVD REAL (Ultra — AgressionVolBalance)
+  // ----------------------------------------------------------------------------
+  // Plot13 traz o saldo acumulado real de agressão (Buy - Sell) desde a
+  // abertura. RECOMENDA-SE mover para painel separado, junto ao Plot10.
+  // Cor dinâmica: verde quando subindo (fluxo comprador), vermelho quando
+  // caindo (fluxo vendedor).
+  // ==========================================================================
+
+  if MostrarCVDReal then
+    if UsarAgressaoUltra then
+    begin
+      Plot13(AgressaoBalance);
+      if CVDSubindo then
+        SetPlotColor(13, RGB(11, 218, 94))
+      else if CVDCaindo then
+        SetPlotColor(13, RGB(218, 11, 11))
+      else
+        SetPlotColor(13, clGray);
+      SetPlotWidth(13, 2);
+    end;
+
+  // ==========================================================================
+  // 18.7 PLOTAGEM DA DIVERGÊNCIA VWAP (Abertura vs Fechamento)
+  // ----------------------------------------------------------------------------
+  // Plot14 (azul) = VWAPAbertura. Plot15 (vermelho) = VWAPFechamento.
+  // Plotadas na mesma escala de preço do candle (sobrepostas ao gráfico
+  // principal, não em painel separado) — permite comparação visual direta
+  // com o padrão que você já identificou no indicador nativo do Profit.
+  // ==========================================================================
+
+  if MostrarDivergenciaVWAP then
+    if UsarDivergenciaVWAP then
+    begin
+      Plot14(VWAPAbertura);
+      SetPlotColor(14, RGB(30, 100, 220));   // Azul — mesma cor do indicador nativo
+      SetPlotWidth(14, 1);
+
+      Plot15(VWAPFechamento);
+      SetPlotColor(15, RGB(220, 30, 30));    // Vermelho — mesma cor do indicador nativo
+      SetPlotWidth(15, 1);
+    end;
+
+  // ==========================================================================
+  // 19. PAINTBAR — HIERARQUIA DE PRIORIDADE
+  // Nota: o alerta de volume anômalo (AlertaVolumeAnomalo) NÃO pinta o
+  // candle diretamente aqui para não competir com a hierarquia de sinais
+  // operacionais já existente. Ele atua de forma indireta — reforçando o
+  // limiar de Score (Parte 1.5) — e fica disponível como variável separada
+  // para quem quiser plotá-lo num painel auxiliar (ver Bloco 20).
+  // ----------------------------------------------------------------------------
+  // PALETA EQUIDISTANTE — validada por distância perceptual Lab (mínimo 24.7
+  // entre qualquer par de cores do sistema, incluindo as médias M9/M25).
+  // Lógica: tons FRIOS (verde/azul) = alta. Tons QUENTES (vermelho/laranja) =
+  // baixa. Saturação/luminosidade mais forte = evento confirmado. Mais clara
+  // = alerta/não confirmado. Nenhuma cor do PaintBar conflita com clAqua
+  // (Média Curta) ou clFuchsia (Média Longa).
+  // ----------------------------------------------------------------------------
+  // Hierarquia P1=±0,5% > P2=±1% > P3=±2% > P4=±3% (Confirmações) > P5=Dia
+  // Direcional > P6=Alertas (Meio→1→2→3) > P7=Aceitação (1→2→3) > P8=Painel
+  // ==========================================================================
+  PintouEvento := false;
+
+  if PintarCandles then
+  begin
+
+    // ── P0 — CONFIRMAÇÃO DA ABERTURA (V12_versao8 — PRIORIDADE MÁXIMA) ──
+    // Maior peso do sistema (+3) e evento composto (exige ±Meio + retorno) —
+    // fica acima de tudo na hierarquia visual.
+    if not PintouEvento then
+      if ConfirmouAceitacaoAberturaCima then
+      begin
+        PaintBar(RGB(20, 200, 180)); // Turquesa — Virada Compradora na Abertura
+        PintouEvento := true;
+      end;
+
+    if not PintouEvento then
+      if ConfirmouAceitacaoAberturaBaixo then
+      begin
+        PaintBar(RGB(200, 20, 140)); // Magenta — Virada Vendedora na Abertura
+        PintouEvento := true;
+      end;
+
+    if not PintouEvento then
+      if ConfirmouRejeicaoAberturaCima then
+      begin
+        PaintBar(RGB(120, 230, 40)); // Verde-limão — Abertura segurou como Suporte
+        PintouEvento := true;
+      end;
+
+    if not PintouEvento then
+      if ConfirmouRejeicaoAberturaBaixo then
+      begin
+        PaintBar(RGB(230, 70, 40)); // Laranja-avermelhado — Abertura segurou como Resistência
+        PintouEvento := true;
+      end;
+
+    // ── P0.5 — MÓDULO DE RECUSA (V12_versao9 — Estado 7, batendo numa banda) ──
+    if not PintouEvento then
+      if LowerRejectionRecusa and ReversalCandidateRecusa and RecusaGateBanda then
+      begin
+        PaintBar(RGB(90, 240, 210)); // Ciano-claro — Recusa Compradora (rejeição na mínima)
+        PintouEvento := true;
+      end;
+
+    if not PintouEvento then
+      if UpperRejectionRecusa and ReversalCandidateRecusa and RecusaGateBanda then
+      begin
+        PaintBar(RGB(240, 90, 170)); // Rosa-choque — Recusa Vendedora (rejeição na máxima)
+        PintouEvento := true;
+      end;
+
+    // ── P1 — ARMADILHA/REJEIÇÃO CONFIRMADA ±0,5% (MÁXIMA PRIORIDADE) ──
+    if not PintouEvento then
+      if ConfirmouArmadilhaMaisMeio then
+      begin
+        PaintBar(RGB(246, 85, 112)); // Coral-rosa — Armadilha Confirmada Meio Baixa
+        PintouEvento := true;
+      end;
+
+    if not PintouEvento then
+      if ConfirmouArmadilhaMenosMeio then
+      begin
+        PaintBar(RGB(132, 94, 237)); // Violeta-azulado — Armadilha Confirmada Meio Alta
+        PintouEvento := true;
+      end;
+
+    if not PintouEvento then
+      if ConfirmouRejeicaoMaisMeio then
+      begin
+        PaintBar(RGB(246, 118, 85)); // Laranja-coral — Rejeição Confirmada Meio Baixa
+        PintouEvento := true;
+      end;
+
+    if not PintouEvento then
+      if ConfirmouRejeicaoMenosMeio then
+      begin
+        PaintBar(RGB(85, 246, 182)); // Verde-menta — Rejeição Confirmada Meio Alta
+        PintouEvento := true;
+      end;
+
+    // ── P2 — ARMADILHA CONFIRMADA ±1% ──
+    if not PintouEvento then
+      if ConfirmouArmadilhaMais1 then
+      begin
+        PaintBar(RGB(218, 11, 11)); // Vermelho puro — Armadilha Confirmada Baixa ±1%
+        PintouEvento := true;
+      end;
+
+    if not PintouEvento then
+      if ConfirmouArmadilhaMenos1 then
+      begin
+        PaintBar(RGB(11, 218, 94)); // Verde puro — Armadilha Confirmada Alta ±1%
+        PintouEvento := true;
+      end;
+
+    // ── P2.5 — REJEIÇÃO CONFIRMADA ±1% ──
+    if not PintouEvento then
+      if ConfirmouRejeicaoMais1 then
+      begin
+        PaintBar(RGB(191, 110, 17)); // Marrom-alaranjado — Rejeição Confirmada Baixa ±1%
+        PintouEvento := true;
+      end;
+
+    if not PintouEvento then
+      if ConfirmouRejeicaoMenos1 then
+      begin
+        PaintBar(RGB(17, 153, 158)); // Azul-petróleo — Rejeição Confirmada Alta ±1%
+        PintouEvento := true;
+      end;
+
+    // ── P3 — ARMADILHA/REJEIÇÃO CONFIRMADA ±2% ──
+    if not PintouEvento then
+      if ConfirmouArmadilhaMais2 then
+      begin
+        PaintBar(RGB(201, 13, 182)); // Magenta-violeta — Armadilha Confirmada Baixa ±2%
+        PintouEvento := true;
+      end;
+
+    if not PintouEvento then
+      if ConfirmouArmadilhaMenos2 then
+      begin
+        PaintBar(RGB(13, 82, 201)); // Azul-índigo — Armadilha Confirmada Alta ±2%
+        PintouEvento := true;
+      end;
+
+    if not PintouEvento then
+      if ConfirmouRejeicaoMais2 then
+      begin
+        PaintBar(RGB(240, 105, 15)); // Laranja-intenso — Rejeição Confirmada Baixa ±2%
+        PintouEvento := true;
+      end;
+
+    if not PintouEvento then
+      if ConfirmouRejeicaoMenos2 then
+      begin
+        PaintBar(RGB(13, 201, 179)); // Ciano-esmeralda — Rejeição Confirmada Alta ±2%
+        PintouEvento := true;
+      end;
+
+    // ── P4 — ARMADILHA/REJEIÇÃO CONFIRMADA ±3% ──
+    if not PintouEvento then
+      if ConfirmouArmadilhaMais3 then
+      begin
+        PaintBar(RGB(201, 13, 98)); // Rosa-carmim — Armadilha Confirmada Baixa ±3%
+        PintouEvento := true;
+      end;
+
+    if not PintouEvento then
+      if ConfirmouArmadilhaMenos3 then
+      begin
+        PaintBar(RGB(13, 54, 201)); // Azul-cobalto — Armadilha Confirmada Alta ±3%
+        PintouEvento := true;
+      end;
+
+    if not PintouEvento then
+      if ConfirmouRejeicaoMais3 then
+      begin
+        PaintBar(RGB(201, 13, 51)); // Vermelho-carmesim — Rejeição Confirmada Baixa ±3%
+        PintouEvento := true;
+      end;
+
+    if not PintouEvento then
+      if ConfirmouRejeicaoMenos3 then
+      begin
+        PaintBar(RGB(54, 217, 242)); // Ciano-celeste — Rejeição Confirmada Alta ±3%
+        PintouEvento := true;
+      end;
+
+    // ── P5 — DIA DIRECIONAL ──
+    if not PintouEvento then
+      if DiaDirecionalCompra then
+      begin
+        PaintBar(RGB(66, 25, 230)); // Azul-violeta — Dia Direcional Compra
+        PintouEvento := true;
+      end;
+
+    if not PintouEvento then
+      if DiaDirecionalVenda then
+      begin
+        PaintBar(RGB(230, 25, 148)); // Magenta-rosa — Dia Direcional Venda
+        PintouEvento := true;
+      end;
+
+    // ── P6 — ALERTAS ±0,5% NÃO CONFIRMADOS ──
+    if not PintouEvento then
+      if ArmadilhaMaisMeio then
+      begin
+        PaintBar(RGB(242, 196, 13)); // Amarelo-dourado — Alerta Meio Baixa
+        PintouEvento := true;
+      end;
+
+    if not PintouEvento then
+      if ArmadilhaMenosMeio then
+      begin
+        PaintBar(RGB(85, 193, 246)); // Azul-celeste — Alerta Meio Alta
+        PintouEvento := true;
+      end;
+
+    // ── P6.2 — REJEIÇÃO NÃO CONFIRMADA ±0.5% (V12_versao8 — Achado 8) ──
+    if not PintouEvento then
+      if RejeitouMaisMeio then
+      begin
+        PaintBar(RGB(250, 235, 180)); // Bege claro — Rejeição não confirmada Baixa Meio
+        PintouEvento := true;
+      end;
+
+    if not PintouEvento then
+      if RejeitouMenosMeio then
+      begin
+        PaintBar(RGB(190, 225, 250)); // Azul-gelo — Rejeição não confirmada Alta Meio
+        PintouEvento := true;
+      end;
+
+    // ── P6.5 — ALERTAS ±1% NÃO CONFIRMADOS ──
+    // V12_versao8: cor DIFERENTE de ±2%/±3% — este evento pontua +2 no Score
+    // mesmo sem confirmação (decisão operacional mantida), enquanto ±2%/±3%
+    // não pontuam nada até confirmar. A cor precisa distinguir isso no gráfico.
+    if not PintouEvento then
+      if ArmadilhaMais1 then
+      begin
+        PaintBar(RGB(217, 137, 21)); // Âmbar — Alerta Baixa ±1% (pontua +2)
+        PintouEvento := true;
+      end;
+
+    if not PintouEvento then
+      if ArmadilhaMenos1 then
+      begin
+        PaintBar(RGB(33, 99, 217)); // Azul-royal — Alerta Alta ±1% (pontua +2)
+        PintouEvento := true;
+      end;
+
+    // ── P6.6 — REJEIÇÃO NÃO CONFIRMADA ±1% (V12_versao8 — antes invisível) ──
+    // RejeitouMais1/Menos1 já somava +1 ao Score sem nenhuma cor própria.
+    // Prioridade abaixo da Armadilha ±1% (evento mais forte tem precedência).
+    if not PintouEvento then
+      if RejeitouMais1 then
+      begin
+        PaintBar(RGB(245, 199, 143)); // Pêssego claro — Rejeição não confirmada Baixa ±1% (+1)
+        PintouEvento := true;
+      end;
+
+    if not PintouEvento then
+      if RejeitouMenos1 then
+      begin
+        PaintBar(RGB(143, 190, 245)); // Azul-céu claro — Rejeição não confirmada Alta ±1% (+1)
+        PintouEvento := true;
+      end;
+
+    // ── P6.8 — ALERTAS ±2% E ±3% NÃO CONFIRMADOS ──
+    if not PintouEvento then
+      if ArmadilhaMais2 then
+      begin
+        PaintBar(RGB(240, 175, 76)); // Laranja claro — Alerta Baixa ±2%
+        PintouEvento := true;
+      end;
+
+    if not PintouEvento then
+      if ArmadilhaMenos2 then
+      begin
+        PaintBar(RGB(76, 142, 240)); // Azul claro — Alerta Alta ±2%
+        PintouEvento := true;
+      end;
+
+    if not PintouEvento then
+      if ArmadilhaMais3 then
+      begin
+        PaintBar(RGB(240, 175, 76)); // Laranja claro — Alerta Baixa ±3%
+        PintouEvento := true;
+      end;
+
+    if not PintouEvento then
+      if ArmadilhaMenos3 then
+      begin
+        PaintBar(RGB(76, 142, 240)); // Azul claro — Alerta Alta ±3%
+        PintouEvento := true;
+      end;
+
+    // ── P6.9 — REJEIÇÃO NÃO CONFIRMADA ±2% E ±3% (V12_versao8 — Achado 8) ──
+    if not PintouEvento then
+      if RejeitouMais2 then
+      begin
+        PaintBar(RGB(245, 205, 235)); // Rosa-pó — Rejeição não confirmada Baixa ±2%
+        PintouEvento := true;
+      end;
+
+    if not PintouEvento then
+      if RejeitouMenos2 then
+      begin
+        PaintBar(RGB(200, 235, 225)); // Verde-água — Rejeição não confirmada Alta ±2%
+        PintouEvento := true;
+      end;
+
+    if not PintouEvento then
+      if RejeitouMais3 then
+      begin
+        PaintBar(RGB(240, 200, 210)); // Rosa-antigo — Rejeição não confirmada Baixa ±3%
+        PintouEvento := true;
+      end;
+
+    if not PintouEvento then
+      if RejeitouMenos3 then
+      begin
+        PaintBar(RGB(195, 215, 240)); // Azul-acinzentado — Rejeição não confirmada Alta ±3%
+        PintouEvento := true;
+      end;
+
+    // ── P7 — ACEITAÇÃO ±1% COM CONTEXTO DE MÉDIAS ──
+    if not PintouEvento then
+      if AceitouMais1 then
+        if CurtaAcimaLonga then
+          if MediaCurtaSubindo then
+          begin
+            PaintBar(RGB(11, 218, 94)); // Verde puro — Aceitação com contexto de alta
+            PintouEvento := true;
+          end;
+
+    if not PintouEvento then
+      if AceitouMenos1 then
+        if CurtaAbaixoLonga then
+          if MediaCurtaCaindo then
+          begin
+            PaintBar(RGB(218, 11, 11)); // Vermelho puro — Aceitação com contexto de baixa
+            PintouEvento := true;
+          end;
+
+    // ── P7.5 — ACEITAÇÃO ESTENDIDA ±2% ──
+    if not PintouEvento then
+      if AceitouMais2 then
+        if CurtaAcimaLonga then
+        begin
+          PaintBar(RGB(13, 82, 201)); // Azul-índigo — Aceitação estendida ±2% alta
+          PintouEvento := true;
+        end;
+
+    if not PintouEvento then
+      if AceitouMenos2 then
+        if CurtaAbaixoLonga then
+        begin
+          PaintBar(RGB(201, 13, 182)); // Magenta-violeta — Aceitação estendida ±2% baixa
+          PintouEvento := true;
+        end;
+
+    // ── P7.8 — ACEITAÇÃO ESTENDIDA ±3% ──
+    if not PintouEvento then
+      if AceitouMais3 then
+        if CurtaAcimaLonga then
+        begin
+          PaintBar(RGB(13, 54, 201)); // Azul-cobalto — Aceitação estendida ±3% alta
+          PintouEvento := true;
+        end;
+
+    if not PintouEvento then
+      if AceitouMenos3 then
+        if CurtaAbaixoLonga then
+        begin
+          PaintBar(RGB(201, 13, 98)); // Rosa-carmim — Aceitação estendida ±3% baixa
+          PintouEvento := true;
+        end;
+
+    // ── P8 — PAINEL GERAL DE CONTEXTO ──
+    if MostrarPainelPorCandle then
+    begin
+      if not PintouEvento then
+        if PainelCompraForte then
+        begin
+          PaintBar(RGB(11, 218, 94)); // Verde puro — Painel geral comprador
+          PintouEvento := true;
+        end;
+
+      if not PintouEvento then
+        if PainelVendaForte then
+        begin
+          PaintBar(RGB(218, 11, 11)); // Vermelho puro — Painel geral de contexto vendedor
+          PintouEvento := true;
+        end;
+    end;
+
+  end;
+
+  // ##########################################################################
+  // PARTE 4 — SISTEMA DE ALERTAS + PLOTTEXT OPERACIONAL
+  // ----------------------------------------------------------------------------
+  // Alert(Cor)         → popup colorido + beep padrão do Profit
+  // PlotText(txt, cor, 3, size, preco) → texto no preço exato (Position=3)
+  //
+  // Estratégia anti-sobreposição:
+  // Cada nível usa um offset de preço distinto em relação ao High/Low do candle.
+  // Espaçamento base = MinPriceIncrement * 80 (aprox 80 pts no WIN 5000T).
+  // Eventos de BAIXA ficam acima do High (High + Nx*Espaço).
+  // Eventos de ALTA ficam abaixo do Low  (Low  - Nx*Espaço).
+  //
+  // Setas no texto:
+  // [C] prefixo nos eventos de ALTA (compra)
+  // [V] prefixo nos eventos de BAIXA (venda)
+  // Funcionam como indicador visual do candle que gerou o evento.
+  //
+  // Hierarquia de offsets (para não sobrepor):
+  // N0 Score    → High + 4x / Low - 4x
+  // N1 Toque    → High + 3x / Low - 3x
+  // N2 Alerta   → High + 2x / Low - 2x
+  // N3 Confirm  → High + 1x / Low - 1x (mais próximo do candle — mais urgente)
+  // N4 Ordem    → Low - 5x / High + 5x (fora de todos, inconfundível)
+  // N4 Risco    → High + 6x (sempre visível, fora de tudo)
+  // ##########################################################################
+
+  // --- Variável de espaçamento base ---
+  EspacoTexto := MinPriceIncrement * 80;
+
+  // ==========================================================================
+  // N0 — LIMIAR DE SCORE (DIREÇÃO DO MERCADO)
+  // V12_versao8 — Achado 12: ContextoComprador/Vendedor é recalculado a cada
+  // candle (Score não é acumulado no dia) e pode ligar/desligar várias vezes
+  // no pregão. Trava única por dia silenciava toda repetição legítima.
+  // Corrigido: borda de subida (compara com o candle anterior via [1]),
+  // dispara toda vez que o Contexto vira, sem exceção.
+  // ----------------------------------------------------------------------------
+  // AJUSTE DE SOBREPOSIÇÃO — frequência e texto mantidos como estavam, a
+  // pedido de Carlos. O que muda é só o posicionamento vertical: em vez de
+  // um offset fixo (que empilha alertas consecutivos no mesmo nível de
+  // preço), o offset agora roda entre 6 faixas via Mod(CurrentBar, 6),
+  // espalhando alertas próximos em preço sem alterar quantos disparam.
+  // ==========================================================================
+
+  if ContextoComprador and not ContextoComprador[1] then
+  begin
+    Alert(RGB(11, 218, 94));
+    PlotText(DataTextoAlerta + "[C] CONTEXTO COMPRADOR | Score " + FloatToString(ScoreComprador, 0)
+             + " vs " + FloatToString(ScoreVendedor, 0)
+             + " | Aguardar sinal de entrada",
+             RGB(11, 218, 94), 3, 9, Low - (EspacoTexto * (4 + Mod(CurrentBar, 6))));
+  end;
+
+  if ContextoVendedor and not ContextoVendedor[1] then
+  begin
+    Alert(RGB(218, 11, 11));
+    PlotText(DataTextoAlerta + "[V] CONTEXTO VENDEDOR | Score " + FloatToString(ScoreVendedor, 0)
+             + " vs " + FloatToString(ScoreComprador, 0)
+             + " | Aguardar sinal de entrada",
+             RGB(218, 11, 11), 3, 9, High + (EspacoTexto * (4 + Mod(CurrentBar, 6))));
+  end;
+
+  // ==========================================================================
+  // N0.5 — DIA DIRECIONAL (V12_versao8 — Achado 11)
+  // ----------------------------------------------------------------------------
+  // Tinha PaintBar (P5) mas nenhum Alert/PlotText. Recalculado a cada candle
+  // (pode ligar/desligar várias vezes no pregão) — mesma lógica de borda de
+  // subida do Achado 12, dispara toda vez que entra em regime direcional.
+  // Faixa de rotação própria (11 a 16), separada da faixa do N0 (4 a 9),
+  // para os dois tiers não colidirem entre si.
+  // ==========================================================================
+
+  if DiaDirecionalCompra and not DiaDirecionalCompra[1] then
+  begin
+    Alert(RGB(66, 25, 230));
+    PlotText(DataTextoAlerta + "[C] DIA DIRECIONAL COMPRA | M9>M25, subindo, aceitou +1%, acima VWAP",
+             RGB(66, 25, 230), 3, 9, Low - (EspacoTexto * (11 + Mod(CurrentBar, 6))));
+  end;
+
+  if DiaDirecionalVenda and not DiaDirecionalVenda[1] then
+  begin
+    Alert(RGB(230, 25, 148));
+    PlotText(DataTextoAlerta + "[V] DIA DIRECIONAL VENDA | M9<M25, caindo, aceitou -1%, abaixo VWAP",
+             RGB(230, 25, 148), 3, 9, High + (EspacoTexto * (11 + Mod(CurrentBar, 6))));
+  end;
+
+  // ==========================================================================
+  // N1 — TOQUES NAS BANDAS
+  // V12_versao8 — Achado 7: flag por lado (B=Baixa/Mais, A=Alta/Menos), não
+  // mais um único flag por banda cobrindo os dois lados.
+  // ==========================================================================
+
+  if TocouMaisMeio and not AlertTocouMeioB then
+  begin
+    Alert(clYellow);
+    PlotText(DataTextoAlerta + "[V] TOQUE +0.5% | Pavio? Corpo? Volume?",
+             clYellow, 3, 8, High + (EspacoTexto * 3));
+    AlertTocouMeioB := true;
+  end;
+
+  if TocouMenosMeio and not AlertTocouMeioA then
+  begin
+    Alert(clYellow);
+    PlotText(DataTextoAlerta + "[C] TOQUE -0.5% | Pavio? Corpo? Volume?",
+             clYellow, 3, 8, Low - (EspacoTexto * 3));
+    AlertTocouMeioA := true;
+  end;
+
+  if TocouMais1Hoje and not AlertTocou1B then
+  begin
+    Alert(RGB(90, 140, 90));
+    PlotText(DataTextoAlerta + "[V] TOQUE +1% | Banda principal | Monitorar rejeição",
+             RGB(90, 140, 90), 3, 8, High + (EspacoTexto * 3));
+    AlertTocou1B := true;
+  end;
+
+  if TocouMenos1Hoje and not AlertTocou1A then
+  begin
+    Alert(RGB(150, 90, 90));
+    PlotText(DataTextoAlerta + "[C] TOQUE -1% | Banda principal | Monitorar rejeição",
+             RGB(150, 90, 90), 3, 8, Low - (EspacoTexto * 3));
+    AlertTocou1A := true;
+  end;
+
+  if TocouMais2Hoje and not AlertTocou2B then
+  begin
+    Alert(RGB(70, 120, 70));
+    PlotText(DataTextoAlerta + "[V] TOQUE +2% | Amplitude elevada | Verificar evento macro",
+             RGB(70, 120, 70), 3, 8, High + (EspacoTexto * 3));
+    AlertTocou2B := true;
+  end;
+
+  if TocouMenos2Hoje and not AlertTocou2A then
+  begin
+    Alert(RGB(130, 70, 70));
+    PlotText(DataTextoAlerta + "[C] TOQUE -2% | Amplitude elevada | Verificar evento macro",
+             RGB(130, 70, 70), 3, 8, Low - (EspacoTexto * 3));
+    AlertTocou2A := true;
+  end;
+
+  if TocouMais3Hoje and not AlertTocou3B then
+  begin
+    Alert(RGB(50, 90, 50));
+    PlotText(DataTextoAlerta + "[V] TOQUE +3% | EVENTO EXTREMO | Cautela maxima",
+             RGB(50, 90, 50), 3, 9, High + (EspacoTexto * 3));
+    AlertTocou3B := true;
+  end;
+
+  if TocouMenos3Hoje and not AlertTocou3A then
+  begin
+    Alert(RGB(100, 50, 50));
+    PlotText(DataTextoAlerta + "[C] TOQUE -3% | EVENTO EXTREMO | Cautela maxima",
+             RGB(100, 50, 50), 3, 9, Low - (EspacoTexto * 3));
+    AlertTocou3A := true;
+  end;
+
+  // ==========================================================================
+  // N2 — ALERTAS NAO CONFIRMADOS
+  // ==========================================================================
+
+  if ArmadilhaMaisMeio and not AlertArmMeioB then
+  begin
+    Alert(RGB(242, 196, 13));
+    PlotText(DataTextoAlerta + "[V] ALERTA +0.5% [AMARELO-DOURADO] | Possivel BAIXA | Aguardar confirmacao",
+             RGB(242, 196, 13), 3, 8, High + (EspacoTexto * 2));
+    AlertArmMeioB := true;
+  end;
+
+  if ArmadilhaMenosMeio and not AlertArmMeioA then
+  begin
+    Alert(RGB(85, 193, 246));
+    PlotText(DataTextoAlerta + "[C] ALERTA -0.5% [AZUL-CELESTE] | Possivel ALTA | Aguardar confirmacao",
+             RGB(85, 193, 246), 3, 8, Low - (EspacoTexto * 2));
+    AlertArmMeioA := true;
+  end;
+
+  // --- V12_versao8 — Achado 8: Rejeição não confirmada ±0.5% nunca teve
+  // nenhuma sinalização (nem Score, nem visual — banda Meio não pontua raw
+  // Rejeitou). Ainda assim é um evento real no gráfico e precisa aparecer. ---
+  if RejeitouMaisMeio and not AlertRejMeioB then
+  begin
+    Alert(RGB(250, 235, 180));
+    PlotText(DataTextoAlerta + "[v] Rejeicao +0.5% nao confirmada | pavio, sem forca de armadilha",
+             RGB(250, 235, 180), 2, 8, High + (EspacoTexto * 2));
+    AlertRejMeioB := true;
+  end;
+
+  if RejeitouMenosMeio and not AlertRejMeioA then
+  begin
+    Alert(RGB(190, 225, 250));
+    PlotText(DataTextoAlerta + "[c] Rejeicao -0.5% nao confirmada | pavio, sem forca de armadilha",
+             RGB(190, 225, 250), 2, 8, Low - (EspacoTexto * 2));
+    AlertRejMeioA := true;
+  end;
+
+  if ArmadilhaMais1 and not AlertArm1B then
+  begin
+    Alert(RGB(217, 137, 21));
+    PlotText(DataTextoAlerta + "[V] ALERTA +1% [AMBAR] | Armadilha BAIXA (+2 Score) | PREPARAR SellShortStop",
+             RGB(217, 137, 21), 3, 8, High + (EspacoTexto * 2));
+    AlertArm1B := true;
+  end;
+
+  if ArmadilhaMenos1 and not AlertArm1A then
+  begin
+    Alert(RGB(33, 99, 217));
+    PlotText(DataTextoAlerta + "[C] ALERTA -1% [AZUL ROYAL] | Armadilha ALTA (+2 Score) | PREPARAR BuyStop",
+             RGB(33, 99, 217), 3, 8, Low - (EspacoTexto * 2));
+    AlertArm1A := true;
+  end;
+
+  // --- V12_versao8: Rejeição não confirmada ±1% — antes pontuava +1 no Score
+  // de forma silenciosa, sem nenhum Alert/PlotText/PaintBar. Agora visível. ---
+  if RejeitouMais1 and not AlertRej1B then
+  begin
+    Alert(RGB(245, 199, 143));
+    PlotText(DataTextoAlerta + "[v] Rejeicao +1% nao confirmada (+1 Score) | pavio, sem forca de armadilha",
+             RGB(245, 199, 143), 2, 8, High + (EspacoTexto * 2));
+    AlertRej1B := true;
+  end;
+
+  if RejeitouMenos1 and not AlertRej1A then
+  begin
+    Alert(RGB(143, 190, 245));
+    PlotText(DataTextoAlerta + "[c] Rejeicao -1% nao confirmada (+1 Score) | pavio, sem forca de armadilha",
+             RGB(143, 190, 245), 2, 8, Low - (EspacoTexto * 2));
+    AlertRej1A := true;
+  end;
+
+  if ArmadilhaMais2 and not AlertArm2B then
+  begin
+    Alert(RGB(240, 175, 76));
+    PlotText(DataTextoAlerta + "[V] ALERTA +2% [LARANJA CLARO] | Armadilha BAIXA rara | PREPARAR com cautela",
+             RGB(240, 175, 76), 3, 8, High + (EspacoTexto * 2));
+    AlertArm2B := true;
+  end;
+
+  if ArmadilhaMenos2 and not AlertArm2A then
+  begin
+    Alert(RGB(76, 142, 240));
+    PlotText(DataTextoAlerta + "[C] ALERTA -2% [AZUL CLARO] | Armadilha ALTA rara | PREPARAR com cautela",
+             RGB(76, 142, 240), 3, 8, Low - (EspacoTexto * 2));
+    AlertArm2A := true;
+  end;
+
+  // --- V12_versao8 — Achado 8: Rejeição não confirmada ±2% nunca teve
+  // nenhuma sinalização. ---
+  if RejeitouMais2 and not AlertRej2B then
+  begin
+    Alert(RGB(245, 205, 235));
+    PlotText(DataTextoAlerta + "[v] Rejeicao +2% nao confirmada | pavio, sem forca de armadilha",
+             RGB(245, 205, 235), 2, 8, High + (EspacoTexto * 2));
+    AlertRej2B := true;
+  end;
+
+  if RejeitouMenos2 and not AlertRej2A then
+  begin
+    Alert(RGB(200, 235, 225));
+    PlotText(DataTextoAlerta + "[c] Rejeicao -2% nao confirmada | pavio, sem forca de armadilha",
+             RGB(200, 235, 225), 2, 8, Low - (EspacoTexto * 2));
+    AlertRej2A := true;
+  end;
+
+  if ArmadilhaMais3 and not AlertArm3B then
+  begin
+    Alert(RGB(240, 175, 76));
+    PlotText(DataTextoAlerta + "[V] ALERTA +3% [LARANJA CLARO] | EXTREMO BAIXA | Verificar macro PRIMEIRO",
+             RGB(240, 175, 76), 3, 9, High + (EspacoTexto * 2));
+    AlertArm3B := true;
+  end;
+
+  if ArmadilhaMenos3 and not AlertArm3A then
+  begin
+    Alert(RGB(76, 142, 240));
+    PlotText(DataTextoAlerta + "[C] ALERTA -3% [AZUL CLARO] | EXTREMO ALTA | Verificar macro PRIMEIRO",
+             RGB(76, 142, 240), 3, 9, Low - (EspacoTexto * 2));
+    AlertArm3A := true;
+  end;
+
+  // --- V12_versao8 — Achado 8: Rejeição não confirmada ±3% nunca teve
+  // nenhuma sinalização. ---
+  if RejeitouMais3 and not AlertRej3B then
+  begin
+    Alert(RGB(240, 200, 210));
+    PlotText(DataTextoAlerta + "[v] Rejeicao +3% nao confirmada | pavio, sem forca de armadilha",
+             RGB(240, 200, 210), 2, 9, High + (EspacoTexto * 2));
+    AlertRej3B := true;
+  end;
+
+  if RejeitouMenos3 and not AlertRej3A then
+  begin
+    Alert(RGB(195, 215, 240));
+    PlotText(DataTextoAlerta + "[c] Rejeicao -3% nao confirmada | pavio, sem forca de armadilha",
+             RGB(195, 215, 240), 2, 9, Low - (EspacoTexto * 2));
+    AlertRej3A := true;
+  end;
+
+  // ==========================================================================
+  // N2.9 — CONFIRMAÇÃO DA ABERTURA (V12_versao8 — maior peso do sistema, +3)
+  // ----------------------------------------------------------------------------
+  // Só leitura/Score — nunca gera ordem (decisão de Carlos). Offset alto
+  // (EspacoTexto * 8) para não competir com o resto do painel.
+  // ==========================================================================
+
+  if ConfirmouAceitacaoAberturaCima and not AlertAceitAbertC then
+  begin
+    Alert(RGB(20, 200, 180));
+    PlotText(DataTextoAlerta + "[C] ABERTURA — VIRADA COMPRADORA | Tocou -Meio, voltou e virou | Score +3",
+             RGB(20, 200, 180), 3, 10, Low - (EspacoTexto * 8));
+    AlertAceitAbertC := true;
+  end;
+
+  if ConfirmouAceitacaoAberturaBaixo and not AlertAceitAbertB then
+  begin
+    Alert(RGB(200, 20, 140));
+    PlotText(DataTextoAlerta + "[V] ABERTURA — VIRADA VENDEDORA | Tocou +Meio, voltou e virou | Score +3",
+             RGB(200, 20, 140), 3, 10, High + (EspacoTexto * 8));
+    AlertAceitAbertB := true;
+  end;
+
+  if ConfirmouRejeicaoAberturaCima and not AlertRejAbertC then
+  begin
+    Alert(RGB(120, 230, 40));
+    PlotText(DataTextoAlerta + "[C] ABERTURA SEGUROU SUPORTE | Tocou +Meio, retestou, alta confirmada | Score +3",
+             RGB(120, 230, 40), 3, 10, Low - (EspacoTexto * 8));
+    AlertRejAbertC := true;
+  end;
+
+  if ConfirmouRejeicaoAberturaBaixo and not AlertRejAbertB then
+  begin
+    Alert(RGB(230, 70, 40));
+    PlotText(DataTextoAlerta + "[V] ABERTURA SEGUROU RESISTENCIA | Tocou -Meio, retestou, baixa confirmada | Score +3",
+             RGB(230, 70, 40), 3, 10, High + (EspacoTexto * 8));
+    AlertRejAbertB := true;
+  end;
+
+  // ==========================================================================
+  // N2.95 — MÓDULO DE RECUSA (V12_versao9) — borda de subida (Estado 7
+  // pode persistir vários candles, mesmo padrão do Achado 12 pra não repetir
+  // o mesmo alerta candle após candle enquanto a condição seguir ativa).
+  // ==========================================================================
+
+  if LowerRejectionRecusa and ReversalCandidateRecusa and RecusaGateBanda
+     and not (LowerRejectionRecusa[1] and ReversalCandidateRecusa[1] and RecusaGateBanda[1]) then
+  begin
+    Alert(RGB(90, 240, 210));
+    PlotText(DataTextoAlerta + "[C] RECUSA COMPRADORA | Banda: " + TextoBandaRecusa
+             + "| RI " + FloatToString(RIRecusa, 0) + " | Vol " + FloatToString(VolumeRatioRecusa, 1)
+             + "x | Score +3",
+             RGB(90, 240, 210), 3, 9, Low - (EspacoTexto * 9));
+  end;
+
+  if UpperRejectionRecusa and ReversalCandidateRecusa and RecusaGateBanda
+     and not (UpperRejectionRecusa[1] and ReversalCandidateRecusa[1] and RecusaGateBanda[1]) then
+  begin
+    Alert(RGB(240, 90, 170));
+    PlotText(DataTextoAlerta + "[V] RECUSA VENDEDORA | Banda: " + TextoBandaRecusa
+             + "| RI " + FloatToString(RIRecusa, 0) + " | Vol " + FloatToString(VolumeRatioRecusa, 1)
+             + "x | Score +3",
+             RGB(240, 90, 170), 3, 9, High + (EspacoTexto * 9));
+  end;
+
+
+  // ==========================================================================
+  // N3 — CONFIRMACOES (sinal operacional real — mais proximo do candle)
+  // ==========================================================================
+
+  if ConfirmouArmadilhaMaisMeio and not AlertConfMeioB then
+  begin
+    Alert(RGB(246, 85, 112));
+    PlotText(DataTextoAlerta + "[V] SINAL VENDA +0.5% [CORAL-ROSA] | CONFIRMADO | VWAP acima? M9 caindo?",
+             RGB(246, 85, 112), 3, 9, High + (EspacoTexto * 1));
+    AlertConfMeioB := true;
+  end;
+
+  if ConfirmouArmadilhaMenosMeio and not AlertConfMeioA then
+  begin
+    Alert(RGB(132, 94, 237));
+    PlotText(DataTextoAlerta + "[C] SINAL COMPRA -0.5% [VIOLETA-AZULADO] | CONFIRMADO | VWAP abaixo? M9 subindo?",
+             RGB(132, 94, 237), 3, 9, Low - (EspacoTexto * 1));
+    AlertConfMeioA := true;
+  end;
+
+  if ConfirmouArmadilhaMais1 and not AlertConf1B then
+  begin
+    Alert(RGB(218, 11, 11));
+    PlotText(DataTextoAlerta + "[V] SINAL VENDA +1% [VERMELHO PURO] | CONFIRMADO | Score + Volume OK?",
+             RGB(218, 11, 11), 3, 10, High + (EspacoTexto * 1));
+    AlertConf1B := true;
+  end;
+
+  if ConfirmouArmadilhaMenos1 and not AlertConf1A then
+  begin
+    Alert(RGB(11, 218, 94));
+    PlotText(DataTextoAlerta + "[C] SINAL COMPRA -1% [VERDE PURO] | CONFIRMADO | Score + Volume OK?",
+             RGB(11, 218, 94), 3, 10, Low - (EspacoTexto * 1));
+    AlertConf1A := true;
+  end;
+
+  if ConfirmouArmadilhaMais2 and not AlertConf2B then
+  begin
+    Alert(RGB(201, 13, 182));
+    PlotText(DataTextoAlerta + "[V] SINAL VENDA +2% [MAGENTA-VIOLETA] | RARO — alta qualidade | Score reforçado",
+             RGB(201, 13, 182), 3, 10, High + (EspacoTexto * 1));
+    AlertConf2B := true;
+  end;
+
+  if ConfirmouArmadilhaMenos2 and not AlertConf2A then
+  begin
+    Alert(RGB(13, 82, 201));
+    PlotText(DataTextoAlerta + "[C] SINAL COMPRA -2% [AZUL-INDIGO] | RARO — alta qualidade | Score reforçado",
+             RGB(13, 82, 201), 3, 10, Low - (EspacoTexto * 1));
+    AlertConf2A := true;
+  end;
+
+  if ConfirmouArmadilhaMais3 and not AlertConf3B then
+  begin
+    Alert(RGB(201, 13, 98));
+    PlotText(DataTextoAlerta + "[V] SINAL VENDA +3% [ROSA-CARMIM] | EXTREMO | Verificar contexto antes de agir",
+             RGB(201, 13, 98), 3, 10, High + (EspacoTexto * 1));
+    AlertConf3B := true;
+  end;
+
+  if ConfirmouArmadilhaMenos3 and not AlertConf3A then
+  begin
+    Alert(RGB(13, 54, 201));
+    PlotText(DataTextoAlerta + "[C] SINAL COMPRA -3% [AZUL-COBALTO] | EXTREMO | Verificar contexto antes de agir",
+             RGB(13, 54, 201), 3, 10, Low - (EspacoTexto * 1));
+    AlertConf3A := true;
+  end;
+
+  // ==========================================================================
+  // N3.5 — REJEIÇÃO CONFIRMADA (V12_versao8 — Achado 6: tinha PaintBar mas
+  // nenhum Alert/PlotText/linha vertical. Corrigido — mesma estrutura da
+  // Armadilha Confirmada acima, cores idênticas às do PaintBar (P2.5/P3/P4).
+  // ==========================================================================
+
+  if ConfirmouRejeicaoMaisMeio and not AlertRejConfMeioB then
+  begin
+    Alert(RGB(246, 118, 85));
+    PlotText(DataTextoAlerta + "[V] REJEICAO CONFIRMADA +0.5% [LARANJA-CORAL] | Score +0.5",
+             RGB(246, 118, 85), 3, 9, High + (EspacoTexto * 1));
+    AlertRejConfMeioB := true;
+  end;
+
+  if ConfirmouRejeicaoMenosMeio and not AlertRejConfMeioA then
+  begin
+    Alert(RGB(85, 246, 182));
+    PlotText(DataTextoAlerta + "[C] REJEICAO CONFIRMADA -0.5% [VERDE-MENTA] | Score +0.5",
+             RGB(85, 246, 182), 3, 9, Low - (EspacoTexto * 1));
+    AlertRejConfMeioA := true;
+  end;
+
+  if ConfirmouRejeicaoMais1 and not AlertRejConf1B then
+  begin
+    Alert(RGB(191, 110, 17));
+    PlotText(DataTextoAlerta + "[V] REJEICAO CONFIRMADA +1% [MARROM-ALARANJADO] | Gera ordem | Score +2",
+             RGB(191, 110, 17), 3, 10, High + (EspacoTexto * 1));
+    AlertRejConf1B := true;
+  end;
+
+  if ConfirmouRejeicaoMenos1 and not AlertRejConf1A then
+  begin
+    Alert(RGB(17, 153, 158));
+    PlotText(DataTextoAlerta + "[C] REJEICAO CONFIRMADA -1% [AZUL-PETROLEO] | Gera ordem | Score +2",
+             RGB(17, 153, 158), 3, 10, Low - (EspacoTexto * 1));
+    AlertRejConf1A := true;
+  end;
+
+  if ConfirmouRejeicaoMais2 and not AlertRejConf2B then
+  begin
+    Alert(RGB(240, 105, 15));
+    PlotText(DataTextoAlerta + "[V] REJEICAO CONFIRMADA +2% [LARANJA-INTENSO] | Só Score +1",
+             RGB(240, 105, 15), 3, 10, High + (EspacoTexto * 1));
+    AlertRejConf2B := true;
+  end;
+
+  if ConfirmouRejeicaoMenos2 and not AlertRejConf2A then
+  begin
+    Alert(RGB(13, 201, 179));
+    PlotText(DataTextoAlerta + "[C] REJEICAO CONFIRMADA -2% [CIANO-ESMERALDA] | Só Score +1",
+             RGB(13, 201, 179), 3, 10, Low - (EspacoTexto * 1));
+    AlertRejConf2A := true;
+  end;
+
+  if ConfirmouRejeicaoMais3 and not AlertRejConf3B then
+  begin
+    Alert(RGB(201, 13, 51));
+    PlotText(DataTextoAlerta + "[V] REJEICAO CONFIRMADA +3% [VERMELHO-CARMESIM] | Só Score +1.5",
+             RGB(201, 13, 51), 3, 10, High + (EspacoTexto * 1));
+    AlertRejConf3B := true;
+  end;
+
+  if ConfirmouRejeicaoMenos3 and not AlertRejConf3A then
+  begin
+    Alert(RGB(54, 217, 242));
+    PlotText(DataTextoAlerta + "[C] REJEICAO CONFIRMADA -3% [CIANO-CELESTE] | Só Score +1.5",
+             RGB(54, 217, 242), 3, 10, Low - (EspacoTexto * 1));
+    AlertRejConf3A := true;
+  end;
+
+  // ==========================================================================
+  // N4A — ORDEM ENVIADA (maximo offset — inconfundivel)
+  // V12_versao8 — Achado 12: trava única por dia significava que só a
+  // PRIMEIRA entrada do dia gerava o alerta "ENVIADO" — com até 4 operações/
+  // dia permitidas (MaxOperacoesPorDia), a 2ª, 3ª e 4ª entrada ficavam mudas.
+  // Corrigido: borda de subida via [1], dispara em toda entrada nova.
+  // ==========================================================================
+
+  if PermissaoCompra and not PermissaoCompra[1] then
+  begin
+    Alert(RGB(11, 218, 94));
+    PlotText(DataTextoAlerta + "[C] >>> BUYSTOP ENVIADO | Preco " + FloatToString(Close + (OffsetExecucao * MinPriceIncrement), 0)
+             + " | Stop -" + FloatToString(StopPontos, 0)
+             + "pts | Alvo +" + FloatToString(AlvoPontos, 0) + "pts",
+             RGB(11, 218, 94), 3, 10, Low - (EspacoTexto * 5));
+  end;
+
+  if PermissaoVenda and not PermissaoVenda[1] then
+  begin
+    Alert(RGB(218, 11, 11));
+    PlotText(DataTextoAlerta + "[V] >>> SELLSHORTSTOP ENVIADO | Preco " + FloatToString(Close - (OffsetExecucao * MinPriceIncrement), 0)
+             + " | Stop +" + FloatToString(StopPontos, 0)
+             + "pts | Alvo -" + FloatToString(AlvoPontos, 0) + "pts",
+             RGB(218, 11, 11), 3, 10, High + (EspacoTexto * 5));
+  end;
+
+  // ==========================================================================
+  // N4A.2 — EXECUÇÃO REAL CONFIRMADA (preço efetivo de preenchimento)
+  // ----------------------------------------------------------------------------
+  // Diferente do alerta acima (que dispara no envio da ordem, com o preço de
+  // disparo do Stop), este dispara quando a posição realmente abre, usando
+  // BuyPrice()/SellPrice() — o preço efetivamente executado, que pode ser
+  // diferente do preço de disparo em caso de slippage.
+  // ==========================================================================
+
+  if AlertExecucaoPendente and not AlertExecucaoConfirmada then
+  begin
+    if IsBought then
+    begin
+      Alert(RGB(11, 218, 94));
+      PlotText(DataTextoAlerta + "[C] *** EXECUTADO *** | Preco real: " + FloatToString(PrecoEntradaRegistrado, 0),
+               RGB(11, 218, 94), 3, 10, Low - (EspacoTexto * 6));
+    end
+    else if IsSold then
+    begin
+      Alert(RGB(218, 11, 11));
+      PlotText(DataTextoAlerta + "[V] *** EXECUTADO *** | Preco real: " + FloatToString(PrecoEntradaRegistrado, 0),
+               RGB(218, 11, 11), 3, 10, High + (EspacoTexto * 6));
+    end;
+
+    AlertExecucaoConfirmada := true;
+    AlertExecucaoPendente   := false;
+  end;
+
+  // ==========================================================================
+  // N4A.3 — FECHAMENTO DE OPERAÇÃO (V12_versao8 — resultado realizado)
+  // ----------------------------------------------------------------------------
+  // Torna ResultadoDiario auditável no gráfico: sem isso, a soma de pontos
+  // acumulada no dia era uma variável interna invisível. Dispara exatamente no
+  // candle em que a posição fechou (stop, alvo, trailing, reversão ou zeragem).
+  // ==========================================================================
+
+  if HouveFechamentoNoCandle then
+  begin
+    if ResultadoOperacaoPontos >= 0 then
+    begin
+      Alert(RGB(11, 218, 94));
+      PlotText(DataTextoAlerta + "[$] OPERACAO ENCERRADA | Resultado: +" + FloatToString(ResultadoOperacaoPontos, 0)
+               + "pts | Acumulado dia: " + FloatToString(ResultadoDiario, 0) + "pts",
+               RGB(11, 218, 94), 3, 10, Low - (EspacoTexto * 7));
+    end
+    else
+    begin
+      Alert(RGB(218, 11, 11));
+      PlotText(DataTextoAlerta + "[$] OPERACAO ENCERRADA | Resultado: " + FloatToString(ResultadoOperacaoPontos, 0)
+               + "pts | Acumulado dia: " + FloatToString(ResultadoDiario, 0) + "pts",
+               RGB(218, 11, 11), 3, 10, High + (EspacoTexto * 7));
+    end;
+  end;
+
+  // ==========================================================================
+  // N4B — GESTAO DE RISCO (offset maximo — sempre visivel)
+  // ==========================================================================
+
+  if TravaPerdaAtiva and not AlertTravaDia then
+  begin
+    Alert(clWhite);
+    PlotText(DataTextoAlerta + "[!] TRAVA ATIVADA | -" + FloatToString(PerdaMaximaDiaria, 0)
+             + "pts | SISTEMA BLOQUEADO — Nao operar",
+             clWhite, 3, 10, High + (EspacoTexto * 6));
+    AlertTravaDia := true;
+  end;
+
+  // V12_versao8 — Achado 9: agora verifica/trava por JANELA (JanelaAtual),
+  // não mais por dia inteiro — uma anomalia na janela 3 não silencia mais
+  // uma anomalia real e distinta na janela 6.
+  if AlertaVolumeAnomalo then
+    if JanelaAtual >= 1 then
+      if JanelaAtual <= 8 then
+        if not AlertVolAnomaloPorJanela[JanelaAtual] then
+        begin
+          Alert(RGB(240, 140, 40));
+          PlotText(DataTextoAlerta + "[!] VOL.ANOMALO | Janela " + FloatToString(JanelaAtual, 0)
+                   + " | " + FloatToString(RatioVolumeAnomalo, 1)
+                   + "x | Score minimo: " + FloatToString(DiferencaMinimaScoreEfetiva, 0),
+                   RGB(240, 140, 40), 3, 8, High + (EspacoTexto * 6));
+          AlertVolAnomaloPorJanela[JanelaAtual] := true;
+        end;
+
+  // --- Divergência VWAP tornou-se válida = Cruzamento Confirmado (mesmo evento) ---
+  if UsarDivergenciaVWAP then
+  begin
+    if DivergenciaCompradoraValida and not AlertDivergenciaCompradora then
+    begin
+      Alert(RGB(11, 218, 94));
+      PlotText(DataTextoAlerta + "[C] CRUZAMENTO VWAP CONFIRMADO | Fechamento cruzou acima da Abertura | Score +"
+               + FloatToString(PesoDivergenciaScore * 2, 1),
+               RGB(11, 218, 94), 3, 9, Low - (EspacoTexto * 4.5));
+      AlertDivergenciaCompradora := true;
+      AlertDivergenciaVendedora  := false;
+    end;
+
+    if DivergenciaVendedoraValida and not AlertDivergenciaVendedora then
+    begin
+      Alert(RGB(218, 11, 11));
+      PlotText(DataTextoAlerta + "[V] CRUZAMENTO VWAP CONFIRMADO | Fechamento cruzou abaixo da Abertura | Score +"
+               + FloatToString(PesoDivergenciaScore * 2, 1),
+               RGB(218, 11, 11), 3, 9, High + (EspacoTexto * 4.5));
+      AlertDivergenciaVendedora  := true;
+      AlertDivergenciaCompradora := false;
+    end;
+  end;
+
+end;
