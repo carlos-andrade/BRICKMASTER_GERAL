@@ -382,7 +382,7 @@
     <div class="header-tag">Manual Operacional Completo</div>
     <h1>BRICKMASTER<br><span>1% OPENING RANGE</span></h1>
     <div class="header-sub">Versão V10.1 EXEC · Profit One / Nelogica · NTSL v4.2 · Carlos Andrade</div>
-    <div class="version-badge">V10.1 EXEC — INDICADOR + EXECUÇÃO + TRAILING STOP (M9)</div>
+    <div class="version-badge">V10.1 EXEC — INDICADOR + EXECUÇÃO + TRAILING (M9) + VOLUME ANÔMALO</div>
   </div>
 </div>
 
@@ -409,6 +409,8 @@
       <li><a href="#sequencia-completa">Sequência Completa — Do Sinal até o Fechamento</a></li>
       <li><a href="#treino-visual">Treino Visual — Reconhecimento Rápido</a></li>
       <li><a href="#trailing-stop">Trailing Stop — Stop Fixo para Dinâmico (M9)</a></li>
+      <li><a href="#volume-anomalo">Cumulative Volume Anômalo — 8 Janelas Horárias</a></li>
+      <li><a href="#catalogo-completo">Catálogo Consolidado — Todos os Sinais do Sistema</a></li>
     </ol>
   </div>
 </div>
@@ -765,16 +767,16 @@
       <rect x="30" y="20" width="8" height="340" rx="4" fill="url(#priorityGrad)"/>
 
       <!-- Prioridade 1 -->
-      <circle cx="34" cy="35" r="6" fill="#e040fb"/>
-      <rect x="55" y="22" width="16" height="26" rx="2" fill="#e040fb"/>
+      <circle cx="34" cy="35" r="6" fill="#DC143C"/>
+      <rect x="55" y="22" width="16" height="26" rx="2" fill="#DC143C"/>
       <text x="78" y="31" fill="#ffffff" font-family="Inter" font-size="12" font-weight="700">P1 — Armadilha Confirmada em +1% (Baixa)</text>
-      <text x="78" y="46" fill="#7a8799" font-family="JetBrains Mono" font-size="10">FUCHSIA · Candle fechou acima de +1% no período anterior e agora fechou abaixo</text>
+      <text x="78" y="46" fill="#7a8799" font-family="JetBrains Mono" font-size="10">CRIMSON · Candle fechou acima de +1% no período anterior e agora fechou abaixo</text>
 
       <!-- Prioridade 1b -->
-      <circle cx="34" cy="75" r="6" fill="#00bcd4"/>
-      <rect x="55" y="62" width="16" height="26" rx="2" fill="#00bcd4"/>
+      <circle cx="34" cy="75" r="6" fill="#00FF7F"/>
+      <rect x="55" y="62" width="16" height="26" rx="2" fill="#00FF7F"/>
       <text x="78" y="71" fill="#ffffff" font-family="Inter" font-size="12" font-weight="700">P1 — Armadilha Confirmada em -1% (Alta)</text>
-      <text x="78" y="86" fill="#7a8799" font-family="JetBrains Mono" font-size="10">AQUA · Fechou abaixo de -1% e agora voltou acima + confirmação</text>
+      <text x="78" y="86" fill="#7a8799" font-family="JetBrains Mono" font-size="10">SPRING GREEN · Fechou abaixo de -1% e agora voltou acima + confirmação</text>
 
       <!-- Prioridade 2 -->
       <circle cx="34" cy="115" r="6" fill="#ff1744"/>
@@ -801,10 +803,10 @@
       <text x="78" y="240" fill="#7a8799" font-family="JetBrains Mono" font-size="10">MAROON · Score vendedor + Curta abaixo Longa + M9 caindo + AceitouMenos1 + abaixo VWAP</text>
 
       <!-- Prioridade 4 -->
-      <circle cx="34" cy="260" r="5" fill="#7b1fa2"/>
-      <rect x="55" y="250" width="16" height="20" rx="2" fill="#7b1fa2"/>
+      <circle cx="34" cy="260" r="5" fill="#FF8C00"/>
+      <rect x="55" y="250" width="16" height="20" rx="2" fill="#FF8C00"/>
       <text x="78" y="259" fill="#ffffff" font-family="Inter" font-size="12" font-weight="700">P4 — Armadilha NÃO Confirmada</text>
-      <text x="78" y="272" fill="#7a8799" font-family="JetBrains Mono" font-size="10">PURPLE (alta) / TEAL (baixa) · Alerta — aguardar confirmação no próximo candle</text>
+      <text x="78" y="272" fill="#7a8799" font-family="JetBrains Mono" font-size="10">DARKORANGE (baixa) / YELLOWGREEN (alta) · Alerta — aguardar confirmação no próximo candle</text>
 
       <!-- Prioridade 5 -->
       <circle cx="34" cy="298" r="5" fill="#00e676"/>
@@ -824,7 +826,7 @@
   </div>
 
   <div class="alert ok">
-    <strong>Correção V10.1 — cores diferenciadas:</strong> Armadilha <strong>confirmada</strong> usa FUCHSIA / AQUA (cores fortes). Armadilha <strong>não confirmada</strong> usa PURPLE / TEAL (cores mais fracas). No V10 original, os dois eventos tinham a mesma cor — impossível distinguir visualmente.
+    <strong>Correção V10.1 — cores diferenciadas:</strong> Armadilha <strong>confirmada</strong> usa CRIMSON (baixa) / SPRING GREEN (alta) — cores fortes e semanticamente intuitivas: vermelho para queda, verde para alta. Armadilha <strong>não confirmada</strong> usa DARKORANGE (baixa) / YELLOWGREEN (alta) — mesma família de cor, tom mais suave. No V10 original, os eventos confirmados usavam as mesmas cores das médias do indicador (Fuchsia/Aqua), criando confusão visual — corrigido para eliminar qualquer sobreposição.
   </div>
 </div>
 
@@ -985,7 +987,7 @@
         <rect x="17" y="50" width="16" height="50" fill="#e040fb" rx="2"/>
         <rect x="47" y="55" width="16" height="45" fill="#e040fb" rx="2"/>
         <rect x="77" y="60" width="16" height="40" fill="#e040fb" rx="2"/>
-        <text x="0" y="220" fill="#e040fb" font-family="JetBrains Mono" font-size="9">PaintBar: FUCHSIA</text>
+        <text x="0" y="220" fill="#DC143C" font-family="JetBrains Mono" font-size="9">PaintBar: CRIMSON</text>
         <text x="0" y="233" fill="#7a8799" font-family="JetBrains Mono" font-size="9">Score +2 vendedor</text>
       </g>
     </svg>
@@ -993,16 +995,16 @@
 
   <div class="signal-grid">
     <div class="signal-card bear">
-      <div class="priority">Prioridade 1 — Cor: FUCHSIA</div>
-      <h4><span class="dot dot-fuchsia"></span>Armadilha Confirmada de Alta (Sinal de Baixa)</h4>
+      <div class="priority">Prioridade 1 — Cor: CRIMSON</div>
+      <h4><span class="dot" style="background:#DC143C"></span>Armadilha Confirmada de Alta (Sinal de Baixa)</h4>
       <p>Candle anterior fechou acima de +1%. Candle atual fechou abaixo de +1%. Candle seguinte confirmou: fechou abaixo do Low anterior, abaixo da média curta, e abaixo do VWAP ou com pressão vendedora.</p>
-      <div class="color-tag" style="background:rgba(224,64,251,0.15);color:#e040fb;">FUCHSIA — Sinal de venda de alta qualidade</div>
+      <div class="color-tag" style="background:rgba(220,20,60,0.15);color:#DC143C;">CRIMSON — Sinal de venda de alta qualidade</div>
     </div>
     <div class="signal-card bull">
-      <div class="priority">Prioridade 1 — Cor: AQUA</div>
-      <h4><span class="dot dot-aqua"></span>Armadilha Confirmada de Baixa (Sinal de Alta)</h4>
+      <div class="priority">Prioridade 1 — Cor: SPRING GREEN</div>
+      <h4><span class="dot" style="background:#00FF7F"></span>Armadilha Confirmada de Baixa (Sinal de Alta)</h4>
       <p>Candle anterior fechou abaixo de -1%. Candle atual fechou acima de -1%. Candle seguinte confirmou: fechou acima do High anterior, acima da média curta, e acima do VWAP ou com pressão compradora.</p>
-      <div class="color-tag" style="background:rgba(0,188,212,0.15);color:#00bcd4;">AQUA — Sinal de compra de alta qualidade</div>
+      <div class="color-tag" style="background:rgba(0,255,127,0.15);color:#00FF7F;">SPRING GREEN — Sinal de compra de alta qualidade</div>
     </div>
     <div class="signal-card bear">
       <div class="priority">Prioridade 2 — Cor: RED</div>
@@ -1029,16 +1031,16 @@
       <div class="color-tag" style="background:rgba(136,14,79,0.2);color:#f06292;">MAROON — Tendência vendedora confirmada</div>
     </div>
     <div class="signal-card warn">
-      <div class="priority">Prioridade 4 — Cor: PURPLE</div>
-      <h4><span class="dot dot-purple"></span>Armadilha NÃO Confirmada em +1% (Alerta)</h4>
+      <div class="priority">Prioridade 4 — Cor: DARKORANGE</div>
+      <h4><span class="dot" style="background:#FF8C00"></span>Armadilha NÃO Confirmada em +1% (Alerta)</h4>
       <p>Candle fechou abaixo de +1% após fechar acima no candle anterior. Mas o candle de confirmação ainda não veio. ALERTA — não é sinal operacional ainda. Aguardar próximo candle.</p>
-      <div class="color-tag" style="background:rgba(123,31,162,0.2);color:#ce93d8;">PURPLE — Alerta pendente de confirmação</div>
+      <div class="color-tag" style="background:rgba(255,140,0,0.2);color:#FF8C00;">DARKORANGE — Alerta pendente de confirmação (baixa)</div>
     </div>
     <div class="signal-card warn">
-      <div class="priority">Prioridade 4 — Cor: TEAL</div>
-      <h4><span class="dot" style="background:#00796b"></span>Armadilha NÃO Confirmada em -1% (Alerta)</h4>
+      <div class="priority">Prioridade 4 — Cor: YELLOWGREEN</div>
+      <h4><span class="dot" style="background:#9ACD32"></span>Armadilha NÃO Confirmada em -1% (Alerta)</h4>
       <p>Candle voltou acima de -1% após fechar abaixo. Ainda não confirmado. Aguardar próximo candle para ver se fecha acima do High anterior e acima da média curta.</p>
-      <div class="color-tag" style="background:rgba(0,121,107,0.2);color:#4db6ac;">TEAL — Alerta pendente de confirmação</div>
+      <div class="color-tag" style="background:rgba(154,205,50,0.2);color:#9ACD32;">YELLOWGREEN — Alerta pendente de confirmação (alta)</div>
     </div>
   </div>
 </div>
@@ -1204,9 +1206,9 @@
       </tr>
       <tr>
         <td>Falso rompimento acima de +1% (armadilha)</td>
-        <td><span class="dot dot-purple"></span>PURPLE → FUCHSIA</td>
+        <td><span class="dot" style="background:#FF8C00"></span>DARKORANGE → CRIMSON</td>
         <td>Confirmação no próximo candle + VWAP acima do preço</td>
-        <td class="scenario-bad">Aguardar FUCHSIA antes de considerar venda</td>
+        <td class="scenario-bad">Aguardar CRIMSON antes de considerar venda</td>
         <td><span class="pill pill-red">Alto</span></td>
       </tr>
       <tr>
@@ -1218,9 +1220,9 @@
       </tr>
       <tr>
         <td>Falso rompimento abaixo de -1%</td>
-        <td><span class="dot" style="background:#00796b;display:inline-block;width:12px;height:12px;border-radius:50%;"></span>TEAL → AQUA</td>
+        <td><span class="dot" style="background:#9ACD32;display:inline-block;width:12px;height:12px;border-radius:50%;"></span>YELLOWGREEN → SPRING GREEN</td>
         <td>Confirmação no próximo candle + VWAP abaixo do preço</td>
-        <td class="scenario-good">Aguardar AQUA antes de considerar compra</td>
+        <td class="scenario-good">Aguardar SPRING GREEN antes de considerar compra</td>
         <td><span class="pill pill-red">Alto</span></td>
       </tr>
       <tr>
@@ -1284,8 +1286,8 @@
   <div class="signal-grid">
     <div class="signal-card bear">
       <div class="priority">Erro Crítico</div>
-      <h4>Entrar na cor PURPLE como se fosse FUCHSIA</h4>
-      <p>PURPLE é uma armadilha NÃO confirmada. É um alerta, não um sinal. Entrar antes do candle de confirmação é entrar na exata hora em que o mercado pode fazer o short squeeze de volta.</p>
+      <h4>Entrar na cor DARKORANGE como se fosse CRIMSON</h4>
+      <p>DARKORANGE é uma armadilha NÃO confirmada. É um alerta, não um sinal. Entrar antes do candle de confirmação é entrar na exata hora em que o mercado pode fazer o short squeeze de volta.</p>
     </div>
     <div class="signal-card bear">
       <div class="priority">Erro Crítico</div>
@@ -1341,8 +1343,8 @@
 
   <h3>Antes de entrar em qualquer operação</h3>
   <ul class="checklist">
-    <li class="ok">O candle tem cor de sinal (não neutro ou PURPLE/TEAL isolado)?</li>
-    <li class="ok">O sinal é de Prioridade 1 ou 2 (FUCHSIA/AQUA/RED confirmado/GREEN confirmado)?</li>
+    <li class="ok">O candle tem cor de sinal (não neutro ou DARKORANGE/YELLOWGREEN isolado)?</li>
+    <li class="ok">O sinal é de Prioridade 1 ou 2 (CRIMSON/SPRING GREEN/RED confirmado/GREEN confirmado)?</li>
     <li class="ok">O VWAP está alinhado com a direção da entrada?</li>
     <li class="ok">O volume do candle de sinal foi forte (≥ 1,3x a média)?</li>
     <li class="ok">As médias (curta e longa) estão na direção da entrada?</li>
@@ -1483,7 +1485,7 @@
   </div>
 
   <div class="alert info">
-    <strong>Por que isso importa para o treino visual:</strong> Você pode ver o candle pintado de AQUA (sinal de armadilha confirmada de baixa) e o robô <em>não operar</em>. Isso não é bug — é a Camada 2 bloqueando porque, por exemplo, está fora do horário ou a trava de perda diária está ativa. Aprenda a olhar o candle E o estado das travas, nunca só o candle.
+    <strong>Por que isso importa para o treino visual:</strong> Você pode ver o candle pintado de SPRING GREEN (sinal de armadilha confirmada de alta) e o robô <em>não operar</em>. Isso não é bug — é a Camada 2 bloqueando porque, por exemplo, está fora do horário ou a trava de perda diária está ativa. Aprenda a olhar o candle E o estado das travas, nunca só o candle.
   </div>
 
   <h3>Tabela de Origem dos Sinais</h3>
@@ -1562,7 +1564,7 @@
         <line x1="20" y1="200" x2="20" y2="280" stroke="#c8d0dc" stroke-width="1"/>
         <rect x="12" y="210" width="16" height="50" fill="#00796b" rx="1"/>
         <text x="-10" y="300" fill="#00796b" font-family="JetBrains Mono" font-size="9">Close volta acima de -1%</text>
-        <text x="-10" y="313" fill="#7a8799" font-family="JetBrains Mono" font-size="9">PaintBar: TEAL (não confirmada)</text>
+        <text x="-10" y="313" fill="#7a8799" font-family="JetBrains Mono" font-size="9">PaintBar: YELLOWGREEN (não confirmada)</text>
       </g>
 
       <!-- Candle 3: CONFIRMAÇÃO -->
@@ -1572,14 +1574,14 @@
         <rect x="12" y="160" width="16" height="50" fill="#00bcd4" rx="1"/>
         <text x="-10" y="250" fill="#00bcd4" font-family="JetBrains Mono" font-size="9">Close &gt; High[1], Close &gt; M9</text>
         <text x="-10" y="263" fill="#00bcd4" font-family="JetBrains Mono" font-size="9">Close &gt; VWAP ou pressão compradora</text>
-        <text x="-10" y="280" fill="#00bcd4" font-family="JetBrains Mono" font-size="10" font-weight="700">PaintBar: AQUA</text>
+        <text x="-10" y="280" fill="#00FF7F" font-family="JetBrains Mono" font-size="10" font-weight="700">PaintBar: SPRING GREEN</text>
       </g>
 
       <!-- Ponto de entrada -->
       <g transform="translate(520,0)">
         <text x="-10" y="20" fill="#76ff03" font-family="JetBrains Mono" font-size="10" font-weight="700">ORDEM ENVIADA</text>
         <rect x="-15" y="35" width="230" height="170" fill="#0a0c10" rx="6" stroke="#76ff03"/>
-        <text x="0" y="58" fill="#7a8799" font-family="JetBrains Mono" font-size="10">No candle seguinte ao AQUA:</text>
+        <text x="0" y="58" fill="#7a8799" font-family="JetBrains Mono" font-size="10">No candle seguinte ao SPRING GREEN:</text>
         <text x="0" y="80" fill="#c8d0dc" font-family="JetBrains Mono" font-size="11">BuyStop(</text>
         <text x="10" y="98" fill="#76ff03" font-family="JetBrains Mono" font-size="10">Close + 5*MinPriceIncr,</text>
         <text x="10" y="114" fill="#76ff03" font-family="JetBrains Mono" font-size="10">Close + 10*MinPriceIncr</text>
@@ -1593,7 +1595,7 @@
   </div>
 
   <div class="alert ok">
-    <strong>Ponto-chave para fixar:</strong> A ordem NUNCA é enviada no candle da cor AQUA/FUCHSIA. Ela é enviada no candle <strong>seguinte</strong>, e ainda assim como uma ordem STOP — ou seja, só executa se o preço continuar na direção esperada. Se o preço reverter antes de tocar o gatilho, a ordem simplesmente não executa.
+    <strong>Ponto-chave para fixar:</strong> A ordem NUNCA é enviada no candle da cor SPRING GREEN/CRIMSON. Ela é enviada no candle <strong>seguinte</strong>, e ainda assim como uma ordem STOP — ou seja, só executa se o preço continuar na direção esperada. Se o preço reverter antes de tocar o gatilho, a ordem simplesmente não executa.
   </div>
 
   <h3>Entrada de Venda — ConfirmouRejeicaoMais1 ou ConfirmouArmadilhaMais1 (espelhado)</h3>
@@ -1625,7 +1627,7 @@
         <line x1="20" y1="80" x2="20" y2="160" stroke="#c8d0dc" stroke-width="1"/>
         <rect x="12" y="90" width="16" height="50" fill="#7b1fa2" rx="1"/>
         <text x="-10" y="180" fill="#7b1fa2" font-family="JetBrains Mono" font-size="9">Close volta abaixo de +1%</text>
-        <text x="-10" y="193" fill="#7a8799" font-family="JetBrains Mono" font-size="9">PaintBar: PURPLE (não confirmada)</text>
+        <text x="-10" y="193" fill="#7a8799" font-family="JetBrains Mono" font-size="9">PaintBar: DARKORANGE (não confirmada)</text>
       </g>
 
       <g transform="translate(370,0)">
@@ -1634,13 +1636,13 @@
         <rect x="12" y="150" width="16" height="50" fill="#e040fb" rx="1"/>
         <text x="-10" y="240" fill="#e040fb" font-family="JetBrains Mono" font-size="9">Close &lt; Low[1], Close &lt; M9</text>
         <text x="-10" y="253" fill="#e040fb" font-family="JetBrains Mono" font-size="9">Close &lt; VWAP ou pressão vendedora</text>
-        <text x="-10" y="270" fill="#e040fb" font-family="JetBrains Mono" font-size="10" font-weight="700">PaintBar: FUCHSIA</text>
+        <text x="-10" y="270" fill="#DC143C" font-family="JetBrains Mono" font-size="10" font-weight="700">PaintBar: CRIMSON</text>
       </g>
 
       <g transform="translate(520,0)">
         <text x="-10" y="20" fill="#ff1744" font-family="JetBrains Mono" font-size="10" font-weight="700">ORDEM ENVIADA</text>
         <rect x="-15" y="35" width="240" height="170" fill="#0a0c10" rx="6" stroke="#ff1744"/>
-        <text x="0" y="58" fill="#7a8799" font-family="JetBrains Mono" font-size="10">No candle seguinte ao FUCHSIA:</text>
+        <text x="0" y="58" fill="#7a8799" font-family="JetBrains Mono" font-size="10">No candle seguinte ao CRIMSON:</text>
         <text x="0" y="80" fill="#c8d0dc" font-family="JetBrains Mono" font-size="11">SellShortStop(</text>
         <text x="10" y="98" fill="#ff1744" font-family="JetBrains Mono" font-size="10">Close - 5*MinPriceIncr,</text>
         <text x="10" y="114" fill="#ff1744" font-family="JetBrains Mono" font-size="10">Close - 10*MinPriceIncr</text>
@@ -1887,14 +1889,14 @@
       <g transform="translate(150,0)">
         <line x1="0" y1="270" x2="0" y2="330" stroke="#c8d0dc" stroke-width="1"/>
         <rect x="-8" y="280" width="16" height="35" fill="#00796b" rx="1"/>
-        <text x="-40" y="400" fill="#00796b" font-family="JetBrains Mono" font-size="9">2. TEAL</text>
+        <text x="-40" y="400" fill="#9ACD32" font-family="JetBrains Mono" font-size="9">2. YELLOWGREEN</text>
         <text x="-50" y="413" fill="#4a5568" font-family="JetBrains Mono" font-size="8">(armadilha s/ confirmação)</text>
       </g>
       <!-- 3: confirmação aqua -->
       <g transform="translate(230,0)">
         <line x1="0" y1="230" x2="0" y2="290" stroke="#c8d0dc" stroke-width="1"/>
         <rect x="-8" y="240" width="16" height="35" fill="#00bcd4" rx="1"/>
-        <text x="-35" y="400" fill="#00bcd4" font-family="JetBrains Mono" font-size="9">3. AQUA</text>
+        <text x="-35" y="400" fill="#00FF7F" font-family="JetBrains Mono" font-size="9">3. SPRING GREEN</text>
         <text x="-45" y="413" fill="#4a5568" font-family="JetBrains Mono" font-size="8">(confirmada — SINAL)</text>
       </g>
       <!-- Linha vertical de evento -->
@@ -1957,8 +1959,8 @@
 
   <div class="checklist">
     <ul class="checklist">
-      <li><strong>Passo 1-2:</strong> Toque e armadilha (TEAL) — apenas observação, sem ação</li>
-      <li><strong>Passo 3:</strong> Confirmação (AQUA) — SinalCompra = true na Camada 1</li>
+      <li><strong>Passo 1-2:</strong> Toque e armadilha (YELLOWGREEN) — apenas observação, sem ação</li>
+      <li><strong>Passo 3:</strong> Confirmação (SPRING GREEN) — SinalCompra = true na Camada 1</li>
       <li><strong>Passo 4:</strong> Se Camada 2 aprovar (horário OK, sem trava, candle não processado) — BuyStop é enviado</li>
       <li><strong>Passo 5:</strong> Ordem stop executa quando preço toca o gatilho — posição aberta, PrecoEntradaRegistrado fixado</li>
       <li><strong>Passo 6:</strong> Alvo ou stop é atingido primeiro — posição encerrada automaticamente</li>
@@ -1980,22 +1982,22 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="dot dot-purple"></span><strong>PURPLE</strong></td>
+        <td><span class="dot" style="background:#FF8C00"></span><strong>DARKORANGE</strong></td>
         <td>"Isso é sinal de venda?"</td>
         <td class="scenario-bad">NÃO — é alerta. Aguarde o próximo candle.</td>
       </tr>
       <tr>
-        <td><span class="dot dot-fuchsia"></span><strong>FUCHSIA</strong></td>
+        <td><span class="dot" style="background:#DC143C"></span><strong>CRIMSON</strong></td>
         <td>"Posso considerar venda?"</td>
         <td class="scenario-good">SIM — confirmado. Sistema pode enviar SellShortStop no próximo candle.</td>
       </tr>
       <tr>
-        <td><span class="dot" style="background:#00796b;display:inline-block;width:12px;height:12px;border-radius:50%;"></span><strong>TEAL</strong></td>
+        <td><span class="dot" style="background:#9ACD32;display:inline-block;width:12px;height:12px;border-radius:50%;"></span><strong>YELLOWGREEN</strong></td>
         <td>"Isso é sinal de compra?"</td>
         <td class="scenario-bad">NÃO — é alerta. Aguarde confirmação.</td>
       </tr>
       <tr>
-        <td><span class="dot dot-aqua"></span><strong>AQUA</strong></td>
+        <td><span class="dot" style="background:#00FF7F"></span><strong>SPRING GREEN</strong></td>
         <td>"Posso considerar compra?"</td>
         <td class="scenario-good">SIM — confirmado. Sistema pode enviar BuyStop no próximo candle.</td>
       </tr>
@@ -2028,7 +2030,7 @@
   </table>
 
   <h3>Exercício de Fixação Recomendado</h3>
-  <p>Durante os 20 pregões de simulação, pare o gráfico em cada candle pintado (PURPLE, TEAL, AQUA, FUCHSIA) e, antes de olhar o candle seguinte, escreva à mão: "este é alerta ou confirmação? Se for confirmação, qual o preço exato do gatilho da ordem?" Depois confira no candle seguinte se sua previsão bateu com o que o sistema realmente fez. Repita isso por todos os 20 pregões — é o método mais rápido para internalizar a hierarquia sem depender de consultar o manual a cada operação.</p>
+  <p>Durante os 20 pregões de simulação, pare o gráfico em cada candle pintado (DARKORANGE, YELLOWGREEN, SPRING GREEN, CRIMSON) e, antes de olhar o candle seguinte, escreva à mão: "este é alerta ou confirmação? Se for confirmação, qual o preço exato do gatilho da ordem?" Depois confira no candle seguinte se sua previsão bateu com o que o sistema realmente fez. Repita isso por todos os 20 pregões — é o método mais rápido para internalizar a hierarquia sem depender de consultar o manual a cada operação.</p>
 </div>
 
 
@@ -2218,6 +2220,390 @@ StopTrailingAnteriorC := StopTrailingCompra;</div>
 </div>
 
 
+<!-- ═══════════════════════════════════════════════════════ 19. CUMULATIVE VOLUME ANÔMALO -->
+<div class="section" id="volume-anomalo">
+  <div class="section-label">Seção 19</div>
+  <h2>Cumulative Volume Anômalo — 8 Janelas Horárias</h2>
+
+  <p>Este módulo responde uma pergunta que nenhuma outra parte do sistema responde: <strong>"o volume de hoje está dentro do normal, ou algo fora do padrão está em curso?"</strong> Não diz direção. Diz intensidade.</p>
+
+  <div class="chart-wrap">
+    <div class="chart-title">As 8 Janelas Horárias do Pregão</div>
+    <svg class="chart" viewBox="0 0 900 260" xmlns="http://www.w3.org/2000/svg">
+      <rect width="900" height="260" fill="#0f1218"/>
+
+      <line x1="40" y1="140" x2="860" y2="140" stroke="#333" stroke-width="2"/>
+
+      <!-- 8 blocos de janela -->
+      <g transform="translate(40,0)">
+        <rect x="0" y="110" width="95" height="60" fill="rgba(0,188,212,0.12)" rx="3"/>
+        <text x="8" y="100" fill="#00bcd4" font-family="JetBrains Mono" font-size="9">J1</text>
+        <text x="5" y="190" fill="#7a8799" font-family="JetBrains Mono" font-size="8">09:00–10:00</text>
+      </g>
+      <g transform="translate(140,0)">
+        <rect x="0" y="110" width="95" height="60" fill="rgba(0,188,212,0.12)" rx="3"/>
+        <text x="8" y="100" fill="#00bcd4" font-family="JetBrains Mono" font-size="9">J2</text>
+        <text x="5" y="190" fill="#7a8799" font-family="JetBrains Mono" font-size="8">10:00–11:00</text>
+      </g>
+      <g transform="translate(240,0)">
+        <rect x="0" y="110" width="95" height="60" fill="rgba(0,188,212,0.12)" rx="3"/>
+        <text x="8" y="100" fill="#00bcd4" font-family="JetBrains Mono" font-size="9">J3</text>
+        <text x="5" y="190" fill="#7a8799" font-family="JetBrains Mono" font-size="8">11:00–12:00</text>
+      </g>
+      <g transform="translate(340,0)">
+        <rect x="0" y="110" width="95" height="60" fill="rgba(120,140,160,0.08)" rx="3"/>
+        <text x="8" y="100" fill="#4a5568" font-family="JetBrains Mono" font-size="9">J4</text>
+        <text x="5" y="190" fill="#4a5568" font-family="JetBrains Mono" font-size="8">12:00–13:00</text>
+        <text x="5" y="202" fill="#4a5568" font-family="JetBrains Mono" font-size="7">(almoço)</text>
+      </g>
+      <g transform="translate(440,0)">
+        <rect x="0" y="110" width="95" height="60" fill="rgba(0,188,212,0.12)" rx="3"/>
+        <text x="8" y="100" fill="#00bcd4" font-family="JetBrains Mono" font-size="9">J5</text>
+        <text x="5" y="190" fill="#7a8799" font-family="JetBrains Mono" font-size="8">13:00–14:00</text>
+      </g>
+      <g transform="translate(540,0)">
+        <rect x="0" y="110" width="95" height="60" fill="rgba(0,188,212,0.12)" rx="3"/>
+        <text x="8" y="100" fill="#00bcd4" font-family="JetBrains Mono" font-size="9">J6</text>
+        <text x="5" y="190" fill="#7a8799" font-family="JetBrains Mono" font-size="8">14:00–15:00</text>
+      </g>
+      <g transform="translate(640,0)">
+        <rect x="0" y="110" width="95" height="60" fill="rgba(0,188,212,0.12)" rx="3"/>
+        <text x="8" y="100" fill="#00bcd4" font-family="JetBrains Mono" font-size="9">J7</text>
+        <text x="5" y="190" fill="#7a8799" font-family="JetBrains Mono" font-size="8">15:00–16:00</text>
+      </g>
+      <g transform="translate(740,0)">
+        <rect x="0" y="110" width="95" height="60" fill="rgba(0,188,212,0.12)" rx="3"/>
+        <text x="8" y="100" fill="#00bcd4" font-family="JetBrains Mono" font-size="9">J8</text>
+        <text x="5" y="190" fill="#7a8799" font-family="JetBrains Mono" font-size="8">16:00–17:30</text>
+      </g>
+
+      <text x="40" y="230" fill="#7a8799" font-family="JetBrains Mono" font-size="10">Cada janela guarda sua própria média histórica — comparação sempre "ponto a ponto do dia"</text>
+    </svg>
+  </div>
+
+  <h3>Como o Histórico é Construído — Dia a Dia</h3>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Acúmulo de Histórico ao Longo de Vários Pregões (Janela J3 como exemplo)</div>
+    <svg class="chart" viewBox="0 0 900 260" xmlns="http://www.w3.org/2000/svg">
+      <rect width="900" height="260" fill="#0f1218"/>
+
+      <line x1="60" y1="220" x2="860" y2="220" stroke="#333" stroke-width="1"/>
+      <line x1="60" y1="40" x2="60" y2="220" stroke="#333" stroke-width="1"/>
+
+      <!-- Barras de volume acumulado em J3 por dia -->
+      <rect x="90"  y="160" width="50" height="60" fill="#4a5568"/>
+      <text x="95" y="235" fill="#7a8799" font-family="JetBrains Mono" font-size="9">Dia 1</text>
+      <text x="95" y="150" fill="#7a8799" font-family="JetBrains Mono" font-size="9">12k</text>
+
+      <rect x="170" y="150" width="50" height="70" fill="#4a5568"/>
+      <text x="175" y="235" fill="#7a8799" font-family="JetBrains Mono" font-size="9">Dia 2</text>
+      <text x="175" y="140" fill="#7a8799" font-family="JetBrains Mono" font-size="9">14k</text>
+
+      <rect x="250" y="165" width="50" height="55" fill="#4a5568"/>
+      <text x="255" y="235" fill="#7a8799" font-family="JetBrains Mono" font-size="9">Dia 3</text>
+      <text x="255" y="155" fill="#7a8799" font-family="JetBrains Mono" font-size="9">11k</text>
+
+      <rect x="330" y="155" width="50" height="65" fill="#4a5568"/>
+      <text x="335" y="235" fill="#7a8799" font-family="JetBrains Mono" font-size="9">Dia 4</text>
+      <text x="335" y="145" fill="#7a8799" font-family="JetBrains Mono" font-size="9">13k</text>
+
+      <rect x="410" y="158" width="50" height="62" fill="#00bcd4"/>
+      <text x="415" y="235" fill="#00bcd4" font-family="JetBrains Mono" font-size="9" font-weight="700">Dia 5</text>
+      <text x="415" y="148" fill="#00bcd4" font-family="JetBrains Mono" font-size="9">12.5k</text>
+      <text x="380" y="80" fill="#00bcd4" font-family="JetBrains Mono" font-size="10" font-weight="700">↓ MinimoDiasParaComparar</text>
+      <text x="395" y="95" fill="#00bcd4" font-family="JetBrains Mono" font-size="9">atingido aqui</text>
+
+      <!-- Linha de média -->
+      <line x1="90" y1="158" x2="460" y2="158" stroke="#ffd600" stroke-width="1.5" stroke-dasharray="5,3"/>
+      <text x="470" y="155" fill="#ffd600" font-family="JetBrains Mono" font-size="10">MediaVolJanela[3] ≈ 12.5k</text>
+
+      <!-- Dia 6 anômalo -->
+      <rect x="500" y="60" width="50" height="160" fill="#ff9800"/>
+      <text x="500" y="235" fill="#ff9800" font-family="JetBrains Mono" font-size="9" font-weight="700">Dia 6</text>
+      <text x="495" y="50" fill="#ff9800" font-family="JetBrains Mono" font-size="9" font-weight="700">28k — ANÔMALO!</text>
+      <text x="500" y="38" fill="#ff9800" font-family="JetBrains Mono" font-size="9">Ratio = 28k/12.5k = 2.24</text>
+
+      <text x="40" y="30" fill="#7a8799" font-family="JetBrains Mono" font-size="10">Volume acumulado até o fim da Janela 3, em cada dia</text>
+    </svg>
+  </div>
+
+  <div class="alert info">
+    <strong>Como a média é calculada:</strong> O sistema NÃO guarda o histórico de todos os dias em memória. Usa a fórmula incremental de Welford — <code>NovaMedia = MediaAntiga + (NovoValor - MediaAntiga) / (N+1)</code> — que chega exatamente à mesma média de uma soma tradicional, mas sem precisar armazenar nenhum dado histórico extra. Apenas a média corrente e o contador de dias.
+  </div>
+
+  <h3>O Momento do Alerta — Passo a Passo</h3>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Sequência Completa: Do Volume Normal ao Alerta Disparando</div>
+    <svg class="chart" viewBox="0 0 900 340" xmlns="http://www.w3.org/2000/svg">
+      <rect width="900" height="340" fill="#0f1218"/>
+
+      <!-- Eixo -->
+      <line x1="60" y1="280" x2="860" y2="280" stroke="#333" stroke-width="1"/>
+
+      <!-- Referência histórica (linha aqua) -->
+      <path d="M 80 250 L 200 220 L 320 190 L 440 165 L 560 145 L 680 125 L 800 110" stroke="#00bcd4" stroke-width="2.5" fill="none"/>
+      <text x="700" y="100" fill="#00bcd4" font-family="JetBrains Mono" font-size="10" font-weight="700">RefHistoricaAtual</text>
+
+      <!-- Volume de hoje (linha branca) - seguindo perto até certo ponto -->
+      <path d="M 80 255 L 200 225 L 320 195 L 440 145 L 560 95 L 680 50 L 800 30" stroke="#ffffff" stroke-width="2.5" fill="none"/>
+      <text x="700" y="22" fill="#ffffff" font-family="JetBrains Mono" font-size="10" font-weight="700">VolumeAcumuladoHoje</text>
+
+      <!-- Ponto onde diverge -->
+      <circle cx="440" cy="145" r="5" fill="#ffd600"/>
+      <text x="380" y="180" fill="#ffd600" font-family="JetBrains Mono" font-size="9">Começa a divergir</text>
+
+      <!-- Zona de alerta -->
+      <rect x="560" y="40" width="240" height="110" fill="rgba(255,152,0,0.08)"/>
+      <line x1="560" y1="40" x2="560" y2="280" stroke="#ff9800" stroke-width="1" stroke-dasharray="4,3"/>
+      <text x="570" y="30" fill="#ff9800" font-family="JetBrains Mono" font-size="11" font-weight="700">RatioVolumeAnomalo ≥ FatorAlertaAnomalia</text>
+      <text x="570" y="160" fill="#ff9800" font-family="JetBrains Mono" font-size="10">AlertaVolumeAnomalo = true</text>
+
+      <!-- Marcadores de janela no eixo -->
+      <text x="60" y="300" fill="#7a8799" font-family="JetBrains Mono" font-size="9">J1</text>
+      <text x="200" y="300" fill="#7a8799" font-family="JetBrains Mono" font-size="9">J2</text>
+      <text x="320" y="300" fill="#7a8799" font-family="JetBrains Mono" font-size="9">J3</text>
+      <text x="440" y="300" fill="#7a8799" font-family="JetBrains Mono" font-size="9">J5</text>
+      <text x="560" y="300" fill="#7a8799" font-family="JetBrains Mono" font-size="9">J6</text>
+      <text x="680" y="300" fill="#7a8799" font-family="JetBrains Mono" font-size="9">J7</text>
+      <text x="800" y="300" fill="#7a8799" font-family="JetBrains Mono" font-size="9">J8</text>
+    </svg>
+  </div>
+
+  <h3>O Que o Alerta Realmente Faz no Sistema — Filtro B+D</h3>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Reforço do Score — Antes e Depois do Alerta</div>
+    <svg class="chart" viewBox="0 0 900 240" xmlns="http://www.w3.org/2000/svg">
+      <rect width="900" height="240" fill="#0f1218"/>
+
+      <!-- SEM alerta -->
+      <rect x="40" y="30" width="380" height="180" fill="#0a0c10" rx="8" stroke="#1e2530"/>
+      <text x="60" y="58" fill="#7a8799" font-family="JetBrains Mono" font-size="11" font-weight="700">SEM ALERTA — dia normal</text>
+      <text x="60" y="85" fill="#c8d0dc" font-family="JetBrains Mono" font-size="10">DiferencaMinimaScoreEfetiva = 3</text>
+      <rect x="60" y="100" width="300" height="36" fill="rgba(0,230,118,0.1)" rx="4" stroke="#00e676"/>
+      <text x="70" y="122" fill="#00e676" font-family="JetBrains Mono" font-size="11">ScoreComprador 8 vs Vendedor 4</text>
+      <text x="60" y="155" fill="#00e676" font-family="JetBrains Mono" font-size="11" font-weight="700">Diferença = 4 ≥ 3 → CONTEXTO ATIVO</text>
+      <text x="60" y="180" fill="#4a5568" font-family="JetBrains Mono" font-size="9">Sinal liberado normalmente</text>
+
+      <!-- COM alerta -->
+      <rect x="460" y="30" width="400" height="180" fill="#0a0c10" rx="8" stroke="#ff9800"/>
+      <text x="480" y="58" fill="#ff9800" font-family="JetBrains Mono" font-size="11" font-weight="700">COM ALERTA — volume anômalo</text>
+      <text x="480" y="85" fill="#c8d0dc" font-family="JetBrains Mono" font-size="10">DiferencaMinimaScoreEfetiva = 3 + 2 = 5</text>
+      <rect x="480" y="100" width="300" height="36" fill="rgba(255,23,68,0.1)" rx="4" stroke="#ff1744"/>
+      <text x="490" y="122" fill="#ff1744" font-family="JetBrains Mono" font-size="11">Mesmo Score: 8 vs 4 (diferença=4)</text>
+      <text x="480" y="155" fill="#ff1744" font-family="JetBrains Mono" font-size="11" font-weight="700">Diferença = 4 &lt; 5 → CONTEXTO BLOQUEADO</text>
+      <text x="480" y="180" fill="#4a5568" font-family="JetBrains Mono" font-size="9">O MESMO score que liberava antes, agora não libera</text>
+    </svg>
+  </div>
+
+  <div class="alert warn">
+    <strong>Ponto crítico para fixar:</strong> O alerta de volume anômalo NÃO pinta o candle com uma cor própria — ele age de forma estrutural, exigindo mais pontos de Score antes de liberar qualquer Contexto Comprador/Vendedor. Isso significa que, em dias de volume anômalo, você vai notar o sistema "mais seletivo" — sinais de Prioridade 3 (Dia Direcional) tendem a desaparecer primeiro, porque dependem diretamente do Contexto.
+  </div>
+
+  <h3>Tabela de Parâmetros do Módulo</h3>
+  <table>
+    <thead>
+      <tr><th>Parâmetro</th><th>Padrão</th><th>Função</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>FatorAlertaAnomalia</code></td><td>2.0</td><td>Quantas vezes acima da média histórica dispara o alerta</td></tr>
+      <tr><td><code>MinimoDiasParaComparar</code></td><td>5</td><td>Dias mínimos de histórico antes do alerta poder disparar</td></tr>
+      <tr><td><code>ReforcoScoreEmAlerta</code></td><td>2</td><td>Pontos somados ao DiferencaMinimaScore quando o alerta está ativo</td></tr>
+      <tr><td><code>JanelaFim1</code> a <code>JanelaFim8</code></td><td>1000–1730</td><td>Limites de horário de cada uma das 8 janelas</td></tr>
+    </tbody>
+  </table>
+
+  <div class="alert danger">
+    <strong>Lembrete operacional:</strong> A média histórica reseta quando o Profit é reiniciado ou o indicador recarregado — NTSL não persiste arrays entre sessões. Nos primeiros 5 pregões após qualquer reinício, o alerta permanece estruturalmente desativado (DiasJanela ainda não atingiu o mínimo), e o sistema opera como se o módulo de volume não existisse.
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════ 20. CATÁLOGO CONSOLIDADO DE TODOS OS SINAIS -->
+<div class="section" id="catalogo-completo">
+  <div class="section-label">Seção 20</div>
+  <h2>Catálogo Consolidado — Todos os Sinais do Sistema Completo</h2>
+
+  <p>Esta seção reúne, em um único lugar, <strong>absolutamente todos os sinais, estados e variáveis de decisão</strong> que existem no V10.1 EXEC + Trailing + Volume Anômalo. Use como referência rápida — cada linha responde "o que é, quando aparece, e o que fazer".</p>
+
+  <h3>Grupo 1 — Sinais de Banda (Indicador Base)</h3>
+  <table>
+    <thead>
+      <tr><th>Sinal</th><th>Cor no Candle</th><th>Condição</th><th>Ação Operacional</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Toque em +1% / -1% / +2% / -2%</td>
+        <td><span class="pill pill-gray">Sem cor própria</span></td>
+        <td>High/Low cruzou a banda</td>
+        <td class="scenario-neutral">Observação apenas — não é sinal, é contexto</td>
+      </tr>
+      <tr>
+        <td>Aceitação (+1%/-1%/+2%/-2%)</td>
+        <td><span class="dot dot-green"></span>/<span class="dot dot-red"></span> GREEN/RED, <span class="dot dot-lime"></span>/<span class="dot dot-maroon"></span> LIME/MAROON</td>
+        <td>Close fecha além da banda</td>
+        <td class="scenario-neutral">Contexto de força — alimenta o Score</td>
+      </tr>
+      <tr>
+        <td>Rejeição simples</td>
+        <td><span class="dot dot-red"></span> RED / <span class="dot dot-green"></span> GREEN</td>
+        <td>Pavio ≥1,5x corpo + corpo ≥25% do range, fecha de volta</td>
+        <td class="scenario-warn">Atenção — aguardar confirmação antes de agir</td>
+      </tr>
+      <tr>
+        <td>Rejeição CONFIRMADA</td>
+        <td><span class="dot dot-red"></span> RED / <span class="dot dot-green"></span> GREEN (no candle seguinte)</td>
+        <td>Candle seguinte fecha além do extremo anterior + além da M9 + VWAP/fluxo alinhado</td>
+        <td class="scenario-good">SINAL — pode gerar ordem (Camada 1)</td>
+      </tr>
+      <tr>
+        <td>Armadilha (não confirmada)</td>
+        <td><span class="dot" style="background:#FF8C00"></span> DARKORANGE / <span class="dot" style="background:#9ACD32"></span> YELLOWGREEN</td>
+        <td>Candle anterior fechou além da banda, este voltou para dentro</td>
+        <td class="scenario-warn">ALERTA — nunca operar nesta cor</td>
+      </tr>
+      <tr>
+        <td>Armadilha CONFIRMADA</td>
+        <td><span class="dot" style="background:#DC143C"></span> CRIMSON / <span class="dot" style="background:#00FF7F"></span> SPRING GREEN</td>
+        <td>Candle seguinte confirma reversão com VWAP/fluxo alinhado</td>
+        <td class="scenario-good">SINAL MAIS FORTE — gera ordem (Camada 1)</td>
+      </tr>
+      <tr>
+        <td>Dia Direcional Compra/Venda</td>
+        <td><span class="dot dot-lime"></span> LIME / <span class="dot" style="background:#880e4f"></span> MAROON</td>
+        <td>5 condições simultâneas (Contexto + médias + aceitação + VWAP)</td>
+        <td class="scenario-warn">SINAL TARDIO — desligado por padrão na execução</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Grupo 2 — Estados Internos (Não Pintam o Candle, mas Decidem Tudo)</h3>
+  <table>
+    <thead>
+      <tr><th>Variável</th><th>O que representa</th><th>Onde atua</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>ScoreComprador / ScoreVendedor</code></td><td>Pontuação acumulada de força direcional</td><td>Base de tudo — alimenta Contexto</td></tr>
+      <tr><td><code>ContextoComprador / Vendedor</code></td><td>Score atingiu a diferença mínima exigida</td><td>Pré-requisito do Dia Direcional</td></tr>
+      <tr><td><code>DiferencaMinimaScoreEfetiva</code></td><td>Limiar dinâmico — 3 normal, 5 com alerta de volume</td><td>Controla a seletividade do Contexto</td></tr>
+      <tr><td><code>PressaoCompradora / Vendedora</code></td><td>Proxy de fluxo via posição do Close no range + volume</td><td>Filtro de confirmação de rejeição/armadilha</td></tr>
+      <tr><td><code>PrecoAcimaVWAP / AbaixoVWAP</code></td><td>Campo institucional do dia</td><td>Filtro de confirmação + Score + Dia Direcional</td></tr>
+      <tr><td><code>AlertaVolumeAnomalo</code></td><td>Volume acumulado muito acima do histórico da janela</td><td>Reforça DiferencaMinimaScoreEfetiva (+2)</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Grupo 3 — Sinais de Execução (Camadas Sinal → Permissão → Execução)</h3>
+  <table>
+    <thead>
+      <tr><th>Variável/Evento</th><th>Camada</th><th>Efeito Real</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>SinalCompra / SinalVenda</code></td><td>1 — Sinal</td><td>Identifica o evento técnico, não gera ordem por si só</td></tr>
+      <tr><td><code>DentroHorarioOperacional</code></td><td>2 — Permissão</td><td>Bloqueia fora das janelas 09:05–12:00 e 14:30–17:30</td></tr>
+      <tr><td><code>TravaPerdaAtiva</code></td><td>2 — Permissão</td><td>Bloqueia tudo se ResultadoDiario ≤ -300pts</td></tr>
+      <tr><td><code>TravaGanhoAtiva</code></td><td>2 — Permissão</td><td>Opcional — bloqueia se ResultadoDiario ≥ +600pts</td></tr>
+      <tr><td><code>OperacoesHoje ≥ MaxOperacoesPorDia</code></td><td>2 — Permissão</td><td>Bloqueia após 4 operações no dia</td></tr>
+      <tr><td><code>PodeProcessarCandle</code></td><td>2 — Permissão</td><td>Impede múltiplos envios no mesmo candle reprocessado</td></tr>
+      <tr><td><code>PermissaoCompra / Venda</code></td><td>2→3 — Ponte</td><td>Só true se Sinal + todos os filtros de Permissão passarem</td></tr>
+      <tr><td><code>BuyStop / SellShortStop</code></td><td>3 — Execução</td><td>Ordem real enviada à B3, com CancelPendingOrders antes</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Grupo 4 — Sinais de Saída (Stop Fixo → Trailing M9)</h3>
+  <table>
+    <thead>
+      <tr><th>Estado</th><th>Fase</th><th>Comportamento</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Posição recém-aberta, lucro &lt; 40pts</td><td>Fase 1</td><td>Stop fixo (Entrada−50) + Alvo fixo (Entrada+80) ativos simultaneamente</td></tr>
+      <tr><td><code>TrailingAtivoCompra/Venda = true</code></td><td>Transição</td><td>Disparado quando lucro atinge 40pts — permanente, nunca desativa na mesma operação</td></tr>
+      <tr><td>Trailing ativo, M9 distante (≥15pts)</td><td>Fase 2</td><td>StopTrailing = MediaBandasCurta (M9)</td></tr>
+      <tr><td>Trailing ativo, M9 muito próxima (&lt;15pts)</td><td>Fase 2</td><td>StopTrailing = Close − 15pts (piso de segurança)</td></tr>
+      <tr><td><code>StopTrailingAnteriorC/V</code></td><td>Fase 2</td><td>Trava de não-regressão — stop nunca afrouxa, só aperta</td></tr>
+      <tr><td>Alvo fixo na Fase 2</td><td>Fase 2</td><td>CANCELADO — só existe trailing a partir daqui</td></tr>
+      <tr><td><code>ZerarNoFimDoPregao</code> + 17:45</td><td>Segurança final</td><td>ClosePosition forçado, independente de qualquer stop/trailing</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Grupo 5 — Cumulative Volume Anômalo</h3>
+  <table>
+    <thead>
+      <tr><th>Variável</th><th>O que mede</th><th>Efeito no Sistema</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>VolumeAcumuladoHoje</code></td><td>Soma de Volume desde a abertura</td><td>Curva branca no painel auxiliar</td></tr>
+      <tr><td><code>RefHistoricaAtual</code></td><td>Média histórica da janela horária atual</td><td>Curva aqua no painel auxiliar</td></tr>
+      <tr><td><code>RatioVolumeAnomalo</code></td><td>VolumeHoje / RefHistorica</td><td>≥2.0 dispara o alerta</td></tr>
+      <tr><td><code>AlertaVolumeAnomalo</code></td><td>Estado booleano do alerta</td><td>Reforça DiferencaMinimaScoreEfetiva em +2 — NÃO pinta candle</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Mapa Visual Único — Onde Cada Grupo Atua na Sequência de Decisão</h3>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Fluxo Completo: do Candle Bruto até a Ordem na B3</div>
+    <svg class="chart" viewBox="0 0 900 460" xmlns="http://www.w3.org/2000/svg">
+      <rect width="900" height="460" fill="#0f1218"/>
+
+      <!-- Etapa 1 -->
+      <rect x="30" y="20" width="840" height="60" fill="rgba(0,188,212,0.08)" rx="6" stroke="#00bcd4"/>
+      <text x="45" y="42" fill="#00bcd4" font-family="JetBrains Mono" font-size="11" font-weight="700">1. INDICADOR BASE — Bandas, Médias, Proxy de Fluxo, VWAP</text>
+      <text x="45" y="62" fill="#7a8799" font-family="JetBrains Mono" font-size="10">Calcula: TocouX, AceitouX, RejeitouX, ArmadilhaX, ConfirmouX</text>
+
+      <text x="450" y="92" fill="#7a8799" font-size="20" text-anchor="middle">↓</text>
+
+      <!-- Etapa 2 -->
+      <rect x="30" y="100" width="840" height="60" fill="rgba(255,152,0,0.08)" rx="6" stroke="#ff9800"/>
+      <text x="45" y="122" fill="#ff9800" font-family="JetBrains Mono" font-size="11" font-weight="700">2. CUMULATIVE VOLUME ANÔMALO — 8 Janelas Horárias</text>
+      <text x="45" y="142" fill="#7a8799" font-family="JetBrains Mono" font-size="10">Calcula: AlertaVolumeAnomalo → ajusta DiferencaMinimaScoreEfetiva</text>
+
+      <text x="450" y="172" fill="#7a8799" font-size="20" text-anchor="middle">↓</text>
+
+      <!-- Etapa 3 -->
+      <rect x="30" y="180" width="840" height="60" fill="rgba(0,230,118,0.08)" rx="6" stroke="#00e676"/>
+      <text x="45" y="202" fill="#00e676" font-family="JetBrains Mono" font-size="11" font-weight="700">3. SCORE E CONTEXTO — ScoreComprador/Vendedor, ContextoX, DiaDirecionalX</text>
+      <text x="45" y="222" fill="#7a8799" font-family="JetBrains Mono" font-size="10">Usa o limiar EFETIVO (reforçado se alerta de volume ativo)</text>
+
+      <text x="450" y="252" fill="#7a8799" font-size="20" text-anchor="middle">↓</text>
+
+      <!-- Etapa 4 -->
+      <rect x="30" y="260" width="840" height="60" fill="rgba(0,188,212,0.08)" rx="6" stroke="#00bcd4"/>
+      <text x="45" y="282" fill="#00bcd4" font-family="JetBrains Mono" font-size="11" font-weight="700">4. SINAL (Camada 1) — SinalCompra / SinalVenda</text>
+      <text x="45" y="302" fill="#7a8799" font-family="JetBrains Mono" font-size="10">Origem: ConfirmouRejeicaoX, ConfirmouArmadilhaX, DiaDirecionalX (se ativado)</text>
+
+      <text x="450" y="332" fill="#7a8799" font-size="20" text-anchor="middle">↓</text>
+
+      <!-- Etapa 5 -->
+      <rect x="30" y="340" width="840" height="60" fill="rgba(255,152,0,0.08)" rx="6" stroke="#ff9800"/>
+      <text x="45" y="362" fill="#ff9800" font-family="JetBrains Mono" font-size="11" font-weight="700">5. PERMISSÃO (Camada 2) — Horário, Travas, Limite de Operações, Candle</text>
+      <text x="45" y="382" fill="#7a8799" font-family="JetBrains Mono" font-size="10">Qualquer filtro reprovado = nenhuma ordem enviada</text>
+
+      <text x="450" y="412" fill="#7a8799" font-size="20" text-anchor="middle">↓</text>
+
+      <!-- Etapa 6 -->
+      <rect x="30" y="420" width="840" height="35" fill="rgba(118,255,3,0.1)" rx="6" stroke="#76ff03"/>
+      <text x="45" y="442" fill="#76ff03" font-family="JetBrains Mono" font-size="11" font-weight="700">6. EXECUÇÃO (Camada 3) — Ordem enviada → Stop Fixo → Trailing M9 → Zeragem</text>
+    </svg>
+  </div>
+
+  <div class="alert ok">
+    <strong>Por que este mapa importa:</strong> Cada grupo de sinal tem seu papel exato na cadeia. Um erro comum é tratar qualquer candle colorido como "sinal de entrada" — mas a cor só representa a Etapa 1. Para uma ordem real existir, o evento precisa atravessar as Etapas 2 a 6 sem ser bloqueado em nenhuma delas.
+  </div>
+
+  <h3>Checklist Final de Leitura — Antes de Confiar em Qualquer Sinal</h3>
+  <ul class="checklist">
+    <li>A cor do candle é SPRING GREEN, CRIMSON, RED-confirmado ou GREEN-confirmado? (Prioridade 1-2, não alerta)</li>
+    <li>O ContextoComprador/Vendedor está ativo considerando o limiar EFETIVO (verifique se há alerta de volume hoje)?</li>
+    <li>Está dentro de uma das duas janelas operacionais (09:05–12:00 / 14:30–17:30)?</li>
+    <li>A trava de perda diária ainda não foi atingida?</li>
+    <li>Ainda há operações disponíveis no limite diário?</li>
+    <li class="danger">Existe evento macro relevante hoje que pede cautela extra, independente do que o sistema sinalize?</li>
+  </ul>
+</div>
+
+
 <!-- ═══════════════════════════════════════════════════════ ROADMAP V11 -->
 <div class="section">
   <div class="section-label">Próxima Versão</div>
@@ -2251,7 +2637,7 @@ StopTrailingAnteriorC := StopTrailingCompra;</div>
 
 <footer>
   BRICKMASTER 1% OPENING RANGE — V10.1 EXEC · Manual Operacional · Carlos Andrade<br>
-  Profit One / Nelogica · NTSL v4.2 · Compatível com gráfico 5000T · Indicador + Execução + Trailing Stop
+  Profit One / Nelogica · NTSL v4.2 · Sistema Completo: Indicador + Execução + Trailing + Volume Anômalo
 </footer>
 
 </body>
