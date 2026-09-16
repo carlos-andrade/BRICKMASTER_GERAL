@@ -1,0 +1,107 @@
+﻿// ROBÔ: BRICKMASTER
+// Método inspirado no Método 9.1 do Larry Williams e o Método de Joseph Reffson (MeJoRe)(Newton–Raphson).
+//https://www.youtube.com/shorts/uREyNIvrROU?feature=share
+// Nome: CAR_AVGPRICE_RENKOv5
+// Versão 05. // USAR SOMENTE NO RENKO 15R NO WINFUT.
+// Estrutura Cinética
+
+  var
+  vCandleAVG0, vCandleAVG1, vCandleAVG2 : Integer;
+  vCandleENT : Integer; // Posicionar a entrada no fechamento do candle 0.
+  vCandleSAI : Integer; // Posicionar a saída no fechamento do candle 2. 
+  
+  sinalC,    sinalV       : booleano;
+  vlrStopC,  vlrStopV     : real;
+  
+  vAvgPrice, vEstrategia, vEstrategiaMAX, vEstrategiaMIN  : real;
+  vRange : float;         
+  vVolatility : Float;
+  vOffSet : float;
+         
+begin 
+  // PASSO 1 | CARREGAR AS VARIÁVEIS:
+  vCandleAVG2 := 2; // AVGPRICE NO CANDLE 2. 
+  vCandleAVG1 := 1; // AVGPRICE NO CANDLE 1.
+  vCandleAVG0 := 0; // AVGPRICE NO CANDLE 0.
+  vCandleENT  := 0; // Posicionar a entrada no fechamento do candle 0.
+  vCandleSAI  := 2; // Posicionar a saída no fechamento do candle 2. 
+
+  // PASSO 1 | CARREGAR INDICADORES  
+  vAvgPrice := AvgPrice();
+  vEstrategia := AvgPrice;   // Validar os sinais de entrada e saída.   
+  vEstrategiaMAX := maxima;   // Posicionar a ordem de compra.
+  vEstrategiaMIN := minima;   // Posicionar a ordem de venda.                                        
+  vRange := Ceiling(Range()); //Range(); // o range está arredondado ...
+  vVolatility := Ceiling((Volatility(vRange))); //(Volatility(vRange));  //volatilidade de 30 períodos no timeframe de 15R.
+  vOffSet := (vRange * vVolatility); 
+
+  //vIBOV := (IBOV.Open + IBOV.Close)/2;                                         
+  //vIBOV := (IBOV.High + IBOV.Low)/2 *(vVolatility); 
+       
+  //-----------PADRÃO----------
+  //EXECUÇÃO DE ENTRADA //PASSO 2 // Controle de Fluxo
+  sinalC := (vEstrategia[vCandleAVG2] > vEstrategia[vCandleAVG1]) 
+          and (vEstrategia[vCandleAVG1] < vEstrategia[vCandleAVG0]);
+
+  sinalV := (vEstrategia[vCandleAVG2] < vEstrategia[vCandleAVG1]) 
+          and (vEstrategia[vCandleAVG1] > vEstrategia[vCandleAVG0]);
+begin   
+  if (not HasPosition) and sinalC and (Time > 900) and (Time < 1730) then
+    BuyStop((vEstrategiaMAX[vCandleENT] + MinPriceIncrement),
+            (vEstrategiaMAX[vCandleENT] + MinPriceIncrement) + (vOffSet * MinPriceIncrement));
+end;
+begin
+  if (not HasPosition) and sinalV and (Time > 900) and (Time < 1730) then
+    SellShortStop((vEstrategiaMIN[vCandleENT] - MinPriceIncrement),
+                  (vEstrategiaMIN[vCandleENT] - MinPriceIncrement) - (vOffSet * MinPriceIncrement));    
+end;
+
+  //EXECUÇÃO DE SAÍDA //PASSO 3
+   vlrStopC := (open[vCandleSAI]);  //open   //PADRÃO: [0] PARA PERDER DE 5 A 10 PONTOS NO WINFUT. //49.229
+   vlrStopV := (close[vCandleSAI]); //cloese //PADRÃO: [0] PARA PERDER DE 5 A 10 PONTOS NO WINFUT.
+begin
+  if IsBought then  //ordem de compra aberta.
+    SellToCoverStop(vlrStopC,vlrStopC - (vOffSet * MinPriceIncrement));
+end;
+
+begin
+  if IsSold then    //ordem de venda aberta.
+    BuyToCoverStop(vlrStopV,vlrStopv + (vOffSet * MinPriceIncrement));
+end;
+  
+  //EXECUCAO DE SAIDA EM GAP
+
+begin
+  if IsBought and (close < vlrStopC) then closeposition;
+end;
+begin
+  if IsSold and (close > vlrStopV) then closeposition;
+end;
+  
+  //Linhas para demarcar os dois pontos do AVGPRICE:
+  //HorizontalLine(open[0], RGB(10,242,49)); //Verde  // Função: Marcar a posição da estratégia.  
+  //HorizontalLine(close[2], RGB(245,17,0)); //Vermelho       // Função: Marcar a posição do tralingstop.
+
+  //COLORAÇÃO
+  SetPlotColor(1,RGB(0, 0, 255));     //Azul - AVGPrice
+  SetPlotColor(2,RGB(255, 255, 0));   //Amarelo - vRange
+  SetPlotColor(3,RGB(255, 0, 255));   //Magenta - vVolatility
+  SetPlotColor(4,RGB(238,93,108));    //Laranja - vOffSet
+    
+  //ESPESSURA
+  SetPlotWidth(1,2);
+  SetPlotWidth(6,4);
+  
+  //ESTILO DA LINHA
+  SetPlotStyle(1,1);
+  
+  //PLOTAGEM
+  Plot (vAvgPrice); 
+  Plot2(vRange);
+  Plot3(vVolatility); 
+  Plot4(vOffSet); 
+  //Plot5();
+  //Plot6(TrueRange);
+  //Plot7(Volume);
+      
+end;

@@ -1,0 +1,4 @@
+﻿Inicio
+  Se (Fechamento < 170) e (Fechamento > 100) então
+    PaintBar(clPúrpura);
+Fim;

@@ -1,0 +1,36 @@
+﻿
+  // variáveis
+  nomeObj = ""
+  topP = 0
+  botP = 0
+  i = 0
+
+  // só processa se houver pelo menos 3 candles
+  If BarNumber > 3 Then
+  Begin
+    // FVG bullish: Low(candle3) > High(candle1)
+    If Low > High[2] Then
+    Begin
+      nomeObj = "FVG_" + NumToStr(BarNumber,0)
+      ObjectCreate(nomeObj, OBJ_RECTANGLE)
+      ObjectSet(nomeObj, OBJPROP_TIME1, BarNumber - 2)
+      ObjectSet(nomeObj, OBJPROP_PRICE1, High[2])
+      ObjectSet(nomeObj, OBJPROP_TIME2, BarNumber)
+      ObjectSet(nomeObj, OBJPROP_PRICE2, Low)
+      ObjectSet(nomeObj, OBJPROP_COLOR, clGreen)
+      ObjectSet(nomeObj, OBJPROP_BACK, True)
+    End
+
+    // apagar retângulos preenchidos nos últimos 200 candles
+    For i = MaxList(1, BarNumber - 200) To BarNumber Begin
+      nomeObj = "FVG_" + NumToStr(i,0)
+      topP = ObjectGet(nomeObj, OBJPROP_PRICE1)
+      botP = ObjectGet(nomeObj, OBJPROP_PRICE2)
+
+      If (topP <> 0) And (botP <> 0) Then
+        If (High >= botP) And (Low <= topP) Then
+          ObjectDelete(nomeObj)
+    End
+  End
+End;
+
