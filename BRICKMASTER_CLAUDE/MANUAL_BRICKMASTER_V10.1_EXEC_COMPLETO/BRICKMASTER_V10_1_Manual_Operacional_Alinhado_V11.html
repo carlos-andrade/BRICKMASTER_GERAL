@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BRICKMASTER V10.1 — Manual Operacional Alinhado V11</title>
+  <style>
+    :root{
+      --bg:#0b0f14;--panel:#111827;--panel2:#151f2e;--text:#e5e7eb;--muted:#9ca3af;
+      --accent:#f59e0b;--green:#22c55e;--red:#ef4444;--blue:#38bdf8;--violet:#a855f7;
+      --yellow:#facc15;--border:#2d3748;--white:#ffffff;--soft:#1f2937;
+    }
+    *{box-sizing:border-box} body{margin:0;background:linear-gradient(180deg,#070a0f,#0b0f14 22%,#0b0f14);color:var(--text);font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;line-height:1.62}
+    .wrap{max-width:1180px;margin:0 auto;padding:32px 22px 80px}.hero{border:1px solid var(--border);background:radial-gradient(circle at top left,rgba(245,158,11,.22),transparent 36%),linear-gradient(135deg,#111827,#0b0f14);border-radius:24px;padding:34px;margin-bottom:24px;box-shadow:0 18px 50px rgba(0,0,0,.35)}
+    h1{font-size:2.45rem;line-height:1.05;margin:0 0 12px} h2{font-size:1.65rem;margin:36px 0 12px;border-left:5px solid var(--accent);padding-left:14px} h3{font-size:1.18rem;margin:26px 0 10px;color:#f3f4f6} p{margin:10px 0;color:#d1d5db}.muted{color:var(--muted)}
+    .badge{display:inline-block;border:1px solid rgba(245,158,11,.45);color:#fde68a;background:rgba(245,158,11,.1);border-radius:999px;padding:6px 12px;font-size:.82rem;margin:3px 6px 3px 0;font-weight:700}.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}.card{grid-column:span 6;border:1px solid var(--border);background:linear-gradient(180deg,var(--panel),#0f172a);border-radius:18px;padding:20px}.card.full{grid-column:1/-1}.card.third{grid-column:span 4}.callout{border-left:5px solid var(--blue);background:rgba(56,189,248,.08);padding:16px 18px;border-radius:12px;margin:16px 0}.warn{border-left-color:var(--red);background:rgba(239,68,68,.09)}.ok{border-left-color:var(--green);background:rgba(34,197,94,.09)}.audit{border-left-color:var(--violet);background:rgba(168,85,247,.09)}
+    table{width:100%;border-collapse:collapse;margin:16px 0;border:1px solid var(--border);overflow:hidden;border-radius:12px} th,td{border:1px solid var(--border);padding:11px 12px;vertical-align:top} th{background:#1f2937;color:#f9fafb;text-align:left} td{background:#111827;color:#d1d5db} code{background:#030712;border:1px solid #263244;border-radius:6px;padding:2px 6px;color:#facc15}.mono{font-family:Consolas,Monaco,monospace}.pill{font-size:.78rem;padding:4px 8px;border-radius:999px;font-weight:800;display:inline-block}.p-green{background:rgba(34,197,94,.18);color:#86efac}.p-red{background:rgba(239,68,68,.18);color:#fca5a5}.p-violet{background:rgba(168,85,247,.2);color:#d8b4fe}.p-yellow{background:rgba(250,204,21,.16);color:#fde68a}.p-blue{background:rgba(56,189,248,.17);color:#bae6fd}.p-gray{background:rgba(156,163,175,.16);color:#d1d5db}.toc a{color:#facc15;text-decoration:none}.toc li{margin:5px 0}.footer{margin-top:50px;border-top:1px solid var(--border);padding-top:18px;color:var(--muted);font-size:.92rem}@media(max-width:850px){.card,.card.third{grid-column:1/-1}h1{font-size:1.9rem}.wrap{padding:20px 14px 60px}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <span class="badge">Manual Operacional</span>
+    <span class="badge">BRICKMASTER 1% OPENING RANGE</span>
+    <span class="badge">Código V10.1</span>
+    <span class="badge">Revisão Documental V11</span>
+    <h1>BRICKMASTER V10.1 — Manual Operacional Alinhado ao Código</h1>
+    <p><strong>Objetivo:</strong> documentar de forma fiel, auditável e operacional o sistema BRICKMASTER 1% Opening Range — V10.1 EXEC + Trailing + Volume Anômalo, usado no Profit/Nelogica via NTSL.</p>
+    <p class="muted">Este documento substitui a leitura solta do indicador por uma leitura estruturada: arquitetura, sinais, execução, trailing, volume anômalo, hierarquia visual, operação, validação e limites do sistema.</p>
+  </section>
+
+  <section class="card full toc">
+    <h2>Sumário Executivo</h2>
+    <ol>
+      <li><a href="#controle">Controle de versão e fidelidade</a></li>
+      <li><a href="#escopo">Escopo real do BRICKMASTER V10.1</a></li>
+      <li><a href="#arquitetura">Arquitetura do código</a></li>
+      <li><a href="#conceito">Conceito operacional do 1% Opening Range</a></li>
+      <li><a href="#volume">Cumulative Volume e Volume Anômalo</a></li>
+      <li><a href="#execucao">Módulo de execução</a></li>
+      <li><a href="#trailing">Trailing Stop</a></li>
+      <li><a href="#visual">Plotagem, PaintBar e hierarquia de cores</a></li>
+      <li><a href="#rotina">Rotina operacional</a></li>
+      <li><a href="#validacao">Validação, auditoria e qualidade</a></li>
+      <li><a href="#limites">Limites e riscos</a></li>
+    </ol>
+  </section>
+
+  <section id="controle">
+    <h2>1. Controle de Versão e Fidelidade</h2>
+    <div class="callout audit">
+      <strong>Regra de qualidade:</strong> este manual não deve inventar função, filtro, indicador, entrada, plotagem ou regra que não exista no código BRICKMASTER V10.1. Manual operacional confiável é rastreável ao código.
+    </div>
+    <table>
+      <tr><th>Item</th><th>Definição</th></tr>
+      <tr><td>Sistema documentado</td><td>BRICKMASTER 1% Opening Range — V10.1 EXEC + Trailing + Volume Anômalo</td></tr>
+      <tr><td>Revisão do manual</td><td>V11 documental, mantendo o código-base V10.1 como referência operacional.</td></tr>
+      <tr><td>Plataforma</td><td>Profit One / Profit Pro / Nelogica, conforme disponibilidade de recursos NTSL.</td></tr>
+      <tr><td>Linguagem</td><td>NTSL — estratégia operacional, não apenas indicador visual.</td></tr>
+      <tr><td>Base gráfica recomendada</td><td>Candlestick em ticks, especialmente 5000T, conforme linha do projeto BRICKMASTER.</td></tr>
+      <tr><td>Tipo de carregamento</td><td>Carregar como <strong>Estratégia</strong> quando o módulo de execução estiver ativo. Não tratar como indicador comum.</td></tr>
+    </table>
+    <div class="callout warn">
+      <strong>Nota crítica:</strong> sem reabrir o arquivo-fonte atual linha por linha, nenhuma revisão pode afirmar “certificação absoluta”. Esta versão foi escrita para ser fiel à arquitetura conhecida do V10.1 e preparada para auditoria direta contra o código.
+    </div>
+  </section>
+
+  <section id="escopo">
+    <h2>2. Escopo Real do BRICKMASTER V10.1</h2>
+    <p>O BRICKMASTER V10.1 é um sistema intraday baseado na leitura da abertura do pregão. Ele usa a abertura como eixo principal e projeta zonas percentuais em torno dela para orientar leitura de aceitação, rejeição, direção, armadilha e execução.</p>
+    <div class="grid">
+      <div class="card"><h3>O que o sistema faz</h3><ul><li>Constrói referência de Opening Range.</li><li>Trabalha com bandas percentuais de referência.</li><li>Classifica comportamento do preço em relação às bandas.</li><li>Usa volume/cumulative volume como confirmação.</li><li>Aplica leitura visual por PaintBar e plots.</li><li>Inclui módulo de execução e trailing stop.</li></ul></div>
+      <div class="card"><h3>O que o sistema não deve prometer</h3><ul><li>Não garante lucro.</li><li>Não elimina necessidade de gerenciamento de risco.</li><li>Não substitui leitura de calendário econômico.</li><li>Não lê book real nível a nível se o código não tiver acesso direto a book.</li><li>Não deve ser confundido com setup mágico.</li><li>Não deve operar notícia forte sem filtro humano ou regra adicional validada.</li></ul></div>
+    </div>
+  </section>
+
+  <section id="arquitetura">
+    <h2>3. Arquitetura do Código</h2>
+    <p>A estrutura conhecida do BRICKMASTER V10.1 segue blocos funcionais. O manual deve respeitar essa divisão para facilitar manutenção, auditoria e evolução sequencial.</p>
+    <table>
+      <tr><th>Bloco</th><th>Função no código</th><th>O que o operador precisa entender</th></tr>
+      <tr><td><code>B0</code> Cabeçalho / Inputs</td><td>Define identidade do código, parâmetros e chaves de uso.</td><td>Antes de operar, conferir inputs, ativo, período, modo visual, execução e risco.</td></tr>
+      <tr><td><code>B1</code> Indicador V10.1</td><td>Calcula referências do Opening Range, bandas, médias e contexto.</td><td>É o motor de leitura. Sem contexto coerente, não há entrada boa.</td></tr>
+      <tr><td><code>B1.5</code> Cumulative Volume / Volume Anômalo</td><td>Acompanha deslocamento de volume e identifica volume fora do padrão.</td><td>Volume anômalo confirma interesse; sozinho não é sinal cego de compra ou venda.</td></tr>
+      <tr><td><code>B2</code> Execução</td><td>Gera lógica de entrada/saída quando habilitada.</td><td>Precisa estar alinhado ao modo de risco. Estratégia ativa pode enviar ordens.</td></tr>
+      <tr><td><code>B2.5</code> Trailing Stop</td><td>Gerencia proteção dinâmica após entrada.</td><td>Protege lucro ou reduz exposição. Não deve ser entendido como blindagem contra gap, slippage ou notícia.</td></tr>
+      <tr><td><code>B3</code> Plotagem / PaintBar</td><td>Mostra linhas, cores, estados e sinais visuais.</td><td>É a camada de leitura rápida. Cor não substitui regra.</td></tr>
+    </table>
+  </section>
+
+  <section id="conceito">
+    <h2>4. Conceito Operacional: 1% Opening Range</h2>
+    <p>O coração do BRICKMASTER é simples: o mercado abre, cria um eixo inicial e depois testa regiões de afastamento percentual. A leitura não é “preço subiu, compra” ou “preço caiu, vende”. A leitura correta é: <strong>o preço aceitou, rejeitou ou armou armadilha em torno das regiões projetadas?</strong></p>
+    <table>
+      <tr><th>Conceito</th><th>Leitura prática</th><th>Erro comum</th></tr>
+      <tr><td>Abertura do dia</td><td>Eixo principal de referência.</td><td>Ignorar a abertura e operar só candle isolado.</td></tr>
+      <tr><td>Bandas percentuais</td><td>Zonas de teste e decisão em torno da abertura.</td><td>Tratar linha percentual como suporte/resistência perfeita.</td></tr>
+      <tr><td>Aceitação</td><td>Preço trabalha sustentado acima/abaixo de uma zona.</td><td>Entrar antes de confirmar sustentação.</td></tr>
+      <tr><td>Rejeição</td><td>Preço testa região e falha em permanecer nela.</td><td>Confundir pavio isolado com reversão institucional.</td></tr>
+      <tr><td>Armadilha</td><td>Rompimento aparente seguido de retorno agressivo.</td><td>Comprar topo ou vender fundo depois do stop dos atrasados.</td></tr>
+    </table>
+    <div class="callout ok"><strong>Leitura correta:</strong> primeiro contexto, depois confirmação, depois execução. O BRICKMASTER foi feito para disciplinar essa sequência.</div>
+  </section>
+
+  <section id="volume">
+    <h2>5. Cumulative Volume e Volume Anômalo</h2>
+    <p>O módulo de volume existe para responder uma pergunta objetiva: <strong>o movimento atual tem participação relevante ou é apenas deslocamento pobre?</strong></p>
+    <div class="grid">
+      <div class="card third"><h3>Volume normal</h3><p>Movimento compatível com a média recente do dia. Serve como leitura de base, mas não confirma agressão relevante.</p></div>
+      <div class="card third"><h3>Volume forte</h3><p>Participação acima do padrão. Pode validar rompimento, rejeição ou aceleração, desde que esteja coerente com o preço.</p></div>
+      <div class="card third"><h3>Volume anômalo</h3><p>Volume fora da curva. Exige cautela: pode ser entrada institucional, zeragem, stop em massa ou absorção.</p></div>
+    </div>
+    <table>
+      <tr><th>Situação</th><th>Interpretação operacional</th></tr>
+      <tr><td>Preço rompe banda + volume forte</td><td>Possível aceitação direcional. Procurar sustentação e continuidade.</td></tr>
+      <tr><td>Preço rompe banda + volume anômalo + volta rápido</td><td>Possível armadilha. Alta prioridade visual.</td></tr>
+      <tr><td>Preço chega na banda sem volume</td><td>Movimento fraco. Cuidado com falso rompimento.</td></tr>
+      <tr><td>Volume anômalo contra o movimento</td><td>Possível absorção. Evitar leitura simplista.</td></tr>
+    </table>
+  </section>
+
+  <section id="execucao">
+    <h2>6. Módulo de Execução</h2>
+    <div class="callout warn"><strong>Atenção operacional:</strong> se o código estiver carregado como estratégia e a execução estiver habilitada, o sistema pode atuar operacionalmente conforme as regras implementadas. Isso exige ambiente correto, simulação prévia e controle de risco.</div>
+    <p>A execução deve ser vista como consequência da leitura, não como botão de aposta. O módulo de execução existe para transformar uma condição validada em ordem operacional, respeitando filtros e regras internas.</p>
+    <table>
+      <tr><th>Camada</th><th>Finalidade</th><th>Validação necessária</th></tr>
+      <tr><td>Filtro de contexto</td><td>Evitar entrada fora da estrutura do dia.</td><td>Preço, bandas, abertura, direção e estado visual coerentes.</td></tr>
+      <tr><td>Filtro de volume</td><td>Evitar entrada sem participação.</td><td>Volume forte/anômalo interpretado junto com preço.</td></tr>
+      <tr><td>Gatilho</td><td>Gerar condição objetiva de entrada.</td><td>Não confundir gatilho com previsão.</td></tr>
+      <tr><td>Risco</td><td>Definir exposição aceitável.</td><td>Stop, lote, limite diário e modo de operação revisados.</td></tr>
+    </table>
+  </section>
+
+  <section id="trailing">
+    <h2>7. Trailing Stop</h2>
+    <p>O trailing stop é o módulo de proteção dinâmica. Ele deve acompanhar uma operação favorável e reduzir o risco de devolver ganho, mas não corrige entrada ruim.</p>
+    <table>
+      <tr><th>Estado da operação</th><th>Papel do trailing</th><th>Observação</th></tr>
+      <tr><td>Entrada recém-aberta</td><td>Aguardar condição mínima de ativação.</td><td>Trailing cedo demais pode expulsar operação boa.</td></tr>
+      <tr><td>Operação andando a favor</td><td>Reposicionar defesa.</td><td>Protege parte do movimento.</td></tr>
+      <tr><td>Mercado muito volátil</td><td>Evitar ajuste excessivamente apertado.</td><td>Ruído pode acionar stop técnico sem invalidar tese.</td></tr>
+      <tr><td>Notícia/calendário forte</td><td>Risco de slippage.</td><td>Trailing não é proteção perfeita contra evento brusco.</td></tr>
+    </table>
+  </section>
+
+  <section id="visual">
+    <h2>8. Plotagem, PaintBar e Hierarquia de Cores</h2>
+    <p>A camada visual serve para reduzir carga cognitiva. Porém, a prioridade deve ser clara: uma cor de menor prioridade nunca deve esconder um evento operacional mais importante.</p>
+    <table>
+      <tr><th>Prioridade</th><th>Estado visual</th><th>Leitura operacional</th></tr>
+      <tr><td>1</td><td><span class="pill p-violet">Armadilha confirmada / anomalia extrema</span></td><td>Evento de alta atenção. Mercado pode ter capturado liquidez.</td></tr>
+      <tr><td>2</td><td><span class="pill p-blue">Rejeição confirmada</span></td><td>Falha de permanência em região importante.</td></tr>
+      <tr><td>3</td><td><span class="pill p-green">Dia direcional comprador</span> / <span class="pill p-red">Dia direcional vendedor</span></td><td>Contexto de aceitação direcional.</td></tr>
+      <tr><td>4</td><td><span class="pill p-yellow">Armadilha não confirmada</span></td><td>Suspeita. Precisa confirmação.</td></tr>
+      <tr><td>5</td><td><span class="pill p-gray">Neutro / indefinido</span></td><td>Mercado sem vantagem clara.</td></tr>
+    </table>
+    <div class="callout audit"><strong>Regra visual:</strong> PaintBar é painel de diagnóstico. A entrada só deve ocorrer se a regra operacional correspondente também estiver válida.</div>
+  </section>
+
+  <section id="rotina">
+    <h2>9. Rotina Operacional Recomendada</h2>
+    <h3>Antes da abertura</h3>
+    <ul><li>Conferir ativo, vencimento do contrato e gráfico.</li><li>Conferir se o código está carregado como estratégia quando houver execução.</li><li>Revisar calendário econômico: Brasil, EUA, juros, inflação, payroll, FOMC, Copom, leilões e eventos relevantes.</li><li>Definir limite de perda diária e limite de operações.</li><li>Testar em simulação antes de operar capital real.</li></ul>
+    <h3>Durante o pregão</h3>
+    <ul><li>Observar a abertura e formação da referência do dia.</li><li>Esperar o preço interagir com bandas/zona de decisão.</li><li>Confirmar volume e comportamento do candle.</li><li>Evitar operação no meio do nada.</li><li>Não inverter mão por impulso após stop.</li></ul>
+    <h3>Depois do pregão</h3>
+    <ul><li>Registrar prints das entradas, saídas e contexto.</li><li>Comparar sinal visual com regra de execução.</li><li>Marcar falsos positivos e falsos negativos.</li><li>Ajustar apenas depois de amostra mínima, nunca por raiva de um trade.</li></ul>
+  </section>
+
+  <section id="validacao">
+    <h2>10. Validação, Auditoria e Qualidade</h2>
+    <p>Para o manual ser confiável, ele deve passar por uma matriz de rastreabilidade. Cada afirmação precisa apontar para um bloco do código.</p>
+    <table>
+      <tr><th>Afirmação do manual</th><th>Onde validar no código</th><th>Status esperado</th></tr>
+      <tr><td>O sistema usa Opening Range.</td><td>B1 — cálculo de abertura/bandas/contexto.</td><td>Obrigatório.</td></tr>
+      <tr><td>Há leitura de volume anômalo.</td><td>B1.5 — cumulative/volume anômalo.</td><td>Obrigatório no V10.1.</td></tr>
+      <tr><td>Há módulo de execução.</td><td>B2 — regras de entrada/saída.</td><td>Obrigatório se carregado como estratégia.</td></tr>
+      <tr><td>Há trailing stop.</td><td>B2.5 — proteção dinâmica.</td><td>Obrigatório no pacote EXEC + Trailing.</td></tr>
+      <tr><td>Há sinais visuais.</td><td>B3 — plots/PaintBar.</td><td>Obrigatório.</td></tr>
+      <tr><td>Há FVG, book real, delta real ou VWAP.</td><td>Somente se existir função/variável explícita no código.</td><td>Não declarar sem evidência.</td></tr>
+    </table>
+    <div class="callout ok"><strong>Critério de aceite:</strong> o manual só está aprovado quando cada regra descrita tiver correspondência direta no código ou for marcada claramente como orientação operacional externa.</div>
+  </section>
+
+  <section id="limites">
+    <h2>11. Limites e Riscos</h2>
+    <p>O BRICKMASTER é uma ferramenta de leitura e execução. Não é garantia de resultado. Mercado futuro tem alavancagem, slippage, ajuste de vencimento, eventos macro e comportamento não estacionário.</p>
+    <table>
+      <tr><th>Risco</th><th>Impacto</th><th>Controle recomendado</th></tr>
+      <tr><td>Slippage</td><td>Execução pior que o preço esperado.</td><td>Testar em replay/simulação e limitar operação em notícia.</td></tr>
+      <tr><td>Overfitting</td><td>Parâmetros bonitos no passado e ruins no futuro.</td><td>Separar treino, validação e teste fora da amostra.</td></tr>
+      <tr><td>Volatilidade extrema</td><td>Stops rápidos e leitura visual poluída.</td><td>Reduzir lote ou suspender operação.</td></tr>
+      <tr><td>Erro de configuração</td><td>Ordens erradas ou leitura incorreta.</td><td>Checklist antes da abertura.</td></tr>
+      <tr><td>Confiança excessiva</td><td>Operar cor sem regra.</td><td>Usar diário de bordo e limite diário.</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>12. Checklist de Aprovação do Manual</h2>
+    <div class="grid">
+      <div class="card"><h3>Checklist técnico</h3><ul><li>O nome do código confere com o manual?</li><li>O arquivo está como estratégia?</li><li>Os inputs descritos existem?</li><li>Os plots descritos existem?</li><li>As cores descritas batem com o PaintBar?</li><li>As regras de execução estão documentadas sem exagero?</li></ul></div>
+      <div class="card"><h3>Checklist operacional</h3><ul><li>O operador sabe quando não operar?</li><li>O volume anômalo está explicado sem promessa milagrosa?</li><li>O trailing foi explicado com suas limitações?</li><li>O manual separa sinal visual de ordem real?</li><li>Existe rotina de pré-mercado e pós-mercado?</li><li>Existe plano de auditoria de falso positivo?</li></ul></div>
+    </div>
+  </section>
+
+  <section class="footer">
+    <p><strong>BRICKMASTER V10.1 — Manual Operacional Alinhado V11.</strong></p>
+    <p>Documento preparado para servir como base confiável de uso, revisão e auditoria. A versão final certificada deve ser confrontada com o arquivo-fonte NTSL atual do BRICKMASTER V10.1.</p>
+  </section>
+</div>
+</body>
+</html>
