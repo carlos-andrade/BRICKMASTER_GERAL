@@ -1,0 +1,41 @@
+﻿//FONTE: https://www.youtube.com/watch?v=-6Qb5owb_ys
+
+var
+dVWAP, sVWAP, mVWAP : real;
+maPrior, miPrior : inteiro;
+
+begin
+// PASSO 1 | CARREGAR INDICADORES
+dVWAP := VWAP(1); //VWAP DIÁRIA
+sVWAP := VWAP(2); //VWAP SEMANAL
+mVWAP := VWAP(3); //VWAP MENSAL
+maPrior := PriorCote(2); //MÁXIMA
+miPrior := PriorCote(3); //MÍNIMA
+
+//PLOTAGEM
+plot (dVWAP);
+plot2(sVWAP);
+plot3(mVWAP);
+//plot4(maPrior); //PRIOR MÁXIMA
+//plot5(miPrior); //PRIOR MÍNIMA
+
+//COLORAÇÃO
+SetPlotColor(1, clyellow); //COR DA VWAP DIÁRIA
+SetPlotColor(2, clgreen);  //COR DA VWAP SEMANAL
+SetPlotColor(3, clblue);   //COR DA VWAP MENSAL
+SetPlotColor(4, clred);    //PRIOR MÁXIMA
+SetPlotColor(5, clNavy);   //PRIOR MÍNIMA
+
+//ESPESSURA
+SetPlotWidth(1, 1);
+SetPlotWidth(2, 3);
+SetPlotWidth(3, 5);
+SetPlotWidth(4, 3);  //PRIOR MÁXIMA
+SetPlotWidth(5, 3);  //PRIOR MÍNIMA
+
+//ESTILO DA LINHA
+SetPlotStyle(1,0);
+SetPlotStyle(2,0);
+SetPlotStyle(3,0);
+end;
+

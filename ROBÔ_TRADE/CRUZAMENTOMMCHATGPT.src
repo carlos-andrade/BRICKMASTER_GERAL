@@ -1,0 +1,26 @@
+﻿// Declaração de variáveis para as médias móveis e o preço anterior
+vars
+    mediaCurta: real;
+    mediaLonga: real;
+    mediaCurtaAnterior: real;
+    mediaLongaAnterior: real;
+
+// Cálculo das médias móveis
+begin
+    mediaCurta := MediaMovelSimples(close, 9);
+    mediaLonga := MediaMovelSimples(close, 81);
+    
+    // Armazena o valor das médias móveis no candle anterior
+    mediaCurtaAnterior := MediaMovelSimples(close[1], 9);
+    mediaLongaAnterior := MediaMovelSimples(close[1], 81);
+
+    // Verifica o cruzamento das médias móveis para gerar sinais de compra e venda
+    // Cruzamento para cima: média curta cruzando de baixo para cima a média longa
+    if (mediaCurtaAnterior < mediaLongaAnterior) and (mediaCurta > mediaLonga) then
+        Compra();
+
+    // Cruzamento para baixo: média curta cruzando de cima para baixo a média longa
+    if (mediaCurtaAnterior > mediaLongaAnterior) and (mediaCurta < mediaLonga) then
+        Venda();
+end;
+

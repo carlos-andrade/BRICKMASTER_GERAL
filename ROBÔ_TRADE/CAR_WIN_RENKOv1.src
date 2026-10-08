@@ -1,0 +1,137 @@
+﻿// ROBÔ: BRICKMASTER
+// Método inspirado no Método 9.1 do Larry Williams e o Método de Joseph Reffson (MeJoRe)(Newton–Raphson).
+// Nome: CAR_DELTA_RENKOv5
+// Versão 05. // USAR SOMENTE NO RENKO 15R NO WINFUT.
+// Estrutura Cinética
+// Paleta: https://www.homehost.com.br/blog/tutoriais/tabela-de-cores-html/
+
+//correlação entre múltiplos ativos
+//correlação entre AVGPRICE e winMedia.
+
+const
+WDO = Asset("WDOFUT", feedBMF);
+WIN = Asset("WINFUT", feedBMF);
+
+input
+ Periodo(9);
+
+  var
+  vCandleAVG0, vCandleAVG1, vCandleAVG2 : Integer;
+  vCandleENT : Integer; // Posicionar a entrada no fechamento do candle 0.
+  vCandleSAI : Integer; // Posicionar a saída no fechamento do candle 2. 
+  
+  sinalC,    sinalV       : booleano;
+  vlrStopC,  vlrStopV     : real;
+  
+  vAvgPrice, vEstrategia, vEstrategiaMAX, vEstrategiaMIN  : real;
+  vRange : float;         
+  vVolatility : Float;
+  vOffSet : float;
+
+  //MODELO 2 — WEIGHTED DELTA (MELHOR) //CHATGPT
+  vDelta     : float;
+
+  vMedianPrice : float;
+
+  wdoMedia : Float;
+  winMedia : Float;
+
+  vIBOV : Float;       
+begin 
+  // PASSO 1 | CARREGAR AS VARIÁVEIS:
+  vCandleAVG2 := 2; // AVGPRICE NO CANDLE 2. 
+  vCandleAVG1 := 1; // AVGPRICE NO CANDLE 1.
+  vCandleAVG0 := 0; // AVGPRICE NO CANDLE 0.
+  vCandleENT  := 0; // Posicionar a entrada no fechamento do candle 0.
+  vCandleSAI  := 2; // Posicionar a saída no fechamento do candle 2. 
+
+  // PASSO 1 | CARREGAR INDICADORES  
+  vAvgPrice := AvgPrice();
+  vEstrategia := vAvgPrice;   // Validar os sinais de entrada e saída.   
+  vEstrategiaMAX := maxima;   // Posicionar a ordem de compra.
+  vEstrategiaMIN := minima;   // Posicionar a ordem de venda.                                        
+  vRange := Ceiling(Range()); //Range(); // o range está arredondado ...
+  vVolatility := Ceiling((Volatility(vRange))); //(Volatility(vRange));  //volatilidade de 30 períodos no timeframe de 15R.
+  vOffSet := (vRange * vVolatility);
+
+  vDelta := ((Close - Open) / TrueRange) * Volume;
+
+  vMedianPrice := MedianPrice;
+
+  wdoMedia := MediaExp(Periodo, WDO.close);
+  winMedia := MediaExp(Periodo, WIN.close);
+
+  vIBOV := IBOV;
+
+begin
+  if (WDO.close > wdoMedia) and (WIN.close < winMedia) then PaintBar(clRed)
+  else if (WDO.close < wdoMedia) and (WIN.close > winMedia) then PaintBar(clAqua);
+end;
+       
+  //-----------PADRÃO----------
+  //EXECUÇÃO DE ENTRADA //PASSO 2 // Controle de Fluxo
+ 
+ sinalC := (AvgPrice > winMedia);
+ sinalV := (AvgPrice < winMedia);
+begin   
+  if (not HasPosition) and sinalC and (Time > 900) and (Time < 1730) then
+    BuyStop((vEstrategiaMAX[vCandleENT] + MinPriceIncrement),
+            (vEstrategiaMAX[vCandleENT] + MinPriceIncrement) + (vOffSet * MinPriceIncrement)); 
+end;
+begin  
+  if (not HasPosition) and sinalV and (Time > 900) and (Time < 1730) then
+    SellShortStop((vEstrategiaMIN[vCandleENT] - MinPriceIncrement),
+                  (vEstrategiaMIN[vCandleENT] - MinPriceIncrement) - (vOffSet * MinPriceIncrement)); 
+end;                 
+                    
+
+  //EXECUÇÃO DE SAÍDA //PASSO 3
+  
+   vlrStopC := (close + open[vCandleSAI]) / 2; //41.920,00 
+   vlrStopV := (close + open[vCandleSAI]) / 2; 
+
+   //vlrStopC := (maxima[vCandleSAI]);  //33.720,00
+   //vlrStopV := (minima[vCandleSAI]); 
+
+  se IsBought entao  //ordem de compra aberta.
+  SellToCoverStop(vlrStopC,vlrStopC - (vOffSet * MinPriceIncrement));
+  se IsSold entao    //ordem de venda aberta.
+  BuyToCoverStop(vlrStopV,vlrStopv + (vOffSet * MinPriceIncrement));
+  
+
+  
+  //EXECUCAO DE SAIDA EM GAP
+  //se IsBought e (close < vlrStopC) entao closeposition;
+  //se IsSold e (close > vlrStopV) entao closeposition;
+  
+  //Linhas para demarcar os dois pontos do AVGPRICE:
+  HorizontalLine(vlrStopC[0], RGB(0, 0, 255)); //Azul  // Função: Marcar a posição da estratégia.  
+  //HorizontalLine(vlrStopV[3], RGB(245,17,0)); //Vermelho       // Função: Marcar a posição do tralingstop.
+
+  //COLORAÇÃO
+  SetPlotColor(1,RGB(0, 0, 255));     //Azul - AVGPrice
+  SetPlotColor(2,RGB(255, 255, 0));   //Amarelo - vRange
+  SetPlotColor(3,RGB(255, 0, 255));   //Magenta - vVolatility
+  SetPlotColor(4,RGB(238,93,108));    //Laranja - vOffSet
+  SetPlotColor(8,RGB(255,215,0));
+    
+  //ESPESSURA
+  SetPlotWidth(1,2);
+  SetPlotWidth(6,4);
+  
+  //ESTILO DA LINHA
+  SetPlotStyle(1,1);
+  
+  //PLOTAGEM
+  Plot (vEstrategia); 
+  Plot2(vRange);
+  Plot3(vVolatility); 
+  Plot4(vOffSet);                                               
+  //Plot5(vDelta);
+  //Plot6(TrueRange);
+  //Plot7(Volume);
+  Plot8(winMedia);
+    
+end;
+
+
