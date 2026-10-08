@@ -1,0 +1,1267 @@
+VOCÊ É UM DESENVOLVEDOR ESPECIALISTA EM NTSL / PROFIT ULTRA / NELOGICA E EM SISTEMAS QUANTITATIVOS DE LEITURA DE MERCADO.
+
+Estou desenvolvendo um novo módulo independente para o ecossistema BRICKMASTER.
+
+O módulo se chama:
+
+REJECTION ENGINE V1.0
+
+Antes de integrar esse módulo ao BRICKMASTER V12, quero desenvolver uma versão COMPLETAMENTE INDEPENDENTE, exclusivamente para TESTE, VALIDAÇÃO VISUAL E VALIDAÇÃO MATEMÁTICA no gráfico WINFUT de 60.000 TICKS.
+
+IMPORTANTE:
+
+Eu forneci a você os seguintes arquivos:
+
+1. BRICKMASTER_V12_versao7_EXEC_COMPLETO2.src
+2. BRICKMASTER_V12_versao7_Manual_Operacional_Completo.html
+
+LEIA OS DOIS ARQUIVOS INTEGRALMENTE ANTES DE ESCREVER O CÓDIGO.
+
+O arquivo .SRC é a referência principal para:
+- sintaxe NTSL realmente utilizada;
+- declaração de inputs;
+- declaração de variáveis;
+- funções;
+- Plot;
+- PlotText;
+- PaintBar;
+- Alert;
+- funções de agressão;
+- tratamento de novo dia;
+- séries históricas;
+- convenções de código;
+- compatibilidade com Profit Ultra.
+
+O manual HTML é a referência para compreender a arquitetura e as funções já utilizadas pelo BRICKMASTER.
+
+NÃO INVENTE FUNÇÕES NTSL.
+
+NÃO USE SINTAXE DE OUTRA LINGUAGEM.
+
+NÃO USE MQL5.
+
+NÃO USE EasyLanguage genérico.
+
+NÃO USE Pine Script.
+
+NÃO USE pseudocódigo no código final.
+
+Se houver dúvida sobre a existência ou sintaxe de uma função, procure primeiro no código-fonte fornecido e no manual.
+
+Se uma função não estiver comprovadamente disponível, NÃO INVENTE.
+
+------------------------------------------------------------
+1. OBJETIVO DO MÓDULO
+------------------------------------------------------------
+
+O REJECTION ENGINE deve identificar e medir a rejeição de extremos de preço.
+
+A ideia central NÃO é simplesmente procurar candles com pavios grandes.
+
+O motor deve medir:
+
+1. eficiência direcional;
+2. ineficiência;
+3. rejeição superior;
+4. rejeição inferior;
+5. progressão da rejeição;
+6. aceleração da rejeição;
+7. persistência;
+8. divergência entre extremo de preço e capacidade de sustentação;
+9. volume financeiro;
+10. agressão real;
+11. Cumulative Delta;
+12. divergência preço × delta;
+13. estado atual da rejeição.
+
+O módulo deve ser DIAGNÓSTICO.
+
+NÃO deve enviar ordens.
+
+NÃO deve utilizar BuyAtMarket.
+
+NÃO deve utilizar SellShortAtMarket.
+
+NÃO deve utilizar BuyStop.
+
+NÃO deve utilizar SellShortStop.
+
+NÃO deve executar ReversePosition.
+
+NÃO deve interferir em posições.
+
+Ele apenas identifica e exibe informações no gráfico.
+
+------------------------------------------------------------
+2. GRÁFICO-ALVO
+------------------------------------------------------------
+
+O módulo foi projetado especificamente para:
+
+WINFUT
+60.000 TICKS
+
+IMPORTANTE:
+
+60.000 TICKS NÃO é um parâmetro de tempo.
+
+Cada candle/observação do gráfico representa 60.000 ticks.
+
+NÃO transforme o sistema em gráfico de minutos.
+
+NÃO crie lógica baseada em 5 minutos, 15 minutos, 1 hora etc.
+
+A janela de análise N=5 significa:
+
+5 candles de 60.000 ticks.
+
+------------------------------------------------------------
+3. NÃO UTILIZAR
+------------------------------------------------------------
+
+O REJECTION ENGINE V1.0 NÃO deve utilizar:
+
+VIX
+RSI
+MACD
+FVG
+VWAP
+TWAP
+calendário macro
+indicadores econômicos
+médias móveis adicionais
+ATR como filtro de rejeição
+qualquer indicador externo que não seja necessário para a hipótese
+
+O objetivo é testar a hipótese PURA DE REJEIÇÃO.
+
+Volume e Delta podem ser utilizados porque fazem parte da dimensão FLOW do próprio motor.
+
+------------------------------------------------------------
+4. DEFINIÇÕES MATEMÁTICAS
+------------------------------------------------------------
+
+Para cada candle:
+
+Range:
+
+R = High - Low
+
+Deslocamento:
+
+D = Close - Open
+
+Corpo:
+
+B = Abs(Close - Open)
+
+Eficiência Direcional:
+
+DE = Abs(Close - Open) / (High - Low) * 100
+
+Ineficiência:
+
+RI = 100 - DE
+
+IMPORTANTE:
+
+RI NÃO significa automaticamente rejeição compradora ou vendedora.
+
+RI representa perda de eficiência direcional / potencial de rejeição.
+
+------------------------------------------------------------
+5. PAVIO SUPERIOR
+------------------------------------------------------------
+
+Upper Wick:
+
+UW = High - Max(Open, Close)
+
+Percentual do pavio superior:
+
+UW% = UW / Range * 100
+
+------------------------------------------------------------
+6. PAVIO INFERIOR
+------------------------------------------------------------
+
+Lower Wick:
+
+LW = Min(Open, Close) - Low
+
+Percentual do pavio inferior:
+
+LW% = LW / Range * 100
+
+------------------------------------------------------------
+7. CLOSE LOCATION
+------------------------------------------------------------
+
+Calcular:
+
+CL = (Close - Low) / (High - Low) * 100
+
+Interpretação:
+
+0% = fechamento na mínima
+
+50% = fechamento no meio do range
+
+100% = fechamento na máxima
+
+------------------------------------------------------------
+8. FALHA DO TOPO E RECUPERAÇÃO DA MÍNIMA
+------------------------------------------------------------
+
+High Failure:
+
+HF = 100 - CL
+
+Low Failure:
+
+LF = CL
+
+------------------------------------------------------------
+9. UPPER REJECTION EVIDENCE
+------------------------------------------------------------
+
+Criar:
+
+URE = UW% * HF / 100
+
+A URE representa evidência de rejeição da região superior.
+
+IMPORTANTE:
+
+URE alta exige combinação de:
+
+pavio superior relevante
+
+E
+
+fechamento afastado da máxima.
+
+Um pavio superior isoladamente NÃO deve ser tratado como rejeição confirmada.
+
+------------------------------------------------------------
+10. LOWER REJECTION EVIDENCE
+------------------------------------------------------------
+
+Criar:
+
+LRE = LW% * LF / 100
+
+A LRE representa evidência de rejeição da região inferior.
+
+Uma LRE alta exige combinação de:
+
+pavio inferior relevante
+
+E
+
+fechamento afastado da mínima.
+
+------------------------------------------------------------
+11. INTERPRETAÇÃO DIRECIONAL
+------------------------------------------------------------
+
+REJEIÇÃO SUPERIOR:
+
+O mercado explorou preços superiores, mas não conseguiu sustentá-los.
+
+Características:
+
+URE elevada
+pavio superior relevante
+fechamento distante da máxima
+RI elevada ou em deterioração
+possível novo extremo
+possível divergência de fluxo
+
+Essa condição pode representar rejeição da direção de alta.
+
+Não chamar isso simplesmente de "venda" sem confirmação.
+
+------------------------------------------------------------
+
+REJEIÇÃO INFERIOR:
+
+O mercado explorou preços inferiores, mas não conseguiu sustentá-los.
+
+Características:
+
+LRE elevada
+pavio inferior relevante
+fechamento distante da mínima
+RI elevada ou em deterioração
+possível nova mínima
+possível divergência de fluxo
+
+Essa condição pode representar rejeição da direção de baixa.
+
+Não chamar isso simplesmente de "compra" sem confirmação.
+
+------------------------------------------------------------
+12. PROGRESSÃO
+------------------------------------------------------------
+
+Utilizar janela inicial:
+
+N = 5 candles
+
+Calcular:
+
+URP = URE atual - URE anterior
+
+LRP = LRE atual - LRE anterior
+
+Calcular inclinação:
+
+URSlope = Slope(URE, N)
+
+LRSlope = Slope(LRE, N)
+
+Calcular aceleração:
+
+URAccel = URP atual - URP anterior
+
+LRAccel = LRP atual - LRP anterior
+
+IMPORTANTE:
+
+Não considerar progressão simplesmente porque o valor atual é maior que o anterior.
+
+Queremos identificar progressão CONSISTENTE.
+
+Portanto, avalie a sequência dos últimos N candles.
+
+------------------------------------------------------------
+13. PERSISTÊNCIA
+------------------------------------------------------------
+
+Criar contador de persistência.
+
+Exemplo inicial:
+
+Janela = 5
+
+Persistência mínima = 4
+
+Ou seja:
+
+4 dos últimos 5 candles precisam apresentar evidência relevante da mesma rejeição.
+
+Criar:
+
+PersistentUpper
+
+PersistentLower
+
+Os valores devem ser inputs configuráveis.
+
+NÃO afirmar que 4/5 é o valor definitivo.
+
+É apenas parâmetro inicial de engenharia para teste.
+
+------------------------------------------------------------
+14. EXTREME REJECTION DIVERGENCE
+------------------------------------------------------------
+
+Criar:
+
+ERD_UP
+
+ERD_DOWN
+
+ERD_UP:
+
+High atual > High anterior
+
+E
+
+URE atual > URE anterior
+
+E
+
+DE atual < DE anterior
+
+Interpretação:
+
+o preço cria/extende extremo superior enquanto sua capacidade de sustentação direcional piora e a rejeição aumenta.
+
+------------------------------------------------------------
+
+ERD_DOWN:
+
+Low atual < Low anterior
+
+E
+
+LRE atual > LRE anterior
+
+E
+
+DE atual < DE anterior
+
+Interpretação:
+
+o preço cria/extende extremo inferior enquanto sua capacidade de sustentação direcional piora e a rejeição aumenta.
+
+------------------------------------------------------------
+15. VOLUME FINANCEIRO
+------------------------------------------------------------
+
+Utilizar o volume disponível no Profit.
+
+Criar uma medida de volume financeiro compatível com o ambiente NTSL.
+
+Preferencialmente:
+
+VolumeFinanceiro = Volume * Close
+
+ou utilizar a função nativa correspondente caso o código-fonte fornecido utilize outra implementação validada.
+
+Criar média de volume.
+
+Criar:
+
+VolumeRatio = VolumeFinanceiro / MediaVolumeFinanceiro
+
+Parâmetro inicial:
+
+janela = 20
+
+VolumeRatio relevante inicial:
+
+1.20
+
+IMPORTANTE:
+
+Volume alto NÃO significa automaticamente reversão.
+
+Volume alto significa participação.
+
+A interpretação correta será:
+
+REJEIÇÃO + PARTICIPAÇÃO
+
+e não:
+
+VOLUME ALTO = REVERSÃO.
+
+------------------------------------------------------------
+16. AGRESSÃO REAL
+------------------------------------------------------------
+
+O BRICKMASTER V12 fornecido utiliza:
+
+AgressionVolBuy()
+AgressionVolSell()
+AgressionVolBalance()
+
+Essas funções são específicas do ambiente Profit Ultra.
+
+Utilize EXATAMENTE a sintaxe comprovada no código-fonte fornecido.
+
+Não invente uma alternativa.
+
+Agressão de compra:
+
+AgressionVolBuy
+
+Agressão de venda:
+
+AgressionVolSell
+
+Saldo:
+
+AgressionVolBalance
+
+Criar análise de:
+
+Delta atual
+Delta anterior
+Mudança do Delta
+Direção do Delta
+
+------------------------------------------------------------
+17. DIVERGÊNCIA PREÇO × DELTA
+------------------------------------------------------------
+
+Criar:
+
+FlowDivergence
+
+Exemplo:
+
+Preço sobe
+
+E
+
+Delta/agressão compradora perde força
+
+=> possível deterioração da pressão compradora.
+
+Preço cai
+
+E
+
+Delta/agressão vendedora perde força
+
+=> possível deterioração da pressão vendedora.
+
+NÃO transformar automaticamente divergência em reversão.
+
+Divergência é evidência adicional.
+
+------------------------------------------------------------
+18. CLASSIFICAÇÃO PRIMÁRIA
+------------------------------------------------------------
+
+Criar:
+
+UpperRejection
+
+LowerRejection
+
+UpperRejection deve considerar conjuntamente:
+
+RI
+UpperWick%
+URE
+
+LowerRejection deve considerar conjuntamente:
+
+RI
+LowerWick%
+LRE
+
+Os parâmetros devem ser configuráveis.
+
+Parâmetros iniciais de teste:
+
+MinRI = 30
+MinWick = 25
+MinEvidence = 30
+
+Esses números NÃO são considerados validados.
+
+São apenas parâmetros iniciais.
+
+------------------------------------------------------------
+19. MÁQUINA DE ESTADOS
+------------------------------------------------------------
+
+Implementar exatamente a seguinte arquitetura:
+
+STATE 0
+NORMAL
+
+STATE 1
+EFFICIENCY LOSS
+
+STATE 2
+REJECTION DEVELOPING
+
+STATE 3
+REJECTION ACTIVE
+
+STATE 4
+PROGRESSIVE REJECTION
+
+STATE 5
+PERSISTENT REJECTION
+
+STATE 6
+FLOW CONFIRMED
+
+STATE 7
+REVERSAL CANDIDATE
+
+Estados devem possuir lógica hierárquica.
+
+A prioridade deve ser:
+
+0
+1
+2
+3
+4
+5
+6
+7
+
+Porém, o estado superior só pode substituir o inferior se TODAS as condições do estado superior forem satisfeitas.
+
+------------------------------------------------------------
+20. STATE 1
+------------------------------------------------------------
+
+STATE 1:
+
+RI >= MinRI
+
+------------------------------------------------------------
+21. STATE 2
+------------------------------------------------------------
+
+STATE 2:
+
+UpperRejection OR LowerRejection
+
+------------------------------------------------------------
+22. STATE 3
+------------------------------------------------------------
+
+STATE 3:
+
+rejeição ativa
+
++
+
+evidência acima do limite.
+
+------------------------------------------------------------
+23. STATE 4
+------------------------------------------------------------
+
+STATE 4:
+
+rejeição
+
++
+
+slope positivo da evidência correspondente
+
++
+
+aceleração correspondente positiva/relevante.
+
+------------------------------------------------------------
+24. STATE 5
+------------------------------------------------------------
+
+STATE 5:
+
+rejeição
+
++
+
+persistência mínima atingida.
+
+------------------------------------------------------------
+25. STATE 6
+------------------------------------------------------------
+
+STATE 6:
+
+rejeição
+
++
+
+volume relevante
+
++
+
+confirmação por agressão/delta.
+
+IMPORTANTE:
+
+Para rejeição superior, procurar deterioração da pressão compradora / confirmação de fluxo vendedor.
+
+Para rejeição inferior, procurar deterioração da pressão vendedora / confirmação de fluxo comprador.
+
+------------------------------------------------------------
+26. STATE 7
+------------------------------------------------------------
+
+STATE 7:
+
+Reversal Candidate
+
+Somente quando houver:
+
+rejeição
+
++
+
+progressão
+
++
+
+persistência
+
++
+
+confirmação de fluxo
+
+Não executar nenhuma ordem.
+
+Apenas marcar:
+
+REVERSAL CANDIDATE
+
+------------------------------------------------------------
+27. CONFLITO ENTRE REJEIÇÕES
+------------------------------------------------------------
+
+O código deve tratar explicitamente situações em que:
+
+UpperRejection = true
+
+E
+
+LowerRejection = true
+
+ao mesmo tempo.
+
+NÃO escolha arbitrariamente.
+
+Criar uma regra objetiva.
+
+Preferencialmente:
+
+comparar URE e LRE.
+
+Se:
+
+URE > LRE
+
+=> dominante superior
+
+Se:
+
+LRE > URE
+
+=> dominante inferior
+
+Se forem praticamente iguais:
+
+=> estado neutro / conflito
+
+Exibir:
+
+REJECTION CONFLICT
+
+Isso é importante para não transformar um candle de grande range e dois pavios em um falso sinal direcional.
+
+------------------------------------------------------------
+28. RESET
+------------------------------------------------------------
+
+O módulo deve funcionar continuamente.
+
+As séries históricas não devem ser destruídas a cada candle.
+
+Se houver necessidade de reset de contadores/eventos diários, utilizar a mesma metodologia existente no BRICKMASTER V12.
+
+Não inventar mecanismo de novo dia.
+
+------------------------------------------------------------
+29. NÃO REPINTAR
+------------------------------------------------------------
+
+O módulo deve operar com dados do candle atual e candles anteriores.
+
+Não utilizar informações futuras.
+
+Não utilizar:
+
+Close[−1]
+High[−1]
+Low[−1]
+
+ou qualquer lógica equivalente de lookahead.
+
+O sinal do candle deve ser baseado somente nas informações disponíveis naquele momento.
+
+------------------------------------------------------------
+30. VISUALIZAÇÃO
+------------------------------------------------------------
+
+Quero uma visualização extremamente clara.
+
+O objetivo é observar o comportamento do motor no gráfico antes de integrá-lo ao Brickmaster.
+
+Plotar, quando possível:
+
+DE
+RI
+URE
+LRE
+URSlope
+LRSlope
+URAccel
+LRAccel
+VolumeRatio
+Delta
+FlowDivergence
+State
+
+Se a quantidade de plots for excessiva para o ambiente, organize-os de maneira tecnicamente adequada em painéis ou utilize apenas os principais plots.
+
+------------------------------------------------------------
+31. MARCAÇÕES NO GRÁFICO
+------------------------------------------------------------
+
+Marcar:
+
+[REJ SUP]
+
+[REJ INF]
+
+[ERD UP]
+
+[ERD DOWN]
+
+[FLOW]
+
+[REVERSAL]
+
+[CONFLICT]
+
+Utilizar PlotText() com a sintaxe EXATA do BRICKMASTER V12.
+
+Segundo o manual, PlotText utiliza:
+
+PlotText(Content, Color, Position, FontSize, Price)
+
+Quando for necessário controlar a posição vertical:
+
+utilizar Position = 3
+
+e fornecer preço explicitamente.
+
+Evitar sobreposição dos textos.
+
+Utilizar espaçamento coerente com:
+
+MinPriceIncrement
+
+e a metodologia utilizada pelo BRICKMASTER.
+
+------------------------------------------------------------
+32. ALERTAS
+------------------------------------------------------------
+
+O módulo pode utilizar:
+
+Alert(Cor)
+
+e
+
+PlotText()
+
+somente se isso estiver compatível com a implementação existente.
+
+NÃO utilizar:
+
+PlaySound()
+
+NÃO utilizar:
+
+IntToStr()
+
+Para conversão numérica em texto, utilizar a função validada pelo manual/código:
+
+FloatToString()
+
+somente se necessária.
+
+------------------------------------------------------------
+33. CORES
+------------------------------------------------------------
+
+Utilizar uma paleta visual coerente.
+
+Sugestão:
+
+Rejeição superior:
+vermelho / magenta
+
+Rejeição inferior:
+verde / ciano
+
+ERD:
+amarelo
+
+Flow:
+cor específica
+
+Reversal:
+cor de alta prioridade
+
+Conflict:
+cinza/amarelo
+
+Mas antes de escolher funções de cor, verificar como o BRICKMASTER V12 define suas cores.
+
+Não inventar constantes de cor incompatíveis.
+
+------------------------------------------------------------
+34. INPUTS
+------------------------------------------------------------
+
+Criar inputs configuráveis semelhantes a:
+
+JanelaRejeicao(5)
+
+MinRI(30)
+
+MinWick(25)
+
+MinEvidence(30)
+
+MinSlope(2)
+
+MinAcceleration(1)
+
+MinPersistence(4)
+
+JanelaVolume(20)
+
+MinVolumeRatio(1.20)
+
+UsarAgressaoUltra(true)
+
+MostrarDE(true)
+
+MostrarRI(true)
+
+MostrarURE(true)
+
+MostrarLRE(true)
+
+MostrarFluxo(true)
+
+MostrarEstado(true)
+
+MostrarSinais(true)
+
+Os nomes podem ser adaptados se houver conflito com palavras reservadas do NTSL.
+
+------------------------------------------------------------
+35. IMPORTANTE SOBRE O CÓDIGO
+------------------------------------------------------------
+
+QUERO O CÓDIGO COMPLETO.
+
+Não entregue:
+
+"adicione este bloco"
+
+"substitua esta parte"
+
+"cole abaixo do var"
+
+"adicione estas variáveis"
+
+Não.
+
+Entregue um ÚNICO arquivo completo, pronto para copiar e colar no editor NTSL.
+
+------------------------------------------------------------
+36. COMPATIBILIDADE
+------------------------------------------------------------
+
+Antes de escrever o código final:
+
+1. Analise o .SRC fornecido.
+2. Identifique a versão/sintaxe NTSL utilizada.
+3. Identifique todas as funções de série utilizadas.
+4. Identifique como o BRICKMASTER declara inputs.
+5. Identifique como declara variáveis.
+6. Identifique como faz Plot.
+7. Identifique como faz PlotText.
+8. Identifique como faz Alert.
+9. Identifique como utiliza AgressionVolBuy.
+10. Identifique como utiliza AgressionVolSell.
+11. Identifique como utiliza AgressionVolBalance.
+12. Identifique como calcula médias.
+13. Identifique como controla o novo dia.
+14. Identifique como utiliza cores.
+
+Depois disso, produza o código.
+
+------------------------------------------------------------
+37. VERIFICAÇÃO DE ERROS
+------------------------------------------------------------
+
+Antes de apresentar o código final, faça uma auditoria interna.
+
+Verifique:
+
+[ ] nenhuma função inexistente
+[ ] nenhuma variável não declarada
+[ ] nenhum input não declarado
+[ ] nenhum identificador duplicado
+[ ] nenhuma função de outra linguagem
+[ ] nenhum lookahead
+[ ] nenhuma ordem de execução
+[ ] nenhum VIX
+[ ] nenhum RSI
+[ ] nenhum MACD
+[ ] nenhum FVG
+[ ] nenhum VWAP
+[ ] nenhum TWAP
+[ ] nenhum indicador externo desnecessário
+[ ] compatibilidade com Profit Ultra
+[ ] compatibilidade com gráfico de 60.000 ticks
+[ ] tratamento de Range = 0
+[ ] proteção para barras insuficientes
+[ ] tratamento de divisão por zero
+[ ] tratamento do Delta
+[ ] tratamento do Volume
+[ ] tratamento de conflito entre URE e LRE
+[ ] máquina de estados coerente
+[ ] nenhum repaint
+
+------------------------------------------------------------
+38. TESTE MATEMÁTICO OBRIGATÓRIO
+------------------------------------------------------------
+
+Antes do código final, demonstre os cálculos usando este candle:
+
+Open = 187198
+High = 187315
+Low = 187098
+Close = 187298
+
+Calcule:
+
+Range
+Body
+Displacement
+DE
+RI
+Upper Wick
+Lower Wick
+Upper Wick %
+Lower Wick %
+Close Location
+High Failure
+Low Failure
+URE
+LRE
+
+Depois explique qual rejeição deveria ser dominante.
+
+Resultado esperado conceitualmente:
+
+Esse candle apresenta forte recuperação a partir da mínima.
+
+Portanto:
+
+LRE deve ser significativamente superior à URE.
+
+O motor deve classificá-lo como evidência de rejeição inferior / rejeição dos preços baixos, e NÃO como rejeição superior.
+
+------------------------------------------------------------
+39. SEGUNDO TESTE
+------------------------------------------------------------
+
+Utilize:
+
+Open = 186346
+High = 186931
+Low = 186330
+Close = 186605
+
+Calcule todos os mesmos indicadores.
+
+Neste caso esperamos uma evidência muito maior de rejeição superior.
+
+------------------------------------------------------------
+40. TESTE DE PROGRESSÃO
+------------------------------------------------------------
+
+Crie uma pequena sequência hipotética de 5 candles contendo:
+
+URE crescente
+
+DE deteriorando
+
+novos Highs
+
+volume crescente
+
+delta perdendo força
+
+Demonstre como o estado evolui:
+
+0
+→ 1
+→ 2
+→ 3
+→ 4
+→ 5
+→ 6
+→ 7
+
+Explique quais condições provocam cada transição.
+
+------------------------------------------------------------
+41. NÃO OTIMIZAR AINDA
+------------------------------------------------------------
+
+NÃO faça otimização estatística.
+
+NÃO faça curve fitting.
+
+NÃO tente encontrar os melhores parâmetros.
+
+Os valores iniciais são apenas para TESTE.
+
+Primeiro precisamos validar:
+
+1. se a matemática está correta;
+2. se a leitura visual está correta;
+3. se os estados aparecem nos lugares corretos;
+4. se o módulo diferencia rejeição superior e inferior;
+5. se progressão funciona;
+6. se persistência funciona;
+7. se ERD funciona;
+8. se fluxo melhora a leitura;
+9. se há conflitos.
+
+Somente depois faremos calibração estatística.
+
+------------------------------------------------------------
+42. SEPARAÇÃO ENTRE DIAGNÓSTICO E REVERSÃO
+------------------------------------------------------------
+
+Uma regra fundamental:
+
+REJECTION ENGINE NÃO É UM SISTEMA DE ENTRADA.
+
+Ele identifica:
+
+"há evidência de rejeição"
+
+"há progressão"
+
+"há persistência"
+
+"há confirmação de fluxo"
+
+"há candidato a reversão"
+
+Mas não deve afirmar:
+
+"COMPRE"
+
+ou
+
+"VENDA"
+
+como ordem operacional.
+
+O estado 7 significa:
+
+REVERSAL CANDIDATE
+
+e não:
+
+EXECUTE TRADE.
+
+A futura integração com o BRICKMASTER decidirá se existe confirmação estrutural suficiente para uma operação.
+
+------------------------------------------------------------
+43. ARQUITETURA FINAL
+------------------------------------------------------------
+
+A arquitetura desejada é:
+
+60.000 TICKS
+       ↓
+PRICE
+       ↓
+RANGE / BODY / DISPLACEMENT
+       ↓
+DE / RI
+       ↓
+WICK ANALYSIS
+       ↓
+CLOSE LOCATION
+       ↓
+URE / LRE
+       ↓
+PROGRESSION
+       ↓
+SLOPE
+       ↓
+ACCELERATION
+       ↓
+PERSISTENCE
+       ↓
+EXTREME REJECTION DIVERGENCE
+       ↓
+VOLUME
+       ↓
+AGGRESSION / DELTA
+       ↓
+PRICE × DELTA DIVERGENCE
+       ↓
+CLASSIFIER
+       ↓
+STATE 0–7
+       ↓
+VISUAL DIAGNOSTIC
+       ↓
+FUTURA INTEGRAÇÃO COM BRICKMASTER
+
+------------------------------------------------------------
+44. FORMATO DA SUA RESPOSTA
+------------------------------------------------------------
+
+Sua resposta deve possuir exatamente esta estrutura:
+
+PARTE 1 — AUDITORIA DO BRICKMASTER
+
+Explique quais funções e padrões do .SRC serão reutilizados.
+
+PARTE 2 — VALIDAÇÃO MATEMÁTICA
+
+Demonstre os dois candles fornecidos.
+
+PARTE 3 — ARQUITETURA DO REJECTION ENGINE
+
+Explique cada camada.
+
+PARTE 4 — MÁQUINA DE ESTADOS
+
+Apresente as condições exatas de cada estado.
+
+PARTE 5 — CÓDIGO NTSL COMPLETO
+
+Entregue o código completo, independente e pronto para compilação.
+
+PARTE 6 — AUDITORIA DO CÓDIGO
+
+Liste os pontos de compatibilidade e possíveis limitações reais da plataforma.
+
+PARTE 7 — COMO TESTAR NO PROFIT
+
+Explique exatamente como carregar o indicador e o que observar no WINFUT 60.000 ticks.
+
+IMPORTANTE:
+
+Se encontrar alguma função, sintaxe ou comportamento no código-fonte fornecido que contradiga alguma premissa deste prompt, NÃO esconda a divergência.
+
+Informe:
+
+"CONFLITO ENCONTRADO"
+
+e explique exatamente o conflito.
+
+Depois adapte a implementação à sintaxe REAL do código-fonte.
+
+NÃO invente uma solução.
+
+OBJETIVO FINAL:
+
+Entregar um REJECTION ENGINE V1.0 independente, compilável, não-repainting, matematicamente transparente e visualmente auditável no WINFUT 60.000 TICKS.
+
+Não integrar ainda ao BRICKMASTER.
+
+Primeiro precisamos provar que o motor funciona.

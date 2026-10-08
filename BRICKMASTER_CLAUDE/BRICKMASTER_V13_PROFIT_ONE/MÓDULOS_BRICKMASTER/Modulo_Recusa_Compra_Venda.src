@@ -1,0 +1,94 @@
+{
+==================================================================================
+  MÓDULO DE CONFIRMAÇÃO DE RECUSA (COMPRA / VENDA)
+  Autor: Carlos | Plataforma: Profit One / Nelogica | Linguagem: NTSL
+  Tipo: Indicador standalone (não integrado ao BRICKMASTER V12)
+==================================================================================
+
+  LÓGICA:
+  Para cada candle, comparamos a Amplitude total (Máxima - Mínima) com o quanto
+  do movimento foi "rejeitado" em cada ponta (pavio superior e pavio inferior).
+
+    Amplitude          = Máxima - Mínima
+    PavioSuperior      = Máxima - Maior(Abertura, Fechamento)
+    PavioInferior      = Menor(Abertura, Fechamento) - Mínima
+    PercRecusaCompra   = (PavioSuperior / Amplitude) * 100
+    PercRecusaVenda    = (PavioInferior / Amplitude) * 100
+    PercEficiencia     = (|Fechamento - Abertura| / Amplitude) * 100
+
+  INTERPRETAÇÃO:
+  - PercRecusaCompra alto  -> o preço subiu durante o candle mas foi "recusado"
+    lá em cima e fechou bem abaixo da máxima (vendedores dominaram no topo).
+  - PercRecusaVenda alto   -> o preço caiu durante o candle mas foi "recusado"
+    lá embaixo e fechou bem acima da mínima (compradores dominaram no fundo).
+  - PercEficiencia alto    -> o candle "andou" na direção do fechamento sem
+    muita rejeição (movimento direcional limpo, pouca disputa).
+  - A PROGRESSÃO (vários candles seguidos com recusa alta na mesma ponta)
+    é o sinal mais forte de rejeição de uma direção.
+
+  Ajuste o parâmetro LimiteAlerta conforme sua sensibilidade desejada.
+==================================================================================
+}
+
+Input
+  LimiteAlerta(80);      { % mínimo de recusa para disparar alerta }
+  MediaRecusa(3);        { períodos para suavizar a progressão de recusa }
+
+Var
+  Amplitude, PavioSuperior, PavioInferior : Float;
+  PercRecusaCompra, PercRecusaVenda, PercEficiencia : Float;
+  MediaRecusaCompra, MediaRecusaVenda : Float;
+  CorCompra, CorVenda, CorEficiencia : Integer;
+
+Begin
+
+  { --- Cálculo do candle atual --- }
+  Amplitude := Maxima(0) - Minima(0);
+
+  If Amplitude > 0 then
+  Begin
+    If Abertura(0) > Fechamento(0) then
+    Begin
+      PavioSuperior := Maxima(0) - Abertura(0);
+      PavioInferior := Fechamento(0) - Minima(0);
+    End
+    Else
+    Begin
+      PavioSuperior := Maxima(0) - Fechamento(0);
+      PavioInferior := Abertura(0) - Minima(0);
+    End;
+
+    PercRecusaCompra := (PavioSuperior / Amplitude) * 100;
+    PercRecusaVenda  := (PavioInferior / Amplitude) * 100;
+    PercEficiencia   := (AbsValor(Fechamento(0) - Abertura(0)) / Amplitude) * 100;
+  End
+  Else
+  Begin
+    PercRecusaCompra := 0;
+    PercRecusaVenda  := 0;
+    PercEficiencia   := 0;
+  End;
+
+  { --- Progressão (média móvel simples da recusa, para ver tendência) --- }
+  MediaRecusaCompra := Media(MediaRecusa, PercRecusaCompra);
+  MediaRecusaVenda  := Media(MediaRecusa, PercRecusaVenda);
+
+  { --- Plotagem --- }
+  CorCompra     := IfThenElse(PercRecusaCompra >= LimiteAlerta, RGB(255, 0, 0), RGB(255, 140, 140));
+  CorVenda      := IfThenElse(PercRecusaVenda  >= LimiteAlerta, RGB(0, 160, 0), RGB(140, 220, 140));
+  CorEficiencia := RGB(120, 120, 255);
+
+  Plot1(PercRecusaCompra, "% Recusa Compra", CorCompra);
+  Plot2(PercRecusaVenda,  "% Recusa Venda",  CorVenda);
+  Plot3(PercEficiencia,   "% Eficiência",    CorEficiencia);
+  Plot4(MediaRecusaCompra, "Média Recusa Compra", RGB(180, 0, 0));
+  Plot5(MediaRecusaVenda,  "Média Recusa Venda",  RGB(0, 100, 0));
+
+  { --- Alertas --- }
+  If PercRecusaCompra >= LimiteAlerta then
+    Alerta("RECUSA DE COMPRA " + ConverteTexto(Arredonde(PercRecusaCompra, 1)) + "% no candle atual");
+
+  If PercRecusaVenda >= LimiteAlerta then
+    Alerta("RECUSA DE VENDA " + ConverteTexto(Arredonde(PercRecusaVenda, 1)) + "% no candle atual");
+
+End;
