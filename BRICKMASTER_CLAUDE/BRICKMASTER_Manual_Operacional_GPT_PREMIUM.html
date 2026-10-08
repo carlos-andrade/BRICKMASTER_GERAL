@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRICKMASTER V10.1 EXEC GPT SAFETY — Manual Operacional Premium</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600;700;800&display=swap');
+
+  :root{
+    --bg:#07090d; --bg2:#0b1017; --bg3:#111824; --bg4:#172131;
+    --line:#263244; --line2:#34445a;
+    --txt:#d7e0ec; --muted:#7f8da3; --dim:#556274;
+    --cyan:#00d4ff; --cyan2:#00a9cc; --blue:#2588ff;
+    --green:#00e676; --green2:#00c853; --lime:#76ff03;
+    --red:#ff1744; --red2:#d50000; --maroon:#880e4f;
+    --yellow:#ffd600; --orange:#ff9800; --gold:#f0b429;
+    --fuchsia:#e040fb; --purple:#7b1fa2; --aqua:#00bcd4; --teal:#00796b;
+    --white:#fff; --shadow:0 18px 60px rgba(0,0,0,.38);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:
+      radial-gradient(circle at 15% 0%, rgba(0,212,255,.10), transparent 28%),
+      radial-gradient(circle at 85% 5%, rgba(224,64,251,.08), transparent 25%),
+      linear-gradient(180deg,#06080c 0%,#090d13 45%,#05070a 100%);
+    color:var(--txt); font-family:Inter, sans-serif; font-size:15px; line-height:1.65;
+  }
+  a{color:var(--cyan); text-decoration:none}
+  .page{max-width:1240px; margin:0 auto; padding:0 32px}
+  .hero{
+    min-height:520px; display:grid; grid-template-columns:1.05fr .95fr; gap:34px; align-items:center;
+    padding:70px 0 54px; border-bottom:1px solid var(--line);
+  }
+  .eyebrow{font-family:JetBrains Mono,monospace; color:var(--cyan); letter-spacing:4px; text-transform:uppercase; font-size:12px; font-weight:700}
+  h1{font-size:64px; line-height:.96; margin:18px 0 18px; color:white; letter-spacing:-3px; font-weight:900}
+  h1 span{color:var(--cyan)}
+  .sub{font-family:JetBrains Mono,monospace; color:var(--muted); font-size:13px}
+  .badges{display:flex; gap:10px; flex-wrap:wrap; margin:26px 0}
+  .badge{border:1px solid rgba(0,212,255,.35); background:rgba(0,212,255,.08); color:var(--cyan); padding:7px 12px; border-radius:999px; font-family:JetBrains Mono,monospace; font-size:11px; font-weight:700}
+  .badge.red{border-color:rgba(255,23,68,.35); background:rgba(255,23,68,.08); color:var(--red)}
+  .badge.gold{border-color:rgba(240,180,41,.35); background:rgba(240,180,41,.08); color:var(--gold)}
+  .hero-card{
+    background:linear-gradient(145deg,rgba(17,24,36,.96),rgba(8,12,18,.96)); border:1px solid var(--line);
+    border-radius:22px; padding:28px; box-shadow:var(--shadow);
+  }
+  .terminal{font-family:JetBrains Mono,monospace; background:#05080c; border:1px solid #1d2837; border-radius:14px; overflow:hidden}
+  .terminal .bar{display:flex; gap:8px; padding:12px 14px; border-bottom:1px solid #1d2837; background:#0b111a}
+  .dotx{width:11px; height:11px; border-radius:50%}
+  .terminal pre{margin:0; padding:18px; color:#98a7ba; font-size:12px; white-space:pre-wrap}
+  .toc{margin:32px 0 52px; background:rgba(17,24,36,.75); border:1px solid var(--line); border-radius:20px; padding:26px}
+  .toc h2{margin:0 0 18px; font-size:18px; color:white}
+  .toc-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:10px}
+  .toc a{display:block; padding:11px 12px; border:1px solid #202c3c; background:#0b1017; border-radius:10px; font-family:JetBrains Mono,monospace; font-size:12px; color:#b9c7d8}
+  .toc a:hover{border-color:var(--cyan); color:var(--cyan)}
+  section{padding:54px 0; border-bottom:1px solid rgba(38,50,68,.75)}
+  .section-label{font-family:JetBrains Mono,monospace; color:var(--cyan); letter-spacing:4px; text-transform:uppercase; font-size:11px; font-weight:700}
+  h2{font-size:34px; line-height:1.15; margin:8px 0 22px; color:white; letter-spacing:-1px}
+  h3{font-size:18px; margin:30px 0 12px; color:var(--cyan); text-transform:uppercase; letter-spacing:1px}
+  p{color:#c8d3e2; margin:0 0 14px}
+  .grid{display:grid; gap:18px}
+  .grid.cols-2{grid-template-columns:repeat(2,1fr)}
+  .grid.cols-3{grid-template-columns:repeat(3,1fr)}
+  .grid.cols-4{grid-template-columns:repeat(4,1fr)}
+  .card{
+    background:linear-gradient(180deg,rgba(17,24,36,.94),rgba(9,14,21,.94)); border:1px solid var(--line);
+    border-radius:18px; padding:22px; box-shadow:0 8px 30px rgba(0,0,0,.20); position:relative; overflow:hidden;
+  }
+  .card::before{content:""; position:absolute; inset:0 0 auto 0; height:3px; background:var(--cyan); opacity:.75}
+  .card.red::before{background:var(--red)} .card.green::before{background:var(--green)}
+  .card.yellow::before{background:var(--yellow)} .card.fuchsia::before{background:var(--fuchsia)}
+  .card.aqua::before{background:var(--aqua)} .card.lime::before{background:var(--lime)}
+  .kicker{font-family:JetBrains Mono,monospace; color:var(--muted); font-size:10px; letter-spacing:2px; text-transform:uppercase; font-weight:700}
+  .card h4{margin:7px 0 8px; font-size:16px; color:white}
+  .alert{padding:16px 18px; border-radius:14px; border:1px solid; margin:18px 0; background:rgba(0,0,0,.22)}
+  .alert.info{border-color:rgba(0,212,255,.35); color:#aeefff}
+  .alert.warn{border-color:rgba(255,214,0,.35); color:#ffe980}
+  .alert.danger{border-color:rgba(255,23,68,.40); color:#ff9aaa}
+  .chart-wrap{background:#0b1017; border:1px solid var(--line); border-radius:20px; padding:22px; margin:20px 0; overflow:hidden}
+  .chart-title{font-family:JetBrains Mono,monospace; color:var(--muted); font-size:11px; letter-spacing:2px; text-transform:uppercase; margin-bottom:14px}
+  svg{width:100%; height:auto; display:block}
+  table{width:100%; border-collapse:separate; border-spacing:0; margin:18px 0; overflow:hidden; border:1px solid var(--line); border-radius:16px}
+  th{background:#141d2b; color:#9fb0c5; font-family:JetBrains Mono,monospace; font-size:11px; text-align:left; padding:13px; text-transform:uppercase; letter-spacing:1px}
+  td{padding:13px; border-top:1px solid var(--line); color:#d2dceb; vertical-align:top}
+  tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+  code{font-family:JetBrains Mono,monospace; color:#c3e88d}
+  .pill{display:inline-block; font-family:JetBrains Mono,monospace; font-size:10px; padding:3px 9px; border-radius:99px; font-weight:800}
+  .pill.green{background:rgba(0,230,118,.14); color:var(--green)}
+  .pill.red{background:rgba(255,23,68,.14); color:var(--red)}
+  .pill.yellow{background:rgba(255,214,0,.14); color:var(--yellow)}
+  .pill.cyan{background:rgba(0,212,255,.14); color:var(--cyan)}
+  .pill.gray{background:rgba(127,141,163,.14); color:var(--muted)}
+  .sw{display:inline-block; width:12px; height:12px; border-radius:50%; margin-right:8px; vertical-align:-1px}
+  .timeline{display:grid; grid-template-columns:repeat(7,1fr); gap:10px; margin:20px 0}
+  .step{background:#0b1017; border:1px solid var(--line); border-radius:14px; padding:14px; min-height:120px}
+  .step .n{font-family:JetBrains Mono,monospace; color:var(--cyan); font-weight:800}
+  .step strong{display:block; color:white; margin:7px 0 5px}
+  .question{font-size:22px; color:white; font-weight:800; line-height:1.2}
+  .foot{padding:38px 0 60px; color:var(--dim); font-family:JetBrains Mono,monospace; font-size:12px; text-align:center}
+  .mini-code{font-family:JetBrains Mono,monospace; background:#06090e; border:1px solid #1f2b3a; color:#9fb4c9; padding:16px; border-radius:14px; white-space:pre-wrap; font-size:12px}
+  @media (max-width:900px){.hero{grid-template-columns:1fr}.toc-grid,.grid.cols-2,.grid.cols-3,.grid.cols-4{grid-template-columns:1fr}.timeline{grid-template-columns:1fr} h1{font-size:44px}}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="hero">
+    <div>
+      <div class="eyebrow">Manual Operacional Premium</div>
+      <h1>BRICKMASTER<br><span>1% OPENING RANGE</span></h1>
+      <p class="sub">V10.1 EXEC GPT SAFETY · Profit One / Nelogica · NTSL v4.2 · Gráfico 5000T · Carlos Andrade</p>
+      <div class="badges">
+        <span class="badge">Indicador + Execução</span>
+        <span class="badge gold">Trailing Stop M9</span>
+        <span class="badge">Proxy de Fluxo</span>
+        <span class="badge red">Execução real exige simulador</span>
+      </div>
+      <p>Este manual não é uma peça genérica. Ele foi desenhado para treinar o olho operacional no Brickmaster: bandas, médias, VWAP, PaintBar, score, execução em camadas, stop, alvo, volume anômalo e trailing.</p>
+    </div>
+    <div class="hero-card">
+      <div class="terminal">
+        <div class="bar"><span class="dotx" style="background:#ff5f56"></span><span class="dotx" style="background:#ffbd2e"></span><span class="dotx" style="background:#27c93f"></span></div>
+<pre>BRICKMASTER_V10.1_EXEC_GPT_SAFETY
+
+Linha = mapa
+Candle = evento
+Média = contexto
+VWAP = campo institucional
+Score = desequilíbrio
+Execução = sinal + permissão + ordem
+
+ModoExecucaoAtivo(false) por padrão.</pre>
+      </div>
+    </div>
+  </header>
+
+  <nav class="toc">
+    <h2>Índice Operacional</h2>
+    <div class="toc-grid">
+      <a href="#filosofia">01 · Filosofia Visual</a>
+      <a href="#mapa">02 · Mapa do Gráfico</a>
+      <a href="#bandas">03 · Bandas e Abertura</a>
+      <a href="#medias">04 · M9/M25</a>
+      <a href="#paintbar">05 · PaintBar</a>
+      <a href="#eventos">06 · Eventos de Banda</a>
+      <a href="#confirmacao">07 · Confirmação</a>
+      <a href="#fluxo">08 · Proxy de Fluxo</a>
+      <a href="#score">09 · Score</a>
+      <a href="#cenarios">10 · Cenários</a>
+      <a href="#erros">11 · Erros Críticos</a>
+      <a href="#checklist">12 · Checklist</a>
+      <a href="#parametros">13 · Parâmetros</a>
+      <a href="#volume">14 · Volume Anômalo</a>
+      <a href="#execucao">15 · Execução</a>
+      <a href="#entradas">16 · Entradas e Saídas</a>
+      <a href="#trailing">17 · Trailing M9</a>
+      <a href="#treino">18 · Treino Visual</a>
+    </div>
+  </nav>
+
+  <section id="filosofia">
+    <div class="section-label">Seção 01</div>
+    <h2>Filosofia e Estrutura Visual</h2>
+    <div class="grid cols-3">
+      <div class="card"><div class="kicker">Pergunta 1</div><div class="question">Onde estou em relação à abertura?</div><p>Acima, abaixo, dentro da faixa, além de +1% ou abaixo de -1%.</p></div>
+      <div class="card yellow"><div class="kicker">Pergunta 2</div><div class="question">O mercado aceitou ou rejeitou?</div><p>Fechou além da banda ou voltou para dentro após tocar?</p></div>
+      <div class="card green"><div class="kicker">Pergunta 3</div><div class="question">Existe pressão real?</div><p>Volume forte, fechamento no terço correto e alinhamento com VWAP.</p></div>
+    </div>
+    <div class="alert info"><strong>Regra-mãe:</strong> linha é mapa; candle é evento; média é contexto. Nenhum sinal deve ser lido isoladamente.</div>
+  </section>
+
+  <section id="mapa">
+    <div class="section-label">Seção 02</div>
+    <h2>Mapa Visual do Gráfico</h2>
+    <div class="chart-wrap">
+      <div class="chart-title">Estrutura visual — bandas, VWAP, M9/M25 e eventos</div>
+      <svg viewBox="0 0 1120 520" xmlns="http://www.w3.org/2000/svg">
+        <rect width="1120" height="520" fill="#0b1017"/>
+        <g stroke="#263244" stroke-width="1">
+          <line x1="80" y1="40" x2="80" y2="470"/><line x1="80" y1="470" x2="1060" y2="470"/>
+        </g>
+        <line x1="80" y1="80" x2="1060" y2="80" stroke="#76ff03" stroke-width="2" stroke-dasharray="8 5"/><text x="90" y="72" fill="#76ff03" font-family="JetBrains Mono" font-size="13">+2%</text>
+        <line x1="80" y1="155" x2="1060" y2="155" stroke="#00e676" stroke-width="3"/><text x="90" y="146" fill="#00e676" font-family="JetBrains Mono" font-size="13">+1%</text>
+        <line x1="80" y1="205" x2="1060" y2="205" stroke="#ffd600" stroke-width="1.6" stroke-dasharray="5 5"/><text x="90" y="196" fill="#ffd600" font-family="JetBrains Mono" font-size="13">+0,5%</text>
+        <line x1="80" y1="260" x2="1060" y2="260" stroke="#fff" stroke-width="3"/><text x="90" y="250" fill="#fff" font-family="JetBrains Mono" font-size="13">ABERTURA</text>
+        <line x1="80" y1="315" x2="1060" y2="315" stroke="#ffd600" stroke-width="1.6" stroke-dasharray="5 5"/><text x="90" y="306" fill="#ffd600" font-family="JetBrains Mono" font-size="13">-0,5%</text>
+        <line x1="80" y1="365" x2="1060" y2="365" stroke="#ff1744" stroke-width="3"/><text x="90" y="356" fill="#ff1744" font-family="JetBrains Mono" font-size="13">-1%</text>
+        <line x1="80" y1="440" x2="1060" y2="440" stroke="#880e4f" stroke-width="2" stroke-dasharray="8 5"/><text x="90" y="431" fill="#f06292" font-family="JetBrains Mono" font-size="13">-2%</text>
+        <path d="M120 285 C260 260,340 230,500 225 C680 220,810 190,1060 180" stroke="#ff9800" fill="none" stroke-width="2" stroke-dasharray="9 6"/>
+        <text x="1010" y="168" fill="#ff9800" font-family="JetBrains Mono" font-size="12">VWAP</text>
+        <path d="M120 270 C250 260,350 245,470 210 C620 170,780 150,1060 135" stroke="#00bcd4" fill="none" stroke-width="4"/>
+        <text x="1010" y="125" fill="#00bcd4" font-family="JetBrains Mono" font-size="12">M9</text>
+        <path d="M120 275 C300 270,430 250,560 220 C700 190,820 180,1060 160" stroke="#e040fb" fill="none" stroke-width="3"/>
+        <text x="1010" y="152" fill="#e040fb" font-family="JetBrains Mono" font-size="12">M25</text>
+        <!-- candles -->
+        <g stroke="#9fb0c5" stroke-width="1.4">
+          <line x1="190" y1="138" x2="190" y2="240"/><rect x="180" y="205" width="20" height="28" fill="#ff1744"/>
+          <text x="158" y="128" fill="#ff1744" font-family="JetBrains Mono" font-size="12">REJEIÇÃO</text>
+          <line x1="270" y1="130" x2="270" y2="258"/><rect x="260" y="165" width="20" height="70" fill="#e040fb"/>
+          <text x="238" y="278" fill="#e040fb" font-family="JetBrains Mono" font-size="12">ARMADILHA</text>
+          <line x1="420" y1="95" x2="420" y2="180"/><rect x="410" y="105" width="20" height="65" fill="#00e676"/>
+          <text x="385" y="88" fill="#00e676" font-family="JetBrains Mono" font-size="12">ACEITAÇÃO</text>
+          <line x1="540" y1="78" x2="540" y2="152"/><rect x="530" y="85" width="20" height="58" fill="#76ff03"/>
+          <text x="505" y="70" fill="#76ff03" font-family="JetBrains Mono" font-size="12">DIRECIONAL</text>
+        </g>
+        <rect x="720" y="300" width="320" height="140" fill="#080c12" stroke="#263244" rx="14"/>
+        <text x="742" y="330" fill="#7f8da3" font-family="JetBrains Mono" font-size="12">LEGENDA OPERACIONAL</text>
+        <text x="742" y="358" fill="#fff" font-family="JetBrains Mono" font-size="12">Branco: abertura do dia</text>
+        <text x="742" y="380" fill="#00e676" font-family="JetBrains Mono" font-size="12">Verde: +1% / campo comprador</text>
+        <text x="742" y="402" fill="#ff1744" font-family="JetBrains Mono" font-size="12">Vermelho: -1% / campo vendedor</text>
+        <text x="742" y="424" fill="#00bcd4" font-family="JetBrains Mono" font-size="12">Aqua: M9 / contexto recente</text>
+      </svg>
+    </div>
+  </section>
+
+  <section id="bandas">
+    <div class="section-label">Seção 03</div>
+    <h2>Bandas e Abertura</h2>
+    <table>
+      <tr><th>Plot</th><th>Linha</th><th>Cor</th><th>Função</th><th>Leitura</th></tr>
+      <tr><td><code>Plot1</code></td><td>Abertura</td><td><span class="sw" style="background:#fff"></span>Branco</td><td>Eixo do dia</td><td>Acima favorece compra; abaixo favorece venda.</td></tr>
+      <tr><td><code>Plot2</code></td><td>+1%</td><td><span class="sw" style="background:#00e676"></span>Verde</td><td>Primeira banda compradora</td><td>Aceitação acima ou rejeição/armadilha se retornar.</td></tr>
+      <tr><td><code>Plot3</code></td><td>-1%</td><td><span class="sw" style="background:#ff1744"></span>Vermelho</td><td>Primeira banda vendedora</td><td>Aceitação abaixo ou rejeição/armadilha se voltar.</td></tr>
+      <tr><td><code>Plot4/5</code></td><td>±0,5%</td><td><span class="sw" style="background:#ffd600"></span>Amarelo</td><td>Zonas intermediárias</td><td>Observação de força antes da banda principal.</td></tr>
+      <tr><td><code>Plot6/7</code></td><td>±2%</td><td><span class="sw" style="background:#76ff03"></span>Lime / Maroon</td><td>Extensão</td><td>Movimento rápido até aqui sugere força ou exaustão.</td></tr>
+    </table>
+    <div class="alert warn">A abertura é o Open do primeiro candle do dia no 5000T. Em gap, ela já embute o deslocamento inicial; não é o preço teórico do leilão.</div>
+  </section>
+
+  <section id="medias">
+    <div class="section-label">Seção 04</div>
+    <h2>Médias M9 e M25 — Contexto, não preço médio comum</h2>
+    <p>As médias do Brickmaster são construídas sobre a variação percentual em relação à abertura e depois convertidas para preço. Isso mantém a leitura ancorada no dia atual.</p>
+    <div class="grid cols-4">
+      <div class="card green"><div class="kicker">Cenário 1</div><h4>M9 acima da M25</h4><p>Viés comprador. Melhor se ambas estiverem subindo.</p></div>
+      <div class="card red"><div class="kicker">Cenário 2</div><h4>M9 abaixo da M25</h4><p>Viés vendedor. Melhor se ambas estiverem caindo.</p></div>
+      <div class="card yellow"><div class="kicker">Cenário 3</div><h4>Cruzamento</h4><p>Mudança de contexto. Não entrar sem confirmação.</p></div>
+      <div class="card"><div class="kicker">Cenário 4</div><h4>Médias achatadas</h4><p>Lateralidade. O correto é não operar rompimento.</p></div>
+    </div>
+  </section>
+
+  <section id="paintbar">
+    <div class="section-label">Seção 05</div>
+    <h2>Hierarquia de Cores — PaintBar</h2>
+    <p>O candle recebe a cor do evento de maior prioridade. Se houver múltiplos eventos, vence a prioridade mais alta.</p>
+    <table>
+      <tr><th>Prioridade</th><th>Cor</th><th>Evento</th><th>Interpretação</th><th>Ação mental</th></tr>
+      <tr><td>P1</td><td><span class="sw" style="background:#e040fb"></span>FUCHSIA</td><td>Armadilha confirmada em +1%</td><td>Sinal de baixa</td><td>Venda pode ser considerada após permissão.</td></tr>
+      <tr><td>P1</td><td><span class="sw" style="background:#00bcd4"></span>AQUA</td><td>Armadilha confirmada em -1%</td><td>Sinal de alta</td><td>Compra pode ser considerada após permissão.</td></tr>
+      <tr><td>P2</td><td><span class="sw" style="background:#ff1744"></span>RED</td><td>Rejeição confirmada em +1%</td><td>Exaustão compradora</td><td>Venda com confirmação.</td></tr>
+      <tr><td>P2</td><td><span class="sw" style="background:#00e676"></span>GREEN</td><td>Rejeição confirmada em -1%</td><td>Exaustão vendedora</td><td>Compra com confirmação.</td></tr>
+      <tr><td>P3</td><td><span class="sw" style="background:#76ff03"></span>LIME</td><td>Dia direcional de compra</td><td>Alta confirmada, sinal tardio</td><td>Seguir com trailing, não perseguir atrasado.</td></tr>
+      <tr><td>P3</td><td><span class="sw" style="background:#880e4f"></span>MAROON</td><td>Dia direcional de venda</td><td>Baixa confirmada, sinal tardio</td><td>Seguir com trailing, não perseguir atrasado.</td></tr>
+      <tr><td>P4</td><td><span class="sw" style="background:#7b1fa2"></span>PURPLE</td><td>Armadilha não confirmada em +1%</td><td>Alerta, não sinal</td><td>Aguardar próximo candle.</td></tr>
+      <tr><td>P4</td><td><span class="sw" style="background:#00796b"></span>TEAL</td><td>Armadilha não confirmada em -1%</td><td>Alerta, não sinal</td><td>Aguardar próximo candle.</td></tr>
+    </table>
+  </section>
+
+  <section id="eventos">
+    <div class="section-label">Seção 06</div>
+    <h2>Eventos de Banda — Toque, Aceitação, Rejeição, Armadilha</h2>
+    <div class="chart-wrap">
+      <div class="chart-title">Sequência visual dos quatro eventos</div>
+      <svg viewBox="0 0 1120 380" xmlns="http://www.w3.org/2000/svg">
+        <rect width="1120" height="380" fill="#0b1017"/>
+        <line x1="60" y1="120" x2="1060" y2="120" stroke="#00e676" stroke-width="3"/>
+        <text x="70" y="108" fill="#00e676" font-family="JetBrains Mono" font-size="13">BANDA +1%</text>
+        <g font-family="JetBrains Mono" font-size="12">
+          <g transform="translate(110,0)">
+            <text y="40" fill="#ffd600" font-weight="700">TOQUE</text>
+            <line x1="55" y1="88" x2="55" y2="190" stroke="#c8d3e2"/><rect x="45" y="150" width="20" height="30" fill="#7f8da3"/>
+            <text y="300" fill="#ffd600">Sem ação</text><text y="320" fill="#7f8da3">Aguardar fechamento</text>
+          </g>
+          <g transform="translate(345,0)">
+            <text y="40" fill="#00e676" font-weight="700">ACEITAÇÃO</text>
+            <line x1="55" y1="70" x2="55" y2="155" stroke="#c8d3e2"/><rect x="45" y="78" width="20" height="66" fill="#00e676"/>
+            <text y="300" fill="#00e676">Close acima da banda</text><text y="320" fill="#7f8da3">Comprador domina</text>
+          </g>
+          <g transform="translate(590,0)">
+            <text y="40" fill="#ff1744" font-weight="700">REJEIÇÃO</text>
+            <line x1="55" y1="55" x2="55" y2="205" stroke="#c8d3e2"/><rect x="45" y="160" width="20" height="35" fill="#ff1744"/>
+            <text x="75" y="88" fill="#ff1744">pavio ≥ 1,5x corpo</text>
+            <text y="300" fill="#ff1744">Toca e fecha abaixo</text><text y="320" fill="#7f8da3">Aguardar confirmação</text>
+          </g>
+          <g transform="translate(850,0)">
+            <text y="40" fill="#e040fb" font-weight="700">ARMADILHA</text>
+            <line x1="30" y1="80" x2="30" y2="155" stroke="#c8d3e2"/><rect x="20" y="88" width="20" height="58" fill="#00e676"/>
+            <line x1="80" y1="105" x2="80" y2="220" stroke="#c8d3e2"/><rect x="70" y="145" width="20" height="62" fill="#e040fb"/>
+            <text y="300" fill="#e040fb">C[1] aceita; C[0] volta</text><text y="320" fill="#7f8da3">Evento forte, mas confirmar</text>
+          </g>
+        </g>
+      </svg>
+    </div>
+  </section>
+
+  <section id="confirmacao">
+    <div class="section-label">Seção 07</div>
+    <h2>Confirmação — O Evento que Separa Alerta de Sinal</h2>
+    <p>A confirmação ocorre no candle seguinte ao evento de rejeição ou armadilha. Ela exige rompimento da referência do candle anterior, alinhamento com M9 e VWAP/pressão.</p>
+    <div class="timeline">
+      <div class="step"><span class="n">01</span><strong>Toque/Rejeição</strong><p>O preço toca a banda e não sustenta.</p></div>
+      <div class="step"><span class="n">02</span><strong>Armadilha</strong><p>O candle anterior aceitou; o atual volta para dentro.</p></div>
+      <div class="step"><span class="n">03</span><strong>Confirmação</strong><p>Close rompe Low/High do candle anterior.</p></div>
+      <div class="step"><span class="n">04</span><strong>M9</strong><p>Close fica do lado correto da média curta.</p></div>
+      <div class="step"><span class="n">05</span><strong>VWAP/Fluxo</strong><p>Campo institucional ou pressão no range confirma.</p></div>
+      <div class="step"><span class="n">06</span><strong>PaintBar</strong><p>AQUA/FUCHSIA ou RED/GREEN confirmado.</p></div>
+      <div class="step"><span class="n">07</span><strong>Próximo Candle</strong><p>A ordem stop pode ser posicionada se a permissão aprovar.</p></div>
+    </div>
+  </section>
+
+  <section id="fluxo">
+    <div class="section-label">Seção 08</div>
+    <h2>Proxy de Fluxo — Profit One</h2>
+    <div class="grid cols-2">
+      <div class="card green"><div class="kicker">Pressão compradora</div><h4>ClosePosicaoNoRange ≥ 0,67 + VolumeForte</h4><p>O candle fechou no terço superior do range com volume acima da média.</p></div>
+      <div class="card red"><div class="kicker">Pressão vendedora</div><h4>ClosePosicaoNoRange ≤ 0,33 + VolumeForte</h4><p>O candle fechou no terço inferior do range com volume acima da média.</p></div>
+    </div>
+    <div class="alert warn">Profit One não fornece Delta real por agressão. O V10.1 usa VWAP, volume e posição do close no range como proxy. V11 Pro deve substituir isso por AgressionVolBuy/Sell.</div>
+  </section>
+
+  <section id="score">
+    <div class="section-label">Seção 09</div>
+    <h2>Score Brickmaster</h2>
+    <div class="chart-wrap">
+      <div class="chart-title">Escala de contexto</div>
+      <svg viewBox="0 0 1120 160" xmlns="http://www.w3.org/2000/svg">
+        <rect width="1120" height="160" fill="#0b1017"/>
+        <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#d50000"/><stop offset=".46" stop-color="#4a5568"/><stop offset=".54" stop-color="#4a5568"/><stop offset="1" stop-color="#00e676"/></linearGradient></defs>
+        <rect x="90" y="60" width="940" height="38" rx="10" fill="url(#g)"/>
+        <line x1="90" y1="48" x2="90" y2="112" stroke="#7f8da3"/><line x1="420" y1="48" x2="420" y2="112" stroke="#ff1744" stroke-dasharray="5 4"/>
+        <line x1="560" y1="42" x2="560" y2="118" stroke="#fff" stroke-width="2"/><line x1="700" y1="48" x2="700" y2="112" stroke="#00e676" stroke-dasharray="5 4"/><line x1="1030" y1="48" x2="1030" y2="112" stroke="#7f8da3"/>
+        <g font-family="JetBrains Mono" font-size="13">
+          <text x="75" y="38" fill="#7f8da3">-12</text><text x="407" y="38" fill="#ff1744">-3</text><text x="554" y="34" fill="#fff">0</text><text x="690" y="38" fill="#00e676">+3</text><text x="1015" y="38" fill="#7f8da3">+12</text>
+          <text x="150" y="135" fill="#ff1744">CONTEXTO VENDEDOR</text><text x="510" y="135" fill="#7f8da3">NEUTRO</text><text x="750" y="135" fill="#00e676">CONTEXTO COMPRADOR</text>
+        </g>
+      </svg>
+    </div>
+    <table><tr><th>Evento</th><th>Peso</th><th>Função</th></tr>
+      <tr><td>Close vs abertura</td><td>+1</td><td>Base direcional do dia.</td></tr>
+      <tr><td>Médias subindo/caindo</td><td>+1</td><td>Confirma contexto recente/estrutural.</td></tr>
+      <tr><td>Cruzamento M9/M25</td><td>+2</td><td>Evento pontual de mudança.</td></tr>
+      <tr><td>Armadilha</td><td>+2</td><td>Evento forte de falso rompimento.</td></tr>
+      <tr><td>Confirmação</td><td>+2</td><td>Sinal operacional de maior qualidade.</td></tr>
+      <tr><td>VWAP e Pressão</td><td>+1</td><td>Campo institucional/proxy de fluxo.</td></tr>
+    </table>
+  </section>
+
+  <section id="cenarios">
+    <div class="section-label">Seção 10</div>
+    <h2>Cenários e Decisão</h2>
+    <table>
+      <tr><th>Cenário</th><th>Cor</th><th>Confirmação</th><th>Ação</th><th>Risco</th></tr>
+      <tr><td>Rompimento forte acima de +1%</td><td>GREEN/LIME</td><td>VWAP abaixo, M9 subindo, volume forte</td><td>Monitorar continuação</td><td><span class="pill yellow">Médio</span></td></tr>
+      <tr><td>Falso rompimento acima de +1%</td><td>PURPLE → FUCHSIA</td><td>Candle seguinte fecha abaixo do Low[1]</td><td>Aguardar FUCHSIA</td><td><span class="pill red">Alto</span></td></tr>
+      <tr><td>Falso rompimento abaixo de -1%</td><td>TEAL → AQUA</td><td>Candle seguinte fecha acima do High[1]</td><td>Aguardar AQUA</td><td><span class="pill red">Alto</span></td></tr>
+      <tr><td>Preço dentro da faixa</td><td>Sem pintura</td><td>Nenhuma</td><td>Não operar</td><td><span class="pill red">Alto se entrar</span></td></tr>
+      <tr><td>Dia macro</td><td>Qualquer</td><td>Não operar abertura</td><td>Aguardar 30–45 min</td><td><span class="pill red">Muito alto</span></td></tr>
+      <tr><td>Dia direcional forte</td><td>LIME/MAROON</td><td>Médias e VWAP alinhados</td><td>Segurar com trailing</td><td><span class="pill green">Controlável</span></td></tr>
+    </table>
+  </section>
+
+  <section id="erros">
+    <div class="section-label">Seção 11</div>
+    <h2>Erros Críticos de Interpretação</h2>
+    <div class="grid cols-3">
+      <div class="card red"><div class="kicker">Erro 1</div><h4>Entrar no PURPLE</h4><p>PURPLE é alerta. FUCHSIA é confirmação. Antecipar é operar contra a própria lógica.</p></div>
+      <div class="card red"><div class="kicker">Erro 2</div><h4>Comprar contra VWAP</h4><p>Rompimento de +1% abaixo da VWAP é contraditório. Não há campo institucional comprador.</p></div>
+      <div class="card yellow"><div class="kicker">Erro 3</div><h4>Operar lateralidade</h4><p>Faixa respeitada o dia inteiro destrói conta por sequência de stops pequenos.</p></div>
+      <div class="card yellow"><div class="kicker">Erro 4</div><h4>Ignorar macro</h4><p>Payroll, FOMC, Copom, CPI e IPCA podem invalidar a leitura inicial.</p></div>
+      <div class="card"><div class="kicker">Erro 5</div><h4>Confundir aceitação com direção</h4><p>GREEN não é sempre compra automática; pode ser aceitação ou rejeição conforme posição.</p></div>
+      <div class="card"><div class="kicker">Erro 6</div><h4>Usar 1% igual em tudo</h4><p>WIN, WDO e ações têm volatilidades diferentes; bandas precisam de validação.</p></div>
+    </div>
+  </section>
+
+  <section id="checklist">
+    <div class="section-label">Seção 12</div>
+    <h2>Checklist Pré-Operação</h2>
+    <table>
+      <tr><th>Momento</th><th>Checklist</th><th>Bloqueio</th></tr>
+      <tr><td>Antes do pregão</td><td>Calendário macro, fechamento anterior, ajuste, gap, rolagem, liquidez.</td><td>Evento macro forte = não operar abertura.</td></tr>
+      <tr><td>Primeiros candles</td><td>Ver abertura, VWAP, formação de M9/M25.</td><td>Não operar primeiros 3 candles.</td></tr>
+      <tr><td>Antes da entrada</td><td>Cor confirmada, VWAP alinhado, volume forte, médias alinhadas.</td><td>PURPLE/TEAL isolado = não entrar.</td></tr>
+      <tr><td>Execução</td><td>Horário OK, sem trava, limite de operações OK, candle não processado.</td><td>Qualquer filtro falhou = sem ordem.</td></tr>
+    </table>
+  </section>
+
+  <section id="parametros">
+    <div class="section-label">Seção 13</div>
+    <h2>Parâmetros e Ajustes</h2>
+    <table>
+      <tr><th>Parâmetro</th><th>Padrão</th><th>WIN</th><th>WDO</th><th>Quando alterar</th></tr>
+      <tr><td><code>PercentualAlvo1</code></td><td>1,00</td><td>1,00–1,50</td><td>0,40–0,60</td><td>Se toca demais, aumentar. Se nunca toca, reduzir.</td></tr>
+      <tr><td><code>FatorVolumeForte</code></td><td>1,30</td><td>1,20–1,50</td><td>1,20–1,50</td><td>Se sinal fraco passa, aumentar.</td></tr>
+      <tr><td><code>DiferencaMinimaScore</code></td><td>3</td><td>2–4</td><td>2–4</td><td>Se muda rápido demais, aumentar.</td></tr>
+      <tr><td><code>StopPontos</code></td><td>50</td><td>Validar</td><td>Validar</td><td>Ajuste crítico por volatilidade real.</td></tr>
+      <tr><td><code>AlvoPontos</code></td><td>80</td><td>Validar</td><td>Validar</td><td>Manter relação risco/retorno consistente.</td></tr>
+    </table>
+    <div class="alert danger">Regra de ouro: nunca altere mais de um parâmetro por vez. Teste 20 pregões em replay antes de concluir.</div>
+  </section>
+
+  <section id="volume">
+    <div class="section-label">Seção 14</div>
+    <h2>Cumulative Volume Anômalo — Integração GPT Safety</h2>
+    <p>O volume acumulado do dia é comparado contra uma referência histórica por janelas horárias. Quando o ratio supera o fator de alerta, o sistema pode elevar o limiar do score ou bloquear entrada, conforme configuração.</p>
+    <div class="chart-wrap">
+      <div class="chart-title">Linha do tempo das 8 janelas</div>
+      <svg viewBox="0 0 1120 240" xmlns="http://www.w3.org/2000/svg">
+        <rect width="1120" height="240" fill="#0b1017"/>
+        <line x1="70" y1="120" x2="1050" y2="120" stroke="#263244" stroke-width="4"/>
+        <g font-family="JetBrains Mono" font-size="12" text-anchor="middle">
+          <g fill="#111824" stroke="#00d4ff">
+            <rect x="70" y="70" width="105" height="80" rx="12"/><rect x="190" y="70" width="105" height="80" rx="12"/><rect x="310" y="70" width="105" height="80" rx="12"/><rect x="430" y="70" width="105" height="80" rx="12"/><rect x="550" y="70" width="105" height="80" rx="12"/><rect x="670" y="70" width="105" height="80" rx="12"/><rect x="790" y="70" width="105" height="80" rx="12"/><rect x="910" y="70" width="105" height="80" rx="12"/>
+          </g>
+          <text x="122" y="105" fill="#00d4ff">J1</text><text x="122" y="130" fill="#7f8da3">até 10:00</text>
+          <text x="242" y="105" fill="#00d4ff">J2</text><text x="242" y="130" fill="#7f8da3">11:00</text>
+          <text x="362" y="105" fill="#00d4ff">J3</text><text x="362" y="130" fill="#7f8da3">12:00</text>
+          <text x="482" y="105" fill="#00d4ff">J4</text><text x="482" y="130" fill="#7f8da3">13:00</text>
+          <text x="602" y="105" fill="#00d4ff">J5</text><text x="602" y="130" fill="#7f8da3">14:00</text>
+          <text x="722" y="105" fill="#00d4ff">J6</text><text x="722" y="130" fill="#7f8da3">15:00</text>
+          <text x="842" y="105" fill="#00d4ff">J7</text><text x="842" y="130" fill="#7f8da3">16:00</text>
+          <text x="962" y="105" fill="#00d4ff">J8</text><text x="962" y="130" fill="#7f8da3">17:30</text>
+        </g>
+        <text x="560" y="195" fill="#ffd600" text-anchor="middle" font-family="JetBrains Mono" font-size="13">RatioVolumeAnomalo = VolumeAcumuladoHoje / RefHistoricaAtual</text>
+      </svg>
+    </div>
+    <table>
+      <tr><th>Variável</th><th>Função</th><th>Uso operacional</th></tr>
+      <tr><td><code>VolumeAcumuladoHoje</code></td><td>Soma do volume do pregão atual</td><td>Mostra participação real do dia.</td></tr>
+      <tr><td><code>RefHistoricaAtual</code></td><td>Média histórica da janela</td><td>Base de comparação.</td></tr>
+      <tr><td><code>RatioVolumeAnomalo</code></td><td>Volume atual / referência</td><td>Acima de 2,0 indica anomalia.</td></tr>
+      <tr><td><code>AlertaVolumeAnomalo</code></td><td>Disparo do alerta</td><td>Pode reforçar score ou bloquear entrada.</td></tr>
+    </table>
+  </section>
+
+  <section id="execucao">
+    <div class="section-label">Seção 15</div>
+    <h2>Módulo de Execução — Sinal → Permissão → Execução</h2>
+    <div class="chart-wrap">
+      <div class="chart-title">As três camadas do robô</div>
+      <svg viewBox="0 0 1120 340" xmlns="http://www.w3.org/2000/svg">
+        <rect width="1120" height="340" fill="#0b1017"/>
+        <g font-family="JetBrains Mono">
+          <rect x="70" y="55" width="280" height="220" rx="18" fill="#081018" stroke="#00bcd4" stroke-width="2"/>
+          <text x="100" y="92" fill="#00bcd4" font-size="16" font-weight="700">CAMADA 1 — SINAL</text>
+          <text x="100" y="125" fill="#c8d3e2" font-size="12">• ConfirmouRejeicao</text>
+          <text x="100" y="150" fill="#c8d3e2" font-size="12">• ConfirmouArmadilha</text>
+          <text x="100" y="175" fill="#c8d3e2" font-size="12">• DiaDirecional opcional</text>
+          <text x="100" y="220" fill="#7f8da3" font-size="12">Resultado: SinalCompra/Venda</text>
+          <text x="378" y="175" fill="#7f8da3" font-size="38">→</text>
+          <rect x="420" y="55" width="280" height="220" rx="18" fill="#101008" stroke="#ffd600" stroke-width="2"/>
+          <text x="450" y="92" fill="#ffd600" font-size="16" font-weight="700">CAMADA 2 — PERMISSÃO</text>
+          <text x="450" y="125" fill="#c8d3e2" font-size="12">• Horário OK?</text>
+          <text x="450" y="150" fill="#c8d3e2" font-size="12">• Sem trava diária?</text>
+          <text x="450" y="175" fill="#c8d3e2" font-size="12">• VWAP/contexto OK?</text>
+          <text x="450" y="200" fill="#c8d3e2" font-size="12">• Candle não processado?</text>
+          <text x="450" y="235" fill="#7f8da3" font-size="12">Qualquer falha = sem ordem</text>
+          <text x="728" y="175" fill="#7f8da3" font-size="38">→</text>
+          <rect x="770" y="55" width="280" height="220" rx="18" fill="#17090d" stroke="#ff1744" stroke-width="2"/>
+          <text x="800" y="92" fill="#ff1744" font-size="16" font-weight="700">CAMADA 3 — EXECUÇÃO</text>
+          <text x="800" y="125" fill="#c8d3e2" font-size="12">• CancelPendingOrders</text>
+          <text x="800" y="150" fill="#c8d3e2" font-size="12">• BuyStop / SellShortStop</text>
+          <text x="800" y="175" fill="#c8d3e2" font-size="12">• Entrada pendente</text>
+          <text x="800" y="200" fill="#c8d3e2" font-size="12">• Stop / Alvo / Trailing</text>
+          <text x="800" y="235" fill="#ff9aaa" font-size="12">Aqui o dinheiro entra em jogo</text>
+        </g>
+      </svg>
+    </div>
+    <div class="alert danger">ModoExecucaoAtivo(false) deve permanecer falso durante leitura, replay e validação. Só ativar em simulador controlado.</div>
+  </section>
+
+  <section id="entradas">
+    <div class="section-label">Seção 16</div>
+    <h2>Pontos Exatos de Entrada, Stop e Alvo</h2>
+    <div class="grid cols-2">
+      <div class="card green"><div class="kicker">Compra confirmada</div><h4>BuyStop</h4><p><code>Close + OffsetExecucao × MinPriceIncrement</code></p><p>Dispara acima do candle confirmado. Não é entrada a mercado.</p></div>
+      <div class="card red"><div class="kicker">Venda confirmada</div><h4>SellShortStop</h4><p><code>Close - OffsetExecucao × MinPriceIncrement</code></p><p>Dispara abaixo do candle confirmado. Não é entrada a mercado.</p></div>
+    </div>
+    <table>
+      <tr><th>Posição</th><th>Stop</th><th>Alvo</th><th>Função</th></tr>
+      <tr><td>Comprado</td><td>Entrada - 50 pts</td><td>Entrada + 80 pts</td><td><code>SellToCoverStop</code> / <code>SellToCoverLimit</code></td></tr>
+      <tr><td>Vendido</td><td>Entrada + 50 pts</td><td>Entrada - 80 pts</td><td><code>BuyToCoverStop</code> / <code>BuyToCoverLimit</code></td></tr>
+    </table>
+  </section>
+
+  <section id="trailing">
+    <div class="section-label">Seção 17</div>
+    <h2>Trailing Stop M9 — Stop Fixo para Dinâmico</h2>
+    <p>A operação começa com stop e alvo fixos. Ao atingir lucro mínimo, ativa o trailing baseado na M9, com folga mínima e trava de não-regressão.</p>
+    <div class="chart-wrap">
+      <div class="chart-title">Fase 1 vs Fase 2</div>
+      <svg viewBox="0 0 1120 420" xmlns="http://www.w3.org/2000/svg">
+        <rect width="1120" height="420" fill="#0b1017"/>
+        <line x1="90" y1="300" x2="1030" y2="300" stroke="#fff" stroke-width="3"/><text x="100" y="288" fill="#fff" font-family="JetBrains Mono" font-size="13">ENTRADA</text>
+        <line x1="480" y1="60" x2="480" y2="370" stroke="#ffd600" stroke-width="2" stroke-dasharray="8 5"/><text x="495" y="80" fill="#ffd600" font-family="JetBrains Mono" font-size="13">+40 PTS — GATILHO</text>
+        <rect x="90" y="60" width="390" height="300" fill="rgba(255,152,0,.06)" stroke="#ff9800" rx="18"/>
+        <text x="125" y="115" fill="#ff9800" font-family="JetBrains Mono" font-size="16" font-weight="700">FASE 1 — STOP FIXO</text>
+        <text x="125" y="155" fill="#c8d3e2" font-family="JetBrains Mono" font-size="13">Stop: Entrada - 50 pts</text>
+        <text x="125" y="185" fill="#c8d3e2" font-family="JetBrains Mono" font-size="13">Alvo: Entrada + 80 pts</text>
+        <text x="125" y="230" fill="#7f8da3" font-family="JetBrains Mono" font-size="12">Proteção inicial; lucro ainda não corre livre.</text>
+        <rect x="520" y="60" width="510" height="300" fill="rgba(0,188,212,.06)" stroke="#00bcd4" rx="18"/>
+        <text x="555" y="115" fill="#00bcd4" font-family="JetBrains Mono" font-size="16" font-weight="700">FASE 2 — TRAILING M9</text>
+        <text x="555" y="155" fill="#c8d3e2" font-family="JetBrains Mono" font-size="13">Alvo fixo deixa de ser dominante</text>
+        <text x="555" y="185" fill="#c8d3e2" font-family="JetBrains Mono" font-size="13">Stop acompanha M9 com folga mínima ≥ 15 pts</text>
+        <text x="555" y="215" fill="#c8d3e2" font-family="JetBrains Mono" font-size="13">Trava de não-regressão: stop só melhora</text>
+        <path d="M590 285 C650 250,700 270,760 235 C820 205,870 220,950 170" stroke="#00bcd4" stroke-width="4" fill="none"/>
+        <path d="M590 315 C650 300,700 295,760 265 C820 245,870 245,950 210" stroke="#76ff03" stroke-width="3" fill="none"/>
+        <text x="955" y="173" fill="#00bcd4" font-family="JetBrains Mono" font-size="12">Preço</text>
+        <text x="955" y="213" fill="#76ff03" font-family="JetBrains Mono" font-size="12">Stop travado</text>
+      </svg>
+    </div>
+    <div class="mini-code">if StopTrailingAnteriorC > 0 then
+  if StopTrailingCompra < StopTrailingAnteriorC then
+    StopTrailingCompra := StopTrailingAnteriorC;
+
+// Compra: stop só sobe.
+// Venda: stop só desce.</div>
+  </section>
+
+  <section id="treino">
+    <div class="section-label">Seção 18</div>
+    <h2>Treino Visual — Cartão de Memorização</h2>
+    <table>
+      <tr><th>Cor</th><th>Pergunta automática</th><th>Resposta correta</th></tr>
+      <tr><td><span class="sw" style="background:#7b1fa2"></span>PURPLE</td><td>Isso é venda?</td><td>Não. É alerta. Aguardar confirmação.</td></tr>
+      <tr><td><span class="sw" style="background:#e040fb"></span>FUCHSIA</td><td>Posso considerar venda?</td><td>Sim, se permissão aprovar.</td></tr>
+      <tr><td><span class="sw" style="background:#00796b"></span>TEAL</td><td>Isso é compra?</td><td>Não. É alerta. Aguardar confirmação.</td></tr>
+      <tr><td><span class="sw" style="background:#00bcd4"></span>AQUA</td><td>Posso considerar compra?</td><td>Sim, se permissão aprovar.</td></tr>
+      <tr><td><span class="sw" style="background:#76ff03"></span>LIME</td><td>Dia direcional de alta?</td><td>Sim, mas é sinal tardio.</td></tr>
+      <tr><td><span class="sw" style="background:#880e4f"></span>MAROON</td><td>Dia direcional de baixa?</td><td>Sim, mas é sinal tardio.</td></tr>
+      <tr><td>Sem pintura</td><td>Existe sinal?</td><td>Não. Não operar.</td></tr>
+    </table>
+    <div class="alert info">Exercício: durante 20 pregões em replay, pare em cada candle PURPLE, TEAL, AQUA e FUCHSIA. Antes de avançar, escreva se é alerta ou confirmação e qual seria o gatilho exato da ordem.</div>
+  </section>
+
+  <section>
+    <div class="section-label">Próxima Versão</div>
+    <h2>Roadmap V11 — Profit Pro / Ultra</h2>
+    <div class="grid cols-4">
+      <div class="card"><div class="kicker">Fluxo real</div><h4>AgressionVolBuy/Sell</h4><p>Substitui proxy por Delta real.</p></div>
+      <div class="card"><div class="kicker">Volatilidade</div><h4>ATR adaptativo</h4><p>Bandas deixam de ser percentual fixo.</p></div>
+      <div class="card"><div class="kicker">Lateralidade</div><h4>Range consolidado</h4><p>Bloqueia rompimentos em mercado sem direção.</p></div>
+      <div class="card"><div class="kicker">Macro</div><h4>DiaDeEvento</h4><p>Aumenta filtros em Payroll, Copom, CPI e FOMC.</p></div>
+    </div>
+  </section>
+
+  <div class="foot">BRICKMASTER 1% OPENING RANGE — V10.1 EXEC GPT SAFETY · Manual Operacional Premium · Carlos Andrade</div>
+</div>
+</body>
+</html>
