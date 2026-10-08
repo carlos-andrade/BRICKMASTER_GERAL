@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRICKMASTER V14_versao3_GROK — Manual</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap');
+  :root {
+    --bg: #0a0c10; --bg2: #0f1218; --border: #1e2530;
+    --text: #c8d0dc; --text2: #7a8799; --accent: #00d4ff;
+    --green: #00e676; --orange: #ff9800; --red: #ff1744;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 15px; line-height: 1.7; }
+  .header { background: linear-gradient(135deg, #0a0c10, #0f1a2e); border-bottom: 1px solid var(--border); padding: 48px 40px; }
+  .header h1 { font-size: 28px; font-weight: 700; color: #fff; }
+  .header h1 span { color: var(--accent); }
+  .header-sub { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text2); margin-top: 10px; }
+  .container { max-width: 920px; margin: 0 auto; padding: 40px 32px; }
+  h2 { font-size: 20px; color: #fff; margin: 40px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  h3 { font-size: 15px; color: var(--accent); margin: 24px 0 10px; }
+  p, li { color: var(--text); margin-bottom: 10px; }
+  ul, ol { padding-left: 22px; margin-bottom: 16px; }
+  code { font-family: 'JetBrains Mono', monospace; background: #151a22; padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+  .box { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 18px 20px; margin: 18px 0; }
+  .box.ok { border-left: 4px solid var(--green); }
+  .box.info { border-left: 4px solid var(--accent); }
+  .box.danger { border-left: 4px solid var(--red); }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+  th { color: var(--text2); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+  footer { text-align: center; padding: 40px; color: var(--text2); font-size: 12px; border-top: 1px solid var(--border); margin-top: 50px; font-family: 'JetBrains Mono', monospace; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="container">
+    <h1>BRICKMASTER <span>V14_versao3_GROK</span></h1>
+    <div class="header-sub">Módulos 00 + 01 + 02 + 03 (Score + Contexto) • 13/09/2026</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="box danger">
+    <strong>REGRA OBRIGATÓRIA</strong><br>
+    1. Regra de coloração nos candles (PaintBar com hierarquia) — ativa<br>
+    2. Sistema com fonte (PlotText/Alert) — será reforçado no Módulo 07<br>
+    Princípio: todo evento relevante deve ser validado, pesado no Score, sinalizado no candle de origem e plotado.
+  </div>
+
+  <h2>1. O que esta versão adiciona</h2>
+  <div class="box ok">
+    <strong>Módulo 03 — Score + Contexto</strong><br>
+    Consolida todos os eventos do dia em dois contadores e define o viés do mercado.
+  </div>
+
+  <h2>2. Como o Score funciona</h2>
+  <ul>
+    <li><code>ScoreComprador</code> e <code>ScoreVendedor</code> acumulam ao longo do dia</li>
+    <li>São zerados automaticamente no início de cada novo dia</li>
+    <li>Só contabilizam o evento no candle em que ele nasce (borda de subida)</li>
+    <li>Cada tipo de evento tem um peso configurável</li>
+  </ul>
+
+  <h3>Pesos padrão</h3>
+  <table>
+    <thead>
+      <tr><th>Evento</th><th>Peso</th><th>Lado</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Confirmação Armadilha ±1%</td><td>2.0</td><td>Comprador ou Vendedor</td></tr>
+      <tr><td>Confirmação Armadilha outras bandas</td><td>1.5</td><td>Comprador ou Vendedor</td></tr>
+      <tr><td>Confirmação Rejeição ±1%</td><td>1.5</td><td>Comprador ou Vendedor</td></tr>
+      <tr><td>Armadilha não confirmada ±1%</td><td>1.0</td><td>Comprador ou Vendedor</td></tr>
+      <tr><td>Rejeição não confirmada ±1%</td><td>0.7</td><td>Comprador ou Vendedor</td></tr>
+      <tr><td>Aceitação ±1%</td><td>0.8</td><td>Conforme o lado aceito</td></tr>
+      <tr><td>Eventos secundários</td><td>0.5</td><td>Comprador ou Vendedor</td></tr>
+    </tbody>
+  </table>
+
+  <h2>3. Contexto e Dia Direcional</h2>
+  <table>
+    <thead>
+      <tr><th>Condição</th><th>Resultado</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>ScoreComprador − ScoreVendedor ≥ <code>DiferencaMinimaScore</code></td>
+        <td><strong>ContextoComprador</strong></td>
+      </tr>
+      <tr>
+        <td>ScoreVendedor − ScoreComprador ≥ <code>DiferencaMinimaScore</code></td>
+        <td><strong>ContextoVendedor</strong></td>
+      </tr>
+      <tr>
+        <td>Diferença menor que o mínimo</td>
+        <td><strong>ContextoNeutro</strong></td>
+      </tr>
+      <tr>
+        <td>Diferença ≥ 1,5 × mínimo e contexto comprador</td>
+        <td><strong>DiaDirecionalCompra</strong></td>
+      </tr>
+      <tr>
+        <td>Diferença ≤ −1,5 × mínimo e contexto vendedor</td>
+        <td><strong>DiaDirecionalVenda</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>4. Inputs do Score</h2>
+  <table>
+    <thead>
+      <tr><th>Input</th><th>Padrão</th><th>Função</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>DiferencaMinimaScore</code></td><td>3.0</td><td>Diferença mínima para definir Contexto</td></tr>
+      <tr><td><code>PesoConfirmacaoArmadilha1</code></td><td>2.0</td><td>Peso da confirmação de armadilha ±1%</td></tr>
+      <tr><td><code>PesoConfirmacaoArmadilhaOutros</code></td><td>1.5</td><td>Peso das outras confirmações de armadilha</td></tr>
+      <tr><td><code>PesoConfirmacaoRejeicao1</code></td><td>1.5</td><td>Peso da confirmação de rejeição ±1%</td></tr>
+      <tr><td><code>PesoArmadilha1</code></td><td>1.0</td><td>Peso de armadilha não confirmada ±1%</td></tr>
+      <tr><td><code>PesoRejeicao1</code></td><td>0.7</td><td>Peso de rejeição não confirmada ±1%</td></tr>
+      <tr><td><code>PesoAceitacao1</code></td><td>0.8</td><td>Peso de aceitação ±1%</td></tr>
+      <tr><td><code>PesoEventosSecundarios</code></td><td>0.5</td><td>Peso dos eventos de outras bandas</td></tr>
+    </tbody>
+  </table>
+
+  <h2>5. Plotagem adicional</h2>
+  <ul>
+    <li><code>Plot12</code> → ScoreComprador (verde)</li>
+    <li><code>Plot13</code> → ScoreVendedor (vermelho)</li>
+  </ul>
+  <p>Úteis para monitorar a evolução do Score ao longo do dia.</p>
+
+  <h2>6. Arquivos desta versão</h2>
+  <ul>
+    <li><code>BRICKMASTER_V14_versao3_GROK.src</code></li>
+    <li><code>BRICKMASTER_V14_versao3_GROK_Manual.html</code></li>
+    <li><code>BRICKMASTER_V14_versao3_Roadmap_Modulos.html</code></li>
+  </ul>
+
+</div>
+
+<footer>
+  BRICKMASTER V14_versao3_GROK • Base + Eventos + PaintBar + Score<br>
+  Regra obrigatória: Coloração de candles + Sistema com fonte<br>
+  Recriado por Grok (xAI) • Baseado no sistema de Carlos Andrade
+</footer>
+
+</body>
+</html>

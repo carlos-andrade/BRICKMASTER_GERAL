@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRICKMASTER V14_versao8_GROK — Manual</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap');
+  :root { --bg:#0a0c10; --bg2:#0f1218; --border:#1e2530; --text:#c8d0dc; --text2:#7a8799; --accent:#00d4ff; --green:#00e676; --red:#ff1744; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; font-size:15px; line-height:1.7; }
+  .header { background:linear-gradient(135deg,#0a0c10,#0f1a2e); border-bottom:1px solid var(--border); padding:48px 40px; }
+  .header h1 { font-size:28px; font-weight:700; color:#fff; }
+  .header h1 span { color:var(--accent); }
+  .header-sub { font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--text2); margin-top:10px; }
+  .container { max-width:920px; margin:0 auto; padding:40px 32px; }
+  h2 { font-size:20px; color:#fff; margin:40px 0 16px; padding-bottom:8px; border-bottom:1px solid var(--border); }
+  p,li { color:var(--text); margin-bottom:10px; }
+  ul { padding-left:22px; margin-bottom:16px; }
+  code { font-family:'JetBrains Mono',monospace; background:#151a22; padding:2px 6px; border-radius:4px; font-size:13px; }
+  .box { background:var(--bg2); border:1px solid var(--border); border-radius:8px; padding:18px 20px; margin:18px 0; }
+  .box.ok { border-left:4px solid var(--green); }
+  .box.danger { border-left:4px solid var(--red); }
+  .box.warn { border-left:4px solid #ff9800; }
+  table { width:100%; border-collapse:collapse; margin:16px 0; font-size:14px; }
+  th,td { padding:10px 12px; text-align:left; border-bottom:1px solid var(--border); }
+  th { color:var(--text2); font-size:12px; text-transform:uppercase; }
+  footer { text-align:center; padding:40px; color:var(--text2); font-size:12px; border-top:1px solid var(--border); margin-top:50px; font-family:'JetBrains Mono',monospace; }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="container">
+    <h1>BRICKMASTER <span>V14_versao8_GROK</span></h1>
+    <div class="header-sub">Módulos 00–08 (Execução) • 13/09/2026</div>
+  </div>
+</div>
+<div class="container">
+
+  <div class="box danger">
+    <strong>REGRA OBRIGATÓRIA</strong><br>
+    Coloração de candles + Sistema com fonte — ativos.<br>
+    Princípio: todo evento relevante deve ser validado, pesado no Score, sinalizado no candle de origem e plotado.
+  </div>
+
+  <h2>1. O que esta versão adiciona</h2>
+  <div class="box ok">
+    <strong>Módulo 08 — Execução</strong><br>
+    Camada operacional: <em>Sinal → Permissão → Ordem</em>.
+  </div>
+
+  <h2>2. Fluxo de execução</h2>
+  <ol>
+    <li><strong>Sinal</strong> — nasce de confirmações de alta prioridade (Armadilha ±1%, Rejeição ±1%, Abertura, Recusa)</li>
+    <li><strong>Permissão</strong> — só libera se passar em todas as travas</li>
+    <li><strong>Ordem</strong> — <code>BuyAtMarket</code> ou <code>SellShortAtMarket</code></li>
+  </ol>
+
+  <h2>3. Travas de segurança</h2>
+  <table>
+    <thead><tr><th>Trava</th><th>Função</th></tr></thead>
+    <tbody>
+      <tr><td><code>HabilitarExecucao</code></td><td>Liga/desliga o envio de ordens</td></tr>
+      <tr><td><code>HorarioInicio / HorarioFim</code></td><td>Janela operacional (padrão 09:00–17:00)</td></tr>
+      <tr><td><code>MaxOperacoesDia</code></td><td>Limite diário de entradas (padrão 4)</td></tr>
+      <tr><td><code>HasPosition</code></td><td>Não entra se já houver posição aberta</td></tr>
+      <tr><td><code>ExigirContexto</code></td><td>Só opera a favor do Contexto/Dia Direcional</td></tr>
+      <tr><td><code>ExigirConfirmacao</code></td><td>Só entra em eventos confirmados</td></tr>
+    </tbody>
+  </table>
+
+  <h2>4. Sinais de compra</h2>
+  <ul>
+    <li>Confirmação Armadilha −1%</li>
+    <li>Confirmação Rejeição −1%</li>
+    <li>Aceitação/Rejeição da Abertura (lado compra)</li>
+    <li>Recusa de Baixa confirmada</li>
+  </ul>
+
+  <h2>5. Sinais de venda</h2>
+  <ul>
+    <li>Confirmação Armadilha +1%</li>
+    <li>Confirmação Rejeição +1%</li>
+    <li>Aceitação/Rejeição da Abertura (lado venda)</li>
+    <li>Recusa de Alta confirmada</li>
+  </ul>
+
+  <h2>6. Inputs de execução</h2>
+  <table>
+    <thead><tr><th>Input</th><th>Padrão</th><th>Função</th></tr></thead>
+    <tbody>
+      <tr><td><code>HabilitarExecucao</code></td><td>true</td><td>Ativa envio de ordens</td></tr>
+      <tr><td><code>QuantidadeContratos</code></td><td>1.0</td><td>Quantidade por ordem</td></tr>
+      <tr><td><code>MaxOperacoesDia</code></td><td>4</td><td>Trava diária</td></tr>
+      <tr><td><code>HorarioInicio</code></td><td>900</td><td>HHMM início</td></tr>
+      <tr><td><code>HorarioFim</code></td><td>1700</td><td>HHMM fim</td></tr>
+      <tr><td><code>ExigirContexto</code></td><td>true</td><td>Filtra pelo Score/Contexto</td></tr>
+      <tr><td><code>ExigirConfirmacao</code></td><td>true</td><td>Só confirmações</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box warn">
+    <strong>Importante:</strong> Teste primeiro com <code>HabilitarExecucao = false</code> ou em modo simulação.
+    O trailing e a saída automática entram no Módulo 09.
+  </div>
+
+  <h2>7. Arquivos desta versão</h2>
+  <ul>
+    <li><code>BRICKMASTER_V14_versao8_GROK.src</code></li>
+    <li><code>BRICKMASTER_V14_versao8_GROK_Manual.html</code></li>
+    <li><code>BRICKMASTER_V14_versao8_Roadmap_Modulos.html</code></li>
+  </ul>
+
+</div>
+<footer>
+  BRICKMASTER V14_versao8_GROK • Execução ativa (Sinal → Permissão → Ordem)<br>
+  Recriado por Grok (xAI) • Baseado no sistema de Carlos Andrade
+</footer>
+</body>
+</html>

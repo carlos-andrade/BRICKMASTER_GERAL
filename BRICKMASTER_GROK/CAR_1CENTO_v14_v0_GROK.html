@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRICKMASTER V14_versao0_GROK — Manual</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap');
+  :root {
+    --bg: #0a0c10; --bg2: #0f1218; --border: #1e2530;
+    --text: #c8d0dc; --text2: #7a8799; --accent: #00d4ff;
+    --green: #00e676; --orange: #ff9800; --purple: #b388ff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 15px; line-height: 1.7; }
+  .header { background: linear-gradient(135deg, #0a0c10, #0f1a2e); border-bottom: 1px solid var(--border); padding: 48px 40px; }
+  .header h1 { font-size: 32px; font-weight: 700; color: #fff; }
+  .header h1 span { color: var(--accent); }
+  .header-sub { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text2); margin-top: 10px; }
+  .container { max-width: 900px; margin: 0 auto; padding: 40px 32px; }
+  h2 { font-size: 22px; color: #fff; margin: 40px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  h3 { font-size: 16px; color: var(--accent); margin: 28px 0 12px; }
+  p, li { color: var(--text); margin-bottom: 12px; }
+  ul, ol { padding-left: 24px; margin-bottom: 16px; }
+  code { font-family: 'JetBrains Mono', monospace; background: #151a22; padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+  .box { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin: 20px 0; }
+  .box.ok { border-left: 4px solid var(--green); }
+  .box.info { border-left: 4px solid var(--accent); }
+  .box.warn { border-left: 4px solid var(--orange); }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+  th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+  th { color: var(--text2); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+  .dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 8px; vertical-align: middle; }
+  footer { text-align: center; padding: 40px; color: var(--text2); font-size: 12px; border-top: 1px solid var(--border); margin-top: 60px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="container">
+    <h1>BRICKMASTER <span>V14_versao0_GROK</span></h1>
+    <div class="header-sub">Primeira versão limpa • Apenas Módulo Base • Recriado por Grok • 12/09/2026</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <h2>1. Objetivo desta versão</h2>
+  <p>Esta é a <strong>versão zero</strong> do Brickmaster V14. Ela contém <strong>somente</strong> a fundação do sistema:</p>
+  <ul>
+    <li>Cálculo da Abertura do Dia</li>
+    <li>Cálculo das 8 bandas percentuais (±0,50% / ±1% / ±2% / ±3%)</li>
+    <li>Cálculo das duas médias de variação das bandas (Curta e Longa)</li>
+    <li>Plotagem limpa das linhas e das médias</li>
+  </ul>
+
+  <div class="box ok">
+    <strong>Nada mais foi incluído.</strong><br>
+    Não há Score, não há execução de ordens, não há alertas, não há volume anômalo, não há módulo de abertura zero, não há módulo de recusa.  
+    Esta versão serve exclusivamente como base sólida e limpa para construir os próximos módulos.
+  </div>
+
+  <h2>2. O que o código faz (passo a passo)</h2>
+
+  <h3>2.1 Detecção de Novo Dia</h3>
+  <p>A cada candle o sistema verifica se a data mudou:</p>
+  <div class="box info">
+    <code>NovoDia := (Date <> Date[1]);</code><br><br>
+    Se for verdadeiro, captura a abertura oficial do pregão:<br>
+    <code>AberturaDia := Open;</code>
+  </div>
+
+  <h3>2.2 Cálculo das Bandas</h3>
+  <p>Todas as bandas são calculadas a partir da <strong>abertura do dia</strong> (não do candle atual):</p>
+  <table>
+    <thead>
+      <tr><th>Banda</th><th>Fórmula</th><th>Cor no gráfico</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>±0,50%</td>
+        <td><code>AberturaDia * (1 ± PercentualMeio/100)</code></td>
+        <td><span class="dot" style="background:#b4b432"></span>Amarelo suave</td>
+      </tr>
+      <tr>
+        <td>±1,00%</td>
+        <td><code>AberturaDia * (1 ± PercentualAlvo1/100)</code></td>
+        <td><span class="dot" style="background:#00b4ff"></span>Azul</td>
+      </tr>
+      <tr>
+        <td>±2,00%</td>
+        <td><code>AberturaDia * (1 ± PercentualAlvo2/100)</code></td>
+        <td><span class="dot" style="background:#00c878"></span>Verde</td>
+      </tr>
+      <tr>
+        <td>±3,00%</td>
+        <td><code>AberturaDia * (1 ± PercentualAlvo3/100)</code></td>
+        <td><span class="dot" style="background:#dc5050"></span>Vermelho</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>2.3 Variação Percentual Atual</h3>
+  <p>É a distância percentual do fechamento atual em relação à abertura do dia:</p>
+  <div class="box info">
+    <code>VariacaoAtual := ((Close - AberturaDia) / AberturaDia) * 100;</code>
+  </div>
+  <p>Essa variável é a matéria-prima das duas médias.</p>
+
+  <h3>2.4 Médias de Variação das Bandas</h3>
+  <p>Em vez de fazer média simples de preço, o sistema faz média da <strong>variação percentual</strong> e depois transforma de volta em preço:</p>
+  <ul>
+    <li><strong>Média Curta</strong> (padrão 9 períodos) → linha laranja</li>
+    <li><strong>Média Longa</strong> (padrão 25 períodos) → linha roxa</li>
+  </ul>
+  <p>Isso permite que as médias “viajem” junto com as bandas e mostrem a tendência da variação do dia.</p>
+
+  <h2>3. O que aparece no gráfico</h2>
+  <table>
+    <thead>
+      <tr><th>Plot</th><th>Conteúdo</th><th>Cor</th><th>Largura</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Plot 1 e 2</td><td>±0,50%</td><td>Amarelo suave</td><td>1</td></tr>
+      <tr><td>Plot 3 e 4</td><td>±1,00%</td><td>Azul</td><td>1</td></tr>
+      <tr><td>Plot 5 e 6</td><td>±2,00%</td><td>Verde</td><td>1</td></tr>
+      <tr><td>Plot 7 e 8</td><td>±3,00%</td><td>Vermelho</td><td>1</td></tr>
+      <tr><td>Plot 9</td><td>Média Curta (M9)</td><td><span class="dot" style="background:#ff9800"></span>Laranja</td><td>2</td></tr>
+      <tr><td>Plot 10</td><td>Média Longa (M25)</td><td><span class="dot" style="background:#b388ff"></span>Roxo</td><td>2</td></tr>
+    </tbody>
+  </table>
+
+  <h2>4. Inputs disponíveis</h2>
+  <table>
+    <thead>
+      <tr><th>Input</th><th>Padrão</th><th>Função</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>PercentualMeio</td><td>0.50</td><td>Banda de ±0,50%</td></tr>
+      <tr><td>PercentualAlvo1</td><td>1.00</td><td>Banda de ±1,00%</td></tr>
+      <tr><td>PercentualAlvo2</td><td>2.00</td><td>Banda de ±2,00%</td></tr>
+      <tr><td>PercentualAlvo3</td><td>3.00</td><td>Banda de ±3,00%</td></tr>
+      <tr><td>PeriodoMediaBandasCurta</td><td>9</td><td>Período da média curta</td></tr>
+      <tr><td>PeriodoMediaBandasLonga</td><td>25</td><td>Período da média longa</td></tr>
+      <tr><td>MostrarMeio / Alvo1 / Alvo2 / Alvo3</td><td>true</td><td>Liga/desliga cada par de bandas</td></tr>
+      <tr><td>MostrarMediaCurta / Longa</td><td>true</td><td>Liga/desliga as médias</td></tr>
+    </tbody>
+  </table>
+
+  <h2>5. Como usar</h2>
+  <ol>
+    <li>Copie o arquivo <code>BRICKMASTER_V14_versao0_GROK.src</code> para a pasta de estratégias do Profit.</li>
+    <li>Abra o Editor de Estratégias e carregue o arquivo.</li>
+    <li><strong>Importante:</strong> carregue como <strong>Estratégia</strong> (não como Indicador).</li>
+    <li>Aplique no gráfico de 1 minuto ou 5 minutos do WIN ou do ativo desejado.</li>
+    <li>As linhas das bandas e as duas médias aparecerão automaticamente a partir da abertura do dia.</li>
+  </ol>
+
+  <div class="box warn">
+    <strong>Atenção:</strong> Esta versão ainda <strong>não opera</strong>. Ela apenas desenha a estrutura visual base.  
+    Nas próximas versões (V14_versao1, versao2...) serão adicionados os módulos de eventos, Score, execução, trailing etc.
+  </div>
+
+  <h2>6. Próximos passos planejados</h2>
+  <ul>
+    <li><strong>V14_versao1</strong> → Detecção completa do ciclo de eventos (Toque → Aceitação → Rejeição → Armadilha → Confirmação)</li>
+    <li><strong>V14_versao2</strong> → PaintBar com hierarquia de cores</li>
+    <li><strong>V14_versao3</strong> → Score + Contexto</li>
+    <li><strong>V14_versao4</strong> → Módulo de Execução + Trailing</li>
+    <li>...</li>
+  </ul>
+
+  <div class="box ok">
+    <strong>Filosofia desta recriação:</strong><br>
+    Construir módulo por módulo, de forma limpa, documentada e testável.  
+    Cada versão adiciona apenas uma camada clara de responsabilidade.
+  </div>
+
+</div>
+
+<footer>
+  BRICKMASTER V14_versao0_GROK • Módulo Base • Recriado por Grok (xAI) • 12/09/2026<br>
+  Baseado no sistema original de Carlos Andrade
+</footer>
+
+</body>
+</html>

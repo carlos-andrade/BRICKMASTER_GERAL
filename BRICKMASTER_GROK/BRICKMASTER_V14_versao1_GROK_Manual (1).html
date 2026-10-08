@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRICKMASTER V14_versao1_GROK — Manual</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap');
+  :root {
+    --bg: #0a0c10; --bg2: #0f1218; --border: #1e2530;
+    --text: #c8d0dc; --text2: #7a8799; --accent: #00d4ff;
+    --green: #00e676; --orange: #ff9800; --red: #ff1744;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 15px; line-height: 1.7; }
+  .header { background: linear-gradient(135deg, #0a0c10, #0f1a2e); border-bottom: 1px solid var(--border); padding: 48px 40px; }
+  .header h1 { font-size: 28px; font-weight: 700; color: #fff; }
+  .header h1 span { color: var(--accent); }
+  .header-sub { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text2); margin-top: 10px; }
+  .container { max-width: 900px; margin: 0 auto; padding: 40px 32px; }
+  h2 { font-size: 20px; color: #fff; margin: 40px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  h3 { font-size: 15px; color: var(--accent); margin: 24px 0 10px; }
+  p, li { color: var(--text); margin-bottom: 10px; }
+  ul, ol { padding-left: 22px; margin-bottom: 16px; }
+  code { font-family: 'JetBrains Mono', monospace; background: #151a22; padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+  .box { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 18px 20px; margin: 18px 0; }
+  .box.ok { border-left: 4px solid var(--green); }
+  .box.info { border-left: 4px solid var(--accent); }
+  .box.warn { border-left: 4px solid var(--orange); }
+  .box.danger { border-left: 4px solid var(--red); }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+  th { color: var(--text2); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+  .dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 8px; vertical-align: middle; }
+  footer { text-align: center; padding: 40px; color: var(--text2); font-size: 12px; border-top: 1px solid var(--border); margin-top: 50px; font-family: 'JetBrains Mono', monospace; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="container">
+    <h1>BRICKMASTER <span>V14_versao1_GROK</span></h1>
+    <div class="header-sub">Módulo 00 (Base) + Módulo 01 (Ciclo de Eventos) • Atualizado 12/09/2026</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <h2>1. Por que o Módulo 01 ainda NÃO aparece no gráfico?</h2>
+
+  <div class="box danger">
+    <strong>Resposta direta:</strong><br>
+    O Módulo 01 <strong>detecta</strong> todos os eventos (Toque, Aceitação, Rejeição, Armadilha e Confirmação), 
+    mas <strong>não desenha nada visual</strong> no gráfico.
+  </div>
+
+  <h3>Explicação detalhada</h3>
+
+  <p>Na construção modular que estamos fazendo, cada módulo tem uma responsabilidade clara e isolada:</p>
+
+  <table>
+    <thead>
+      <tr><th>Módulo</th><th>O que ele faz</th><th>O que ele mostra no gráfico</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>00 – Base</strong></td>
+        <td>Calcula abertura, bandas e médias</td>
+        <td>Linhas (Abertura + 8 bandas + 2 médias)</td>
+      </tr>
+      <tr>
+        <td><strong>01 – Ciclo de Eventos</strong></td>
+        <td>Detecta Toque / Aceitação / Rejeição / Armadilha / Confirmação</td>
+        <td><strong>Nada visual ainda</strong></td>
+      </tr>
+      <tr>
+        <td><strong>02 – PaintBar (Cores)</strong></td>
+        <td>Pinta os candles de acordo com o evento mais importante</td>
+        <td>Cores nos candles (próximo módulo)</td>
+      </tr>
+      <tr>
+        <td><strong>07 – Alertas</strong></td>
+        <td>Gera Alert() + PlotText()</td>
+        <td>Textos e pop-ups no gráfico</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>No código da <code>V14_versao1</code> existem dezenas de variáveis booleanas sendo calculadas a cada candle, por exemplo:</p>
+
+  <ul>
+    <li><code>TocouMais1</code>, <code>TocouMenos1</code></li>
+    <li><code>AceitouMais1</code>, <code>AceitouMenos1</code></li>
+    <li><code>RejeitouMais1</code>, <code>RejeitouMenos1</code></li>
+    <li><code>ArmadilhaMais1</code>, <code>ArmadilhaMenos1</code></li>
+    <li><code>ConfirmouArmadilhaMais1</code>, <code>ConfirmouArmadilhaMenos1</code></li>
+    <li>... e o mesmo para ±0,5%, ±2% e ±3%</li>
+  </ul>
+
+  <p>Essas variáveis <strong>existem e estão sendo calculadas corretamente</strong>.  
+  Porém, no final do código, a seção de plotagem continua sendo <strong>exatamente a mesma da versão 0</strong>:</p>
+
+  <ul>
+    <li>Plot da Abertura (branco)</li>
+    <li>Plots das 8 bandas</li>
+    <li>Plots das 2 médias</li>
+  </ul>
+
+  <div class="box warn">
+    <strong>Não existe nesta versão:</strong><br>
+    • Nenhum <code>PaintBar()</code><br>
+    • Nenhum <code>PlotText()</code><br>
+    • Nenhum <code>Alert()</code><br>
+    • Nenhum plot extra ligado aos eventos
+  </div>
+
+  <p>Por isso, ao olhar o gráfico, você só vê as linhas.  
+  Os eventos estão acontecendo “por baixo dos panos”, mas ainda não têm representação visual.</p>
+
+  <h3>Por que foi feito assim de propósito?</h3>
+  <p>Para manter a construção <strong>modular e limpa</strong>:</p>
+  <ol>
+    <li>Primeiro garantimos que a detecção está correta (Módulo 01)</li>
+    <li>Depois criamos a camada visual (Módulo 02 – PaintBar)</li>
+    <li>Depois a camada de alertas textuais (Módulo 07)</li>
+  </ol>
+
+  <p>Se misturássemos detecção + cores + alertas no mesmo passo, ficaria muito mais difícil depurar e ajustar cada parte isoladamente.</p>
+
+  <h2>2. O que o Módulo 01 realmente faz (mesmo sem aparecer)</h2>
+
+  <p>Para cada uma das 8 bandas o sistema avalia, a cada candle:</p>
+
+  <table>
+    <thead>
+      <tr><th>Evento</th><th>Condição</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Toque</strong></td>
+        <td>High ≥ banda de cima <em>ou</em> Low ≤ banda de baixo</td>
+      </tr>
+      <tr>
+        <td><strong>Aceitação</strong></td>
+        <td>Close fecha além da banda</td>
+      </tr>
+      <tr>
+        <td><strong>Rejeição</strong></td>
+        <td>Tocou + Close voltou para dentro + pavio ≥ <code>MinPavioRejeicao</code></td>
+      </tr>
+      <tr>
+        <td><strong>Armadilha</strong></td>
+        <td>Rejeição + pavio ≥ <code>MinPavioArmadilha</code> (mais rigoroso)</td>
+      </tr>
+      <tr>
+        <td><strong>Confirmação</strong></td>
+        <td>Armadilha/Rejeição + candle na direção oposta ao toque (versão simples)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>3. Inputs de calibração do ciclo</h2>
+  <table>
+    <thead>
+      <tr><th>Input</th><th>Padrão</th><th>Função</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>MinPavioRejeicao</code></td>
+        <td>0.40</td>
+        <td>Pavio mínimo (% do range) para registrar Rejeição</td>
+      </tr>
+      <tr>
+        <td><code>MinPavioArmadilha</code></td>
+        <td>0.55</td>
+        <td>Pavio mínimo (% do range) para registrar Armadilha</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>4. Plotagem atual (ainda só a Base)</h2>
+  <table>
+    <thead>
+      <tr><th>Plot</th><th>Conteúdo</th><th>Cor</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>Abertura do Dia</td><td><span class="dot" style="background:#fff;border:1px solid #555"></span>Branco</td></tr>
+      <tr><td>2-3</td><td>±0,50%</td><td>Amarelo suave</td></tr>
+      <tr><td>4-5</td><td>±1,00%</td><td>Azul</td></tr>
+      <tr><td>6-7</td><td>±2,00%</td><td>Verde</td></tr>
+      <tr><td>8-9</td><td>±3,00%</td><td>Vermelho</td></tr>
+      <tr><td>10</td><td>Média Curta (M9)</td><td><span class="dot" style="background:#ff9800"></span>Laranja</td></tr>
+      <tr><td>11</td><td>Média Longa (M25)</td><td><span class="dot" style="background:#b388ff"></span>Roxo</td></tr>
+    </tbody>
+  </table>
+
+  <h2>5. Quando os eventos vão aparecer no gráfico?</h2>
+  <div class="box ok">
+    <strong>No próximo módulo (02 – PaintBar).</strong><br>
+    Lá vamos criar a hierarquia de cores e usar <code>PaintBar()</code> para pintar o candle 
+    de acordo com o evento mais importante que ocorreu nele.
+  </div>
+
+  <h2>6. Arquivos desta versão</h2>
+  <ul>
+    <li><code>BRICKMASTER_V14_versao1_GROK.src</code></li>
+    <li><code>BRICKMASTER_V14_versao1_GROK_Manual.html</code> (este arquivo)</li>
+    <li><code>BRICKMASTER_V14_Roadmap_Modulos.html</code></li>
+  </ul>
+
+</div>
+
+<footer>
+  BRICKMASTER V14_versao1_GROK • Módulo Base + Ciclo de Eventos (lógica apenas)<br>
+  Recriado por Grok (xAI) • Baseado no sistema de Carlos Andrade
+</footer>
+
+</body>
+</html>
