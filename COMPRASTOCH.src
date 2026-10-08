@@ -1,4 +1,0 @@
-﻿Inicio
-  Se(SlowStochastic(14,3,0) <= 20) e (Media(20,Close) >= 20) então
-    PlotText("SINAL DE COMPRA!", clVerde);
-Fim;
