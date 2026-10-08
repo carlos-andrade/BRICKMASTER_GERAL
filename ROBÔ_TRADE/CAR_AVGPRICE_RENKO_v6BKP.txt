@@ -1,0 +1,109 @@
+// BRICKMASTER
+// Método inspirado no Método 9.1 do Larry Williams e o Método de Joseph Reffson (MeJoRe)(Newton–Raphson).
+// Nome: CAR_AVGPRICE_RENKOv6BKP // Atualizar seguindo as recomendação da chatgpt
+// Versão 05. // RENKO 15R NO WIN.  //PROMISSOR. //APRESENTOU OS MELHORES RESULTADOS.
+// Estrutura Cinética
+
+// Start do robô: 9:05 as 17:30
+// Pausar e Zerar: 17:30
+
+//input
+  //offSet(20); // 20 para o WIN e WDOL no 15R. //altera o Drawndown e o Fator de Lucro.
+  //candleavg0 (0); candleavg1 (1); candleavg2 (2);
+  //candleent  (0); // Posicionar a entrada no fechamento do candle 0.
+  //candlesai  (2); // Posicionar a saída no fechamento do candle 2.
+
+  var
+  vCandleAVG0, vCandleAVG1, vCandleAVG2 : Integer;
+  vCandleENT : Integer; // Posicionar a entrada no fechamento do candle 0.
+  vCandleSAI : Integer; // Posicionar a saída no fechamento do candle 2. 
+  
+  sinalC,    sinalV       : booleano;
+  vlrStopC,  vlrStopV     : real;
+  
+  vAvgPrice, vEstrategia, vEstrategiaMAX, vEstrategiaMIN  : real;
+  vRange : float; 
+  vVolatility : Float;
+  vOffSet : float;
+  vGraphicOffset : Integer;  
+     
+begin 
+  // PASSO 1 | CARREGAR AS VARIÁVEIS:
+  vCandleAVG2 := 2; // AVGPRICE NO CANDLE 2. 
+  vCandleAVG1 := 1; // AVGPRICE NO CANDLE 1.
+  vCandleAVG0 := 0; // AVGPRICE NO CANDLE 0.
+  vCandleENT  := 0; // Posicionar a entrada no fechamento do candle 0.
+  vCandleSAI  := 2; // Posicionar a saída no fechamento do candle 2. 
+
+  // PASSO 1 | CARREGAR INDICADORES  
+  vAvgPrice := AvgPrice();
+  vEstrategia := vAvgPrice; // Validar os sinais de entrada e saída.   
+  vEstrategiaMAX := maxima;   // Posicionar a ordem de compra.
+  vEstrategiaMIN := minima;   // Posicionar a ordem de venda.                                        
+  vRange := Range();
+  vVolatility := (Volatility(15));  //volatilidade de 30 períodos no timeframe de 15R.
+  vOffSet := (vRange * vVolatility);
+  vGraphicOffset := GraphicOffset();  
+     
+  //-----------PADRÃO----------
+  //EXECUÇÃO DE ENTRADA //PASSO 2 // Controle de Fluxo                                                                    
+  
+  sinalC := (vEstrategia[vCandleAVG2] > vEstrategia[vCandleAVG1]) e (vEstrategia[vCandleAVG1] < vEstrategia[vCandleAVG0]); // \/
+  sinalV := (vEstrategia[vCandleAVG2] < vEstrategia[vCandleAVG1]) e (vEstrategia[vCandleAVG1] > vEstrategia[vCandleAVG0]); // /\
+   
+  se (not HasPosition) e sinalC e (Time > 905) and (Time < 1730) entao
+    BuyStop((vEstrategiaMAX[vCandleENT] + MinPriceIncrement),(vEstrategiaMAX[vCandleENT] + MinPriceIncrement) + (vOffSet * MinPriceIncrement));
+  se (not HasPosition) e sinalV e (Time > 905) and (Time < 1730) entao
+    SellShortStop((vEstrategiaMIN[vCandleENT] - MinPriceIncrement),(vEstrategiaMIN[vCandleENT] - MinPriceIncrement) - (vOffSet * MinPriceIncrement));    
+
+  //EXECUÇÃO DE SAÍDA //PASSO 3
+  //vlrStopC := (vEstrategia[vCandleSAI]); //PADRÃO: [0] PARA PERDER DE 5 A 10 PONTOS NO WINFUT.
+  //vlrStopV := (vEstrategia[vCandleSAI]); //PADRÃO: [0] PARA PERDER DE 5 A 10 PONTOS NO WINFUT.
+
+  //vlrStopC := (maxima[vCandleSAI]); //PADRÃO: [0] PARA PERDER DE 5 A 10 PONTOS NO WINFUT.
+  //vlrStopV := (minima[vCandleSAI]); //PADRÃO: [0] PARA PERDER DE 5 A 10 PONTOS NO WINFUT.
+
+   vlrStopC := (close[vCandleSAI]); //PADRÃO: [0] PARA PERDER DE 5 A 10 PONTOS NO WINFUT.
+   vlrStopV := (open[vCandleSAI]); //PADRÃO: [0] PARA PERDER DE 5 A 10 PONTOS NO WINFUT.
+
+  
+  se IsBought entao  //ordem de compra aberta.
+    SellToCoverStop(vlrStopC,vlrStopC - (vOffSet * MinPriceIncrement));
+  se IsSold entao    //ordem de venda aberta.
+    BuyToCoverStop(vlrStopV,vlrStopv + (vOffSet * MinPriceIncrement));
+  
+  //EXECUCAO DE SAIDA EM GAP
+  se IsBought e (close < vlrStopC) entao closeposition;
+  se IsSold e (close > vlrStopV) entao closeposition;
+  
+  //Linhas para demarcar os dois pontos do AVGPRICE:
+  HorizontalLine(vEstrategia[2], RGB(255, 255, 0)); //Amarela  // Função: Marcar a posição da estratégia.  
+  HorizontalLine(vEstrategia[1], RGB(0, 0, 255)); //Azul       // Função: Marcar a posição do tralingstop.
+
+ // 19.22 Função PlotText
+ //if (vEstrategia[2] > vEstrategia[1]) and (vEstrategia[1] < vEstrategia[0]) then PlotText("Sinal de Compra!", clAzul, 1, 10)
+//else if (vEstrategia[2] < vEstrategia[1]) and (vEstrategia[1] > vEstrategia[0]) then PlotText("Sinal de Venda!", clAmarelo, 1, 10);
+
+  //COLORAÇÃO
+  SetPlotColor(1,RGB(0, 0, 255));     //Azul - AVGPrice
+  SetPlotColor(2,RGB(255, 255, 0));   //Amarelo - vOffSet
+  SetPlotColor(3,RGB(255, 0, 255));   //Magenta - vGraphicOffset
+  SetPlotColor(4,RGB(238,93,108));    //Laranja - vRange
+  SetPlotColor(5,RGB(106,13,131));    //Roxo - vVolatility
+  
+  //ESPESSURA
+  SetPlotWidth(1,2);
+  SetPlotWidth(6,4);
+  
+  //ESTILO DA LINHA
+  SetPlotStyle(1,1);
+  
+  //PLOTAGEM
+  Plot(vEstrategia); 
+  Plot2(vOffSet);
+  Plot3(vGraphicOffset); 
+  Plot4(vRange);
+  Plot5(vVolatility);
+  //Plot6();  
+    
+end;

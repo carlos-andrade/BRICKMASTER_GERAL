@@ -1,0 +1,138 @@
+// BRICKMASTER
+// Método inspirado no Método 9.1 do Larry Williams e o Método de Joseph Reffson (MeJoRe)(Newton–Raphson).
+// Nome: CAR_AVGPRICE_RENKOv6 // Atualizar seguindo as recomendação da chatgpt
+// Versão 05. // RENKO 15R NO WIN.  //PROMISSOR. //APRESENTOU OS MELHORES RESULTADOS.
+// Estrutura Cinética
+
+// Start do robô: 9:05 as 17:30
+// Pausar e Zerar: 17:30
+
+//19.1 Função AvgPrice - é o motor no robô.
+
+//TRABALHAR O Função Range (Filtro 1 — Range mínimo) SUGERIDA PELA CHATGP.
+//TRABALHAR COM AMPLITUDE DO CANDLE = RANGE.
+
+input
+  //offSet(20); // 20 para o WIN e WDOL no 15R. //altera o Drawndown e o Fator de Lucro.
+  candleavg0 (0); candleavg1 (1); candleavg2 (2);
+  candleent  (0); // Posicionar a entrada no fechamento do candle 0.
+  candlesai  (2); // Posicionar a saída no fechamento do candle 2.
+var
+  vlrStopC,  vlrStopV     : real;
+  sinalC,    sinalV       : booleano;
+  vAvgPrice, vEstrategia, vEstrategiaC, vEstrategiaV  : real;
+  vgOffset : Integer; 
+  vRange : float; 
+  vVWAP : float;
+  vVWAPDate : float;
+  vAdaptiveMovingAverage : float;
+  vTimeToMinutes : Integer;
+  vOffSet : float;
+  vVolatility : Float;
+  vCandleSai : Float;
+  vFinancialVol : Float;
+  vStopATR : Float;
+  vTrueHigh : Float;
+  vTrueLow : Float;
+  vmTrueRange : Float;
+  
+   
+begin  
+  // PASSO 1 | CARREGAR INDICADORES  
+  vAvgPrice := AvgPrice();
+  vEstrategia := vAvgPrice; // Validar os sinais de entrada e saída.
+  vVWAP := (VWAP(1)); 
+  vVWAPDate := VWAPDate(1260311, 900);                                                    
+  vRange := Range();
+  vVolatility := (Volatility(30));  //volatilidade de 30 períodos no timeframe de 15R.
+  vOffSet := (vRange * vVolatility);
+  vEstrategiaC := maxima;   // Posicionar a ordem de compra.
+  vEstrategiaV := minima;   // Posicionar a ordem de venda.
+  vgOffset := GraphicOffset(); 
+  vFinancialVol := (FinancialVol(False, False));
+  vStopATR := (StopATR(2.0, 20, kaArithmetic)|0|);
+  vTrueHigh := TrueHigh();
+  vTrueLow := TrueLow();
+  vmTrueRange := (vTrueHigh + vTrueLow) / 2;
+
+  //vAdaptiveMovingAverage := (AdaptiveMovingAverage(3, 2, 30));
+  //vTimeToMinutes := (TimeToMinutes(0930));  
+  //vCandleSai := nRange;
+  
+  
+     
+  //-----------PADRÃO----------
+  //EXECUÇÃO DE ENTRADA //PASSO 2 // Controle de Fluxo                                                                    
+  sinalC := (vEstrategia[candleavg2] > vEstrategia[candleavg1]) e (vEstrategia[candleavg1] < vEstrategia[candleavg0]); // \/
+  sinalV := (vEstrategia[candleavg2] < vEstrategia[candleavg1]) e (vEstrategia[candleavg1] > vEstrategia[candleavg0]); // /\
+
+    
+  // 2 Filtros:
+  //Close > MediaExp(200)
+  //Close < MediaExp(200)
+  //if (Time >= 905) and (Time <= 1200) then executar/
+  //if (Time >= 1430) and (Time <= 1630) then executar/ 
+  //if (not HasPosition) and sinalC and (Close < VWAP()) and (Range() > 10)
+  //se (not HasPosition) e sinalC e (Close < vwap) entao
+  
+  //se ( not HasPosition) e sinalC e (close > vVWAP) e (vAvgPrice > vVWAP) e (Time > 905) and (Time < 1730) entao
+    //BuyStop((vEstrategiaC[candleent] + MinPriceIncrement),(vEstrategiaC[candleent] + MinPriceIncrement) + (vOffSet * MinPriceIncrement));
+   //e (vAvgPrice > vStopATR)
+  se ( not HasPosition) e sinalC e (Time > 905) and (Time < 1730) entao
+    BuyStop((vEstrategiaC[candleent] + MinPriceIncrement),(vEstrategiaC[candleent] + MinPriceIncrement) + (vOffSet * MinPriceIncrement));
+  
+  //se (not HasPosition) e sinalV e (Close > vwap) entao 
+  //e (vAvgPrice < vStopATR) 
+  se ( not HasPosition) e sinalV e (Time > 905) and (Time < 1730) entao
+    SellShortStop((vEstrategiaV[candleent] - MinPriceIncrement),(vEstrategiaV[candleent] - MinPriceIncrement) - (vOffSet * MinPriceIncrement));
+    
+
+  //EXECUÇÃO DE SAÍDA //PASSO 3
+  vlrStopC := (vEstrategia[candlesai]); //PADRÃO: [0] PARA PERDER DE 5 A 10 PONTOS NO WINFUT.
+  vlrStopV := (vEstrategia[candlesai]); //PADRÃO: [0] PARA PERDER DE 5 A 10 PONTOS NO WINFUT.
+
+                        
+  se IsBought entao
+    SellToCoverStop(vlrStopC,vlrStopC - (vOffSet * MinPriceIncrement));
+  se IsSold entao
+    BuyToCoverStop(vlrStopV,vlrStopv + (vOffSet * MinPriceIncrement));
+  
+  //EXECUCAO DE SAIDA EM GAP
+  se IsBought e (vEstrategia < vlrStopC) entao closeposition;
+  se IsSold e (vEstrategia > vlrStopV) entao closeposition;
+  
+  //BuyStop adicionado:
+  //HorizontalLine(vEstrategia[2], RGB(255, 255, 0)); //Amarela  // Função: Marcar a posição da estratégia.  
+  //HorizontalLine(vEstrategia[1], RGB(0, 0, 255)); //Azul       // Função: Marcar a posição do tralingstop.
+
+ // 19.22 Função PlotText
+ //if (vEstrategia[2] > vEstrategia[1]) and (vEstrategia[1] < vEstrategia[0]) then PlotText("Sinal de Compra!", clAzul, 1, 10)
+//else if (vEstrategia[2] < vEstrategia[1]) and (vEstrategia[1] > vEstrategia[0]) then PlotText("Sinal de Venda!", clAmarelo, 1, 10);
+
+  //COLORAÇÃO
+  SetPlotColor(1,RGB(0, 0, 255));     //Azul - AVGPrice
+  SetPlotColor(2,RGB(255, 255, 0));   //Amarelo / vOffSet
+  SetPlotColor(3,RGB(255, 0, 255));   //Magenta - vgOffset = nRange * vVolatility
+  SetPlotColor(4,RGB(0, 255, 0));     //Verde - nRange
+  SetPlotColor(5,RGB(255, 0, 0));     //Vermelho - VWAP
+  SetPlotColor(6,RGB(255, 255, 255)); //Branco - vVolatility
+  SetPlotColor(8,RGB(106,13,131));
+  //ESPESSURA
+  SetPlotWidth(1,2);
+  SetPlotWidth(6,4);
+  //ESTILO DA LINHA
+  //SetPlotStyle(1,0);
+  //PLOTAGEM
+  Plot(vEstrategia); 
+  Plot2(vOffSet);
+  Plot3(vgOffset); 
+  Plot4(vRange); 
+  //Plot5(vVWAP);
+  Plot6(vVolatility); 
+  Plot7(vFinancialVol);
+  //Plot8(vStopATR);
+  Plot9(vTrueHigh); 
+  Plot10(vTrueLow);
+  Plot11(vmTrueRange);
+    
+end;

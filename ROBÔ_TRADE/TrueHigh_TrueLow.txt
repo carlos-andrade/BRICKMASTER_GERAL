@@ -1,0 +1,21 @@
+CRIAR UM ROBÔ 
+
+NOME: TrueHigh_TrueLow
+
+19.30 Função TrueHigh
+19.31 Função TrueLow
+19.32 Função TrueRange
+
+20.3 Função AccAgressSaldo
+20.19 Função AvgAgrBuySell
+20.20 Função AvgAgrTotal
+
+20.53 Função FinancialVol
+
+20.57 Função FullStochastic
+
+20.102 Função QuantityVol
+
+5 Controle de Fluxo
+
+
