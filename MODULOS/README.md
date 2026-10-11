@@ -1,4 +1,41 @@
+---
+projeto: "BRICKMASTER RAIZ"
+repositorio: "carlos-andrade/BRICKMASTER_GERAL"
+tipo_documento: "INDICE_DE_MODULOS"
+fase: "ARQUITETURA_MODULAR"
+id_documento: "BM-DOC-MODULOS-README"
+titulo: "BRICKMASTER RAIZ — Arquitetura modular"
+status: "EM_DESENVOLVIMENTO"
+versao: "1.0.0"
+data_criacao: "N/A"
+data_atualizacao: "2026-10-11"
+origem: "Conteúdo preexistente; histórico Git"
+autoridade_documental: "GOVERNANCA"
+cadeia_autoridade: "PROMPT → CARTA → LAYOUT ÚNICO → CÓDIGO"
+rastreabilidade: "PR feat/cabecalho-padrao-documental"
+escopo: "Índice e regras estruturais dos módulos"
+objetivo: "Padronizar a documentação modular e os seus ciclos de validação"
+dependencias: "Documentos de cada módulo"
+---
+
 # BRICKMASTER RAIZ — Arquitetura modular
+
+> **Projeto:** BRICKMASTER RAIZ  
+> **Repositório:** carlos-andrade/BRICKMASTER_GERAL  
+> **Tipo:** ÍNDICE DE MÓDULOS  
+> **Fase:** ARQUITETURA MODULAR  
+> **ID:** BM-DOC-MODULOS-README  
+> **Status:** EM_DESENVOLVIMENTO  
+> **Versão:** 1.0.0  
+> **Criação:** N/A  
+> **Atualização:** 2026-10-11  
+> **Origem:** Conteúdo preexistente; histórico Git  
+> **Autoridade:** GOVERNANÇA  
+> **Rastreabilidade:** PR feat/cabecalho-padrao-documental
+
+## Contexto Histórico
+
+Índice preexistente que define a estrutura e o ciclo de vida dos módulos BRICKMASTER.
 
 ## Regra estrutural
 
@@ -45,6 +82,22 @@ Cada pasta de módulo deve conter, conforme aplicável:
 
 **Não integrar módulos que não tenham evidências de teste e critérios de aceitação satisfeitos.** A aprovação num backtest não equivale, por si só, a validação em tempo real ou garantia de rentabilidade.
 
-## Índice
+## Estado
 
-- [Módulo 001 — Linha de abertura e projeções percentuais](./001-LINHA-ABERTURA-PROJECOES-PERCENTUAIS/README.md)
+EM_DESENVOLVIMENTO — regras modulares documentadas.
+
+## Evidências
+
+O conteúdo original deste índice e os documentos vinculados no repositório.
+
+## Validação
+
+O cabeçalho foi padronizado; não foram executados testes de trading por esta alteração.
+
+## Resultado
+
+Índice com identificação e rastreabilidade.
+
+## Próxima Ação
+
+Aplicar a mesma governança aos restantes documentos e validar a cobertura documental.
