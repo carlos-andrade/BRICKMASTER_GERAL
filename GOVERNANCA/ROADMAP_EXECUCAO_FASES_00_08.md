@@ -6,7 +6,7 @@ fase: "GOVERNANCA_E_INVENTARIO"
 id_documento: "BM-ROADMAP-EXECUCAO-00-08-001"
 titulo: "BRICKMASTER RAIZ — Roadmap de execução e validação (Fases 00–08)"
 status: "EXPERIMENTAL"
-versao: "1.0.2"
+versao: "1.0.3"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-11"
 origem: "Decisões e instruções do projeto BRICKMASTER RAIZ; histórico Git preservado"
@@ -127,14 +127,15 @@ Roadmap versionado com nove etapas explícitas (00–08), oito fases de implemen
 
 - O PR #4 foi integrado em `develop` após sucesso do workflow documental; `main` não foi alterada.
 - A branch `develop` foi criada a partir de `main` para cumprir o fluxo feature → develop → validação → main.
-- O snapshot recursivo em `GOVERNANCA/INVENTARIO_FASE_00_SNAPSHOT_2026-10-11.md` regista 212 blobs na árvore de `main`, com `truncated=false`.
+- O snapshot recursivo em `GOVERNANCA/INVENTARIO_FASE_00_SNAPSHOT_2026-10-11.md` regista 212 blobs na árvore de `main`, com `truncated=false`; a diferença para os 209 ficheiros do inventário anterior foi reconciliada com os três novos artefactos do PR #2.
 - O workflow de cabeçalhos documentais passou no head do PR: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/38181403462
 - A revisão focalizada do Módulo 001 encontrou notação matemática ambígua na lista de percentagens; a especificação foi clarificada por tabela e o changelog atualizado. Nenhum código NTSL foi alterado.
 - O Módulo 001 continua sem implementação NTSL na sua pasta e o plano de testes continua marcado como não executado; logo, não está aprovado para integração.
-- A contagem atual de 212 blobs não foi reconciliada com os 209 ficheiros citados na norma. A Fase 00 continua PARCIAL.
+- A diferença entre 209 e 212 ficheiros foi reconciliada com os três artefactos adicionados no PR #2 (norma documental, workflow e script de validação). A Fase 00 continua PARCIAL porque a auditoria semântica de todos os artefactos ainda não foi concluída.
 
 ## Histórico de versões
 
 - 1.0.0 — 2026-10-11 — formalização inicial do roadmap 00–08.
 - 1.0.1 — 2026-10-11 — correção do cabeçalho para Front Matter YAML e inclusão das secções obrigatórias após auditoria do validador documental.
 - 1.0.2 — 2026-10-11 — inventário estrutural registado, correspondência entre domínios lógicos e camadas L0–L9 clarificada e checkpoint de continuidade acrescentado.
+- 1.0.3 — 2026-10-11 — reconciliação da contagem histórica de ficheiros e correção do estado do inventário.
