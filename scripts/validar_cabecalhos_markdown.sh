@@ -1,17 +1,15 @@
 #!/usr/bin/env bash
 set -euo pipefail
-
 fail=0
 while IFS= read -r -d '' file; do
-  first_line="$(head -n 1 "$file" || true)"
-  if [[ "$first_line" != "---" ]]; then
-    echo "::error file=$file::Falta Front Matter YAML no início do documento."
+  if [[ "$(head -n 1 "$file" || true)" != "---" ]]; then
+    echo "::error file=$file::Falta Front Matter YAML no início."
     fail=1
     continue
   fi
   for field in projeto repositorio tipo_documento fase id_documento titulo status versao data_criacao data_atualizacao origem autoridade_documental cadeia_autoridade rastreabilidade escopo objetivo dependencias; do
-    if ! grep -Eq "^\${field}:" "$file"; then
-      echo "::error file=$file::Campo obrigatório ausente no Front Matter: $field"
+    if ! grep -Eq "^${field}:" "$file"; then
+      echo "::error file=$file::Campo obrigatório ausente: $field"
       fail=1
     fi
   done
@@ -22,10 +20,8 @@ while IFS= read -r -d '' file; do
     fi
   done
 done < <(git ls-files -z '*.md')
-
 if [[ "$fail" -ne 0 ]]; then
-  echo "Validação documental FALHOU. Corrigir os documentos antes de integrar."
+  echo "Validação documental FALHOU."
   exit 1
 fi
-
-echo "Validação documental PASS: todos os Markdown rastreados contêm os campos e secções obrigatórios."
+echo "Validação documental PASS."
