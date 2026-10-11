@@ -6,7 +6,7 @@ fase: "MODULO_001"
 id_documento: "BM-DOC-MODULO-001-ESPECIFICACAO"
 titulo: "Especificação técnica — Módulo 001"
 status: "PLANEJADO"
-versao: "1.0.0"
+versao: "1.0.1"
 data_criacao: "N/A"
 data_atualizacao: "2026-10-11"
 origem: "Conteúdo preexistente; histórico Git"
@@ -35,7 +35,7 @@ dependencias: "Manual NTSL 4.4; confirmação dos parâmetros operacionais"
 
 ## Contexto Histórico
 
-Especificação preexistente do Módulo 001; o cabeçalho foi acrescentado sem alterar os contratos e as condições técnicas abaixo.
+Especificação preexistente do Módulo 001. Na revisão 1.0.1, a lista matemática de percentagens foi substituída por uma tabela explícita para eliminar a ambiguidade entre vírgula decimal e separador de elementos. A correção esclarece a notação pretendida; não altera o conjunto de níveis documentado nem comprova implementação.
 
 ## Contrato funcional
 
@@ -46,11 +46,21 @@ Especificação preexistente do Módulo 001; o cabeçalho foi acrescentado sem a
 
 ## Modelo matemático
 
-Seja (P₀) o preço de abertura válido para a sessão e (r) um dos valores {-3,-2,-1,-0,5,0,5,1,2,3}. Então:
+Seja P₀ o preço de abertura válido para a sessão. Os oito níveis externos à linha-base correspondem às percentagens abaixo, interpretando a vírgula como separador decimal em português:
 
-`L(r) = P₀ × (1 + r/100)`
+| Nível | Percentagem | Fórmula |
+|---|---:|---|
+| Superior 1 | +0,5% | `P₀ × 1,005` |
+| Superior 2 | +1% | `P₀ × 1,01` |
+| Superior 3 | +2% | `P₀ × 1,02` |
+| Superior 4 | +3% | `P₀ × 1,03` |
+| Linha-base | 0% | `P₀` |
+| Inferior 1 | −0,5% | `P₀ × 0,995` |
+| Inferior 2 | −1% | `P₀ × 0,99` |
+| Inferior 3 | −2% | `P₀ × 0,98` |
+| Inferior 4 | −3% | `P₀ × 0,97` |
 
-A linha-base é `L(0) = P₀`. A lista inclui oito níveis externos à linha-base. Os valores calculados antes do arredondamento devem ser preservados para validação; os valores efetivamente plotados devem seguir a regra de tick size aprovada.
+Os valores calculados antes do arredondamento devem ser preservados para validação; os valores efetivamente plotados devem seguir a regra de tick size aprovada.
 
 ## Ciclo de vida da referência
 
@@ -102,4 +112,9 @@ Documento identificável e rastreável, preservando a especificação técnica.
 
 ## Próxima Ação
 
-Confirmar decisões em aberto e preparar testes isolados antes de qualquer integração.
+Confirmar decisões em aberto (fonte exata da abertura, reinicialização de sessão e arredondamento ao tick size) e preparar testes isolados antes de qualquer integração.
+
+## Histórico de versões
+
+- 1.0.0 — 2026-10-11 — especificação inicial.
+- 1.0.1 — 2026-10-11 — desambiguação da notação das percentagens por tabela; sem alteração da lógica pretendida.
