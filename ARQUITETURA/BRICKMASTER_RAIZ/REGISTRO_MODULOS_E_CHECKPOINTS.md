@@ -42,8 +42,8 @@ Este registo é um índice de trabalho. Os estados abaixo descrevem o que está 
 
 | ID | Módulo | Responsabilidade | Estado do inventário | Próxima ação |
 |---|---|---|---|---|
-| BM-CORE-001 | GIROSCÓPIO | Contexto central e localização do operador no gráfico | Não localizado por nome de ficheiro na árvore atual; auditoria semântica ainda parcial | Recuperar especificações anteriores e definir máquina de estados, confiança e bloqueios |
-| BM-DATA-001 | Relógio/Sessão/Abertura | Identificar sessão e referência diária | A inventariar | Localizar cálculos existentes; definir testes de transição |
+| BM-CORE-001 | GIROSCÓPIO | Contexto central e localização do operador no gráfico | Contrato inicial e plano de testes criados em `MODULOS/003-GIROSCOPIO/`; sem código nem testes executados | Implementar localização/contexto mínimo e executar testes de qualidade, conflito, bloqueio e 60K ticks |
+| BM-DATA-001 | Relógio/Sessão/Abertura | Identificar sessão e referência diária | Contrato inicial e plano de testes criados em `MODULOS/002-RELOGIO-SESSAO-ABERTURA/`; política de abertura por confirmar | Confirmar fonte da abertura e horários; implementar máquina de estados e executar testes de transição |
 | BM-STRUCT-001 | Estrutura de preço | Swings, deslocamento e rompimento | A inventariar | Mapear código e documentação |
 | BM-FVG-001 | FVG Atlas | Identificar FVGs, dimensão e ciclo de vida | Inventário externo inicial concluído: FVG-ATLAS `main` tem 249 blobs; roadmap externo aponta V2.1.33 como regressão integrada aprovada | Congelar contrato; validar Manual NTSL 4.4/Profit e testes de contrato antes de integração BRICKMASTER |
 | BM-LIQ-001 | Liquidez | Níveis, varredura e reação | Não localizado por nome de ficheiro na árvore atual; auditoria semântica ainda parcial | Recuperar especificações anteriores e formalizar nível, sweep, confirmação e invalidação |
