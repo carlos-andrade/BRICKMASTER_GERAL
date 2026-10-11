@@ -6,7 +6,7 @@ fase: "GOVERNANCA_E_INVENTARIO"
 id_documento: "BM-ROADMAP-EXECUCAO-00-08-001"
 titulo: "BRICKMASTER RAIZ — Roadmap de execução e validação (Fases 00–08)"
 status: "EXPERIMENTAL"
-versao: "1.0.3"
+versao: "1.0.4"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-11"
 origem: "Decisões e instruções do projeto BRICKMASTER RAIZ; histórico Git preservado"
@@ -55,7 +55,7 @@ O plano possui nove etapas numeradas de 00 a 08: uma fase 00 de inventário/rast
 | 01 — Arquitetura e governança | Contratos de módulos, dependências, versionamento, estados e fluxo de branches | Arquitetura de referência, ADRs, regras de integração e checkpoint mestre | Cobertura documental comparada com a estrutura real e CI | PARCIAL |
 | 02 — Dados, sessão e abertura | Fontes, timestamps, sessão B3, abertura do dia, qualidade, atraso e reconciliação | Contrato de dados/sessão com proveniência e freshness | Dados ausentes, atrasados ou contraditórios reduzem confiança ou bloqueiam consumo; abertura reproduzível | PARCIAL — especificação incompleta |
 | 03 — Estado do gráfico / Giroscópio | Instrumento, tipo de gráfico, ticks incluindo 60K, sessão, localização do preço e confiança | Máquina de estados e contrato de contexto | Estado explica a posição operacional; transições determinísticas; contexto inválido bloqueia sinal | POR ESPECIFICAR/VALIDAR |
-| 04 — Estrutura e módulos de mercado | Inventariar FVG-ATLAS, liquidez, VWAP/TWAP, delta cumulativo, volume financeiro, VIX, IBOV e Market DNA conforme fontes disponíveis | Catálogo de módulos com contratos, dependências e testes isolados | Definições objetivas, limites e testes próprios; sem dados presumidos | PENDENTE DE INVENTÁRIO |
+| 04 — Estrutura e módulos de mercado | Inventariar FVG-ATLAS, liquidez, VWAP/TWAP, delta cumulativo, volume financeiro, VIX, IBOV e Market DNA conforme fontes disponíveis | Catálogo de módulos com contratos, dependências e testes isolados | Definições objetivas, limites e testes próprios; sem dados presumidos | PARCIAL — FVG-ATLAS inventariado; restantes módulos por auditar |
 | 05 — Decisão e risco soberano | Separar inteligência, sinal, decisão, dimensionamento, limites de perda, bloqueios e meta experimental de 1% | Contrato de decisão e camada soberana de risco | Risco pode vetar qualquer sinal; meta de 1% desde a abertura é hipótese, nunca garantia | PENDENTE |
 | 06 — NTSL, Profit, execução conciliada e Watchdog | Compatibilidade NTSL 4.4, comportamento no Profit, ordens/posições, reconciliação e monitorização | Código isolado, matriz de compatibilidade, watchdog e eventos | Compilação e testes documentados; estado conciliado com plataforma; sem ordens reais por padrão | PENDENTE |
 | 07 — Testes, replay e backtest | Testes unitários/contratuais, falhas, replay, backtest e gráficos atemporais/ticks | Plano de testes, datasets identificados, resultados e limitações | Resultados reproduzíveis, custos e limitações explícitos; sem alegar rentabilidade futura | PENDENTE |
@@ -125,6 +125,17 @@ Roadmap versionado com nove etapas explícitas (00–08), oito fases de implemen
 
 ## Checkpoint de continuidade — 2026-10-11
 
+### Inventário FVG-ATLAS — fase 04 iniciada
+
+- Repositório externo consultado: `carlos-andrade/FVG-ATLAS`, branch `main`.
+- Snapshot: 249 blobs, árvore recursiva não truncada, SHA `379115a60f70d8835f1fa71278dd344e6a253bd0`.
+- Código de referência identificado pelo roadmap externo: `FVG_ATLAS_V2.1.33_REGRESSAO_INTEGRADA_LATCH_HISTORICO.src`, blob SHA `1294ff5054754060ac52dd87b368c6e474e6179d`.
+- O roadmap externo declara V2.1.33 aprovada para regressão integrada do ciclo de vida e ainda lista pendências para congelamento formal, FVG Engine científico, MFE/MAE/FILL, base de dados, observabilidade, testes de stress e validação estatística.
+- Relatório BRICKMASTER: `GOVERNANCA/INVENTARIO_FVG_ATLAS_FASE04_2026-10-11.md`.
+- O registo mestre foi atualizado para marcar o inventário FVG como inicial/concluído e para registar Market DNA como lacuna de inventário: não foi identificado como módulo na árvore `BRICKMASTER_GERAL/main` consultada. Isso não prova que não exista noutro histórico/conversa.
+- A evidência de regressão é proveniente da documentação FVG-ATLAS; não é teste executado nesta sessão, nem prova de integração ou compatibilidade Profit/NTSL no BRICKMASTER.
+
+
 - O PR #4 foi integrado em `develop` após sucesso do workflow documental; `main` não foi alterada.
 - A branch `develop` foi criada a partir de `main` para cumprir o fluxo feature → develop → validação → main.
 - O snapshot recursivo em `GOVERNANCA/INVENTARIO_FASE_00_SNAPSHOT_2026-10-11.md` regista 212 blobs na árvore de `main`, com `truncated=false`; a diferença para os 209 ficheiros do inventário anterior foi reconciliada com os três novos artefactos do PR #2.
@@ -139,3 +150,4 @@ Roadmap versionado com nove etapas explícitas (00–08), oito fases de implemen
 - 1.0.1 — 2026-10-11 — correção do cabeçalho para Front Matter YAML e inclusão das secções obrigatórias após auditoria do validador documental.
 - 1.0.2 — 2026-10-11 — inventário estrutural registado, correspondência entre domínios lógicos e camadas L0–L9 clarificada e checkpoint de continuidade acrescentado.
 - 1.0.3 — 2026-10-11 — reconciliação da contagem histórica de ficheiros e correção do estado do inventário.
+- 1.0.4 — 2026-10-11 — inventário inicial FVG-ATLAS registado, fase 04 marcada parcial e lacuna Market DNA identificada.

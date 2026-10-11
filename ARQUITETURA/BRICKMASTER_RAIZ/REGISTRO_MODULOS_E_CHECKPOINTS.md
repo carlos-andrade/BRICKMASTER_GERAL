@@ -6,7 +6,7 @@ fase: "GOVERNANCA_DOCUMENTAL"
 id_documento: "BM-DOC-ARQUITETURA-BRICKMASTER-RAIZ-REGISTRO-MODULOS-E-CHECKPOINTS"
 titulo: "BRICKMASTER RAIZ — Registo de módulos e checkpoints"
 status: "PLANEJADO"
-versao: "1.0.0"
+versao: "1.0.1"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-11"
 origem: "Conteúdo preexistente; ver histórico Git e referências internas"
@@ -45,12 +45,13 @@ Este registo é um índice de trabalho. Os estados abaixo descrevem o que está 
 | BM-CORE-001 | GIROSCÓPIO | Contexto central e localização do operador no gráfico | A inventariar | Localizar versões existentes e consolidar definições |
 | BM-DATA-001 | Relógio/Sessão/Abertura | Identificar sessão e referência diária | A inventariar | Localizar cálculos existentes; definir testes de transição |
 | BM-STRUCT-001 | Estrutura de preço | Swings, deslocamento e rompimento | A inventariar | Mapear código e documentação |
-| BM-FVG-001 | FVG Atlas | Identificar FVGs, dimensão e ciclo de vida | Repositório relacionado conhecido; código a inventariar | Comparar com FVG-ATLAS e localizar versões no repositório central |
+| BM-FVG-001 | FVG Atlas | Identificar FVGs, dimensão e ciclo de vida | Inventário externo inicial concluído: FVG-ATLAS `main` tem 249 blobs; roadmap externo aponta V2.1.33 como regressão integrada aprovada | Congelar contrato; validar Manual NTSL 4.4/Profit e testes de contrato antes de integração BRICKMASTER |
 | BM-LIQ-001 | Liquidez | Níveis, varredura e reação | A inventariar | Localizar especificações existentes e formalizar condições |
 | BM-TOUCH-001 | Contador de toques | Contagem e invalidação de contactos com níveis | A inventariar | Recuperar desenho anterior e identificar parâmetros |
 | BM-FLOW-001 | Fluxo | Delta, volume financeiro e VWAP/TWAP | A inventariar | Confirmar campos reais, fonte e sincronização |
 | BM-MACRO-001 | Calendário económico | Contexto macro e janelas de risco | A inventariar | Inventariar fontes e regras de horário |
 | BM-REF-001 | Referências externas | VIX e IBOV como contexto | A inventariar | Definir proveniência, atraso e regra de uso |
+| BM-MDNA-001 | Market DNA | Responsabilidade funcional por definir a partir dos artefactos anteriores | Não consta como módulo identificado na árvore `main` consultada; especificação/código a localizar ou criar após inventário | Recuperar decisões anteriores, delimitar entradas/saídas e criar contrato sem duplicar módulos existentes |
 | BM-RISK-001 | Gestão de risco | Limites, exposição e interrupção | A inventariar | Identificar regras anteriores e propor contrato testável |
 | BM-EXEC-001 | Adaptador NTSL | Implementação e execução controlada | A inventariar | Verificar código e compatibilidade com Manual NTSL 4.4 |
 | BM-OBS-001 | Watchdog/Auditoria | Saúde dos dados, logs e alertas | A inventariar | Localizar watchdog e definir heartbeat e falhas |
@@ -119,11 +120,13 @@ A compilação isolada não satisfaz, por si só, estes critérios.
 
 - Arquitetura modular de alto nível: DOCUMENTADA.
 - Registo mestre de módulos: DOCUMENTADO.
-- Inventário integral do repositório: NOT_RUN.
-- Código NTSL alterado: NÃO.
-- Testes de estratégia executados: NÃO.
+- Inventário estrutural de `BRICKMASTER_GERAL/main`: 212 blobs, árvore sem truncamento; diferença histórica 209 → 212 reconciliada com três ficheiros adicionados no PR #2.
+- Inventário estrutural inicial de `FVG-ATLAS/main`: 249 blobs, árvore sem truncamento; V2.1.33 e o respetivo relatório de regressão foram identificados por hash.
+- Auditoria semântica integral de todos os artefactos: PARCIAL.
+- Código NTSL alterado por estes checkpoints: NÃO.
+- Testes de estratégia executados nesta tarefa: NÃO; o relatório FVG externo contém evidência histórica do próprio projeto.
 - Rentabilidade validada: NÃO.
-- Próximo passo: inventariar os arquivos reais e atualizar este registo com caminhos, versões e evidências verificáveis.
+- Próximo passo: concluir o inventário de versões e contratos de Giroscópio, sessão/abertura, liquidez, Market DNA, risco, execução e Watchdog.
 
 
 ## Contexto Histórico
@@ -153,4 +156,10 @@ Cabeçalho documental padronizado sem intenção de alterar as regras ou o conte
 
 ## Próxima Ação
 
-Rever os metadados, preencher datas/versões desconhecidas com evidência verificável e executar os testes específicos quando aplicável.
+Manter este registo como índice de trabalho; atualizar cada módulo somente com caminho, versão, estado e evidência verificáveis. Priorizar a definição de contrato e a validação isolada do FVG-ATLAS, e recuperar a especificação de Market DNA antes de criar código.
+
+
+## Histórico de versões
+
+- 1.0.0 — 2026-10-11 — registo inicial dos módulos.
+- 1.0.1 — 2026-10-11 — inventário estrutural do FVG-ATLAS registado e Market DNA incluído como lacuna de inventário, sem presumir implementação.
