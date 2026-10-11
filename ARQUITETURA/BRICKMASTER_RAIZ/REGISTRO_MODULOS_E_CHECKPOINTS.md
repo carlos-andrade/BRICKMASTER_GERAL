@@ -6,7 +6,7 @@ fase: "GOVERNANCA_DOCUMENTAL"
 id_documento: "BM-DOC-ARQUITETURA-BRICKMASTER-RAIZ-REGISTRO-MODULOS-E-CHECKPOINTS"
 titulo: "BRICKMASTER RAIZ — Registo de módulos e checkpoints"
 status: "PLANEJADO"
-versao: "1.0.1"
+versao: "1.0.2"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-11"
 origem: "Conteúdo preexistente; ver histórico Git e referências internas"
@@ -42,19 +42,19 @@ Este registo é um índice de trabalho. Os estados abaixo descrevem o que está 
 
 | ID | Módulo | Responsabilidade | Estado do inventário | Próxima ação |
 |---|---|---|---|---|
-| BM-CORE-001 | GIROSCÓPIO | Contexto central e localização do operador no gráfico | A inventariar | Localizar versões existentes e consolidar definições |
+| BM-CORE-001 | GIROSCÓPIO | Contexto central e localização do operador no gráfico | Não localizado por nome de ficheiro na árvore atual; auditoria semântica ainda parcial | Recuperar especificações anteriores e definir máquina de estados, confiança e bloqueios |
 | BM-DATA-001 | Relógio/Sessão/Abertura | Identificar sessão e referência diária | A inventariar | Localizar cálculos existentes; definir testes de transição |
 | BM-STRUCT-001 | Estrutura de preço | Swings, deslocamento e rompimento | A inventariar | Mapear código e documentação |
 | BM-FVG-001 | FVG Atlas | Identificar FVGs, dimensão e ciclo de vida | Inventário externo inicial concluído: FVG-ATLAS `main` tem 249 blobs; roadmap externo aponta V2.1.33 como regressão integrada aprovada | Congelar contrato; validar Manual NTSL 4.4/Profit e testes de contrato antes de integração BRICKMASTER |
-| BM-LIQ-001 | Liquidez | Níveis, varredura e reação | A inventariar | Localizar especificações existentes e formalizar condições |
-| BM-TOUCH-001 | Contador de toques | Contagem e invalidação de contactos com níveis | A inventariar | Recuperar desenho anterior e identificar parâmetros |
-| BM-FLOW-001 | Fluxo | Delta, volume financeiro e VWAP/TWAP | A inventariar | Confirmar campos reais, fonte e sincronização |
+| BM-LIQ-001 | Liquidez | Níveis, varredura e reação | Não localizado por nome de ficheiro na árvore atual; auditoria semântica ainda parcial | Recuperar especificações anteriores e formalizar nível, sweep, confirmação e invalidação |
+| BM-TOUCH-001 | Contador de toques | Contagem e invalidação de contactos com níveis | Não localizado por nome de ficheiro na árvore atual; auditoria semântica ainda parcial | Recuperar desenho anterior e identificar tolerância, separação temporal e invalidação |
+| BM-FLOW-001 | Fluxo | Delta, volume financeiro e VWAP/TWAP | Candidatos legados identificados em `ROBÔ_TRADE/` e `BRICKMASTER_CLAUDE/CÓDIGO NTSL/`; não validados nem canónicos | Comparar variantes; verificar funções no Manual NTSL 4.4, fontes, sincronização e compatibilidade com ticks/60K |
 | BM-MACRO-001 | Calendário económico | Contexto macro e janelas de risco | A inventariar | Inventariar fontes e regras de horário |
 | BM-REF-001 | Referências externas | VIX e IBOV como contexto | A inventariar | Definir proveniência, atraso e regra de uso |
 | BM-MDNA-001 | Market DNA | Responsabilidade funcional por definir a partir dos artefactos anteriores | Não consta como módulo identificado na árvore `main` consultada; especificação/código a localizar ou criar após inventário | Recuperar decisões anteriores, delimitar entradas/saídas e criar contrato sem duplicar módulos existentes |
 | BM-RISK-001 | Gestão de risco | Limites, exposição e interrupção | A inventariar | Identificar regras anteriores e propor contrato testável |
 | BM-EXEC-001 | Adaptador NTSL | Implementação e execução controlada | A inventariar | Verificar código e compatibilidade com Manual NTSL 4.4 |
-| BM-OBS-001 | Watchdog/Auditoria | Saúde dos dados, logs e alertas | A inventariar | Localizar watchdog e definir heartbeat e falhas |
+| BM-OBS-001 | Watchdog/Auditoria | Saúde dos dados, logs e alertas | Não localizado por nome de ficheiro na árvore atual; auditoria semântica ainda parcial | Definir heartbeat, freshness, timeouts, divergência de estado e política fail-closed |
 
 ## 2. Modelo obrigatório de checkpoint
 
@@ -156,10 +156,13 @@ Cabeçalho documental padronizado sem intenção de alterar as regras ou o conte
 
 ## Próxima Ação
 
-Manter este registo como índice de trabalho; atualizar cada módulo somente com caminho, versão, estado e evidência verificáveis. Priorizar a definição de contrato e a validação isolada do FVG-ATLAS, e recuperar a especificação de Market DNA antes de criar código.
+Manter este registo como índice de trabalho; atualizar cada módulo somente com caminho, versão, estado e evidência verificáveis. Priorizar contratos isolados para FVG-ATLAS e candidatos de fluxo; recuperar a especificação de Market DNA e dos módulos não localizados antes de criar código.
 
 
 ## Histórico de versões
 
 - 1.0.0 — 2026-10-11 — registo inicial dos módulos.
 - 1.0.1 — 2026-10-11 — inventário estrutural do FVG-ATLAS registado e Market DNA incluído como lacuna de inventário, sem presumir implementação.
+
+
+- 1.0.2 — 2026-10-11 — inventário de candidatos de fluxo/VWAP/TWAP/volume acrescentado; lacunas por nome de ficheiro registadas sem declarar inexistência absoluta.
