@@ -88,7 +88,7 @@ A validação realizada é **estrutural**: a árvore foi enumerada, a resposta n
 
 ## Resultado
 
-Baseline estrutural reproduzível de 212 ficheiros em `main`, com contagem por extensão e hashes de cada artefacto. A Fase 00 está **parcialmente concluída**: a enumeração estrutural está documentada; falta a auditoria semântica por grupos de artefactos e a reconciliação com o inventário histórico de 209 ficheiros citado na norma.
+Baseline estrutural reproduzível de 212 ficheiros em `main`, com contagem por extensão e hashes de cada artefacto. A Fase 00 está **parcialmente concluída**: a enumeração estrutural está documentada e a diferença de contagem 209 → 212 foi reconciliada com o PR #2; falta a auditoria semântica por grupos de artefactos.
 
 ## Próxima Ação
 
