@@ -6,7 +6,7 @@ fase: "GOVERNANCA_E_INVENTARIO"
 id_documento: "BM-ROADMAP-EXECUCAO-00-08-001"
 titulo: "BRICKMASTER RAIZ — Roadmap de execução e validação (Fases 00–08)"
 status: "EXPERIMENTAL"
-versao: "1.0.7"
+versao: "1.0.8"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-11"
 origem: "Decisões e instruções do projeto BRICKMASTER RAIZ; histórico Git preservado"
@@ -56,7 +56,7 @@ O plano possui nove etapas numeradas de 00 a 08: uma fase 00 de inventário/rast
 | 02 — Dados, sessão e abertura | Fontes, timestamps, sessão B3, abertura do dia, qualidade, atraso e reconciliação | Contrato de dados/sessão com proveniência e freshness | Dados ausentes, atrasados ou contraditórios reduzem confiança ou bloqueiam consumo; abertura reproduzível | CONTRATO INICIAL DOCUMENTADO; IMPLEMENTAÇÃO PENDENTE |
 | 03 — Estado do gráfico / Giroscópio | Instrumento, tipo de gráfico, ticks incluindo 60K, sessão, localização do preço e confiança | Máquina de estados e contrato de contexto | Estado explica a posição operacional; transições determinísticas; contexto inválido bloqueia sinal | CONTRATO INICIAL DOCUMENTADO; IMPLEMENTAÇÃO/TESTES PENDENTES |
 | 04 — Estrutura e módulos de mercado | Inventariar FVG-ATLAS, liquidez, VWAP/TWAP, delta cumulativo, volume financeiro, VIX, IBOV e Market DNA conforme fontes disponíveis | Catálogo de módulos com contratos, dependências e testes isolados | Definições objetivas, limites e testes próprios; sem dados presumidos | PARCIAL — FVG-ATLAS inventariado; restantes módulos por auditar |
-| 05 — Decisão e risco soberano | Separar inteligência, sinal, decisão, dimensionamento, limites de perda, bloqueios e meta experimental de 1% | Contrato de decisão e camada soberana de risco | Risco pode vetar qualquer sinal; meta de 1% desde a abertura é hipótese, nunca garantia | PENDENTE |
+| 05 — Decisão e risco soberano | Separar inteligência, sinal, decisão, dimensionamento, limites de perda, bloqueios e meta experimental de 1% | Contrato de decisão e camada soberana de risco | Risco pode vetar qualquer sinal; meta de 1% desde a abertura é hipótese, nunca garantia | CONTRATO INICIAL DOCUMENTADO; LIMITES E TESTES PENDENTES |
 | 06 — NTSL, Profit, execução conciliada e Watchdog | Compatibilidade NTSL 4.4, comportamento no Profit, ordens/posições, reconciliação e monitorização | Código isolado, matriz de compatibilidade, watchdog e eventos | Compilação e testes documentados; estado conciliado com plataforma; sem ordens reais por padrão | PARCIAL — revisão estática de candidato de volume; compilação/Profit pendentes |
 | 07 — Testes, replay e backtest | Testes unitários/contratuais, falhas, replay, backtest e gráficos atemporais/ticks | Plano de testes, datasets identificados, resultados e limitações | Resultados reproduzíveis, custos e limitações explícitos; sem alegar rentabilidade futura | PENDENTE |
 | 08 — Integração e produção | Integrar módulos aprovados, observabilidade, rollback, configuração e lançamento | Release candidate, checklist de produção e plano de reversão | Portões anteriores aprovados, CI verde e aprovação explícita para execução | PENDENTE |
@@ -158,6 +158,14 @@ Roadmap versionado com nove etapas explícitas (00–08), oito fases de implemen
 - O contrato do Giroscópio separa localização/contexto de sinal, decisão, risco e execução; não usa score numérico arbitrário nem considera módulos não validados como entradas essenciais.
 - Os planos têm casos de teste identificados, todos NOT_RUN. Nenhum código foi implementado nesta etapa.
 
+### Contrato inicial do risco soberano — fase 05
+
+- Especificação: `MODULOS/004-RISCO-SOBERANO/ESPECIFICACAO.md`.
+- Plano de testes: `MODULOS/004-RISCO-SOBERANO/tests/PLANO-DE-TESTES.md`.
+- O risco tem estados ALLOW/BLOCK/HALT, razões auditáveis e precedência sobre sinais e metas. ALLOW não envia ordem.
+- Limites de perda, exposição, tentativas e parâmetros de conta continuam por aprovar; não foram inventados valores numéricos.
+- Todos os testes de risco estão NOT_RUN; sem simulação, teste Profit ou execução real.
+
 
 - O PR #4 foi integrado em `develop` após sucesso do workflow documental; `main` não foi alterada.
 - A branch `develop` foi criada a partir de `main` para cumprir o fluxo feature → develop → validação → main.
@@ -177,3 +185,4 @@ Roadmap versionado com nove etapas explícitas (00–08), oito fases de implemen
 - 1.0.5 — 2026-10-11 — candidatos legados de fluxo/VWAP/TWAP/volume inventariados e limites de compatibilidade registados.
 - 1.0.6 — 2026-10-11 — revisão estática de candidato Cumulative Volume confrontada com Manual NTSL 4.4; testes de plataforma continuam pendentes.
 - 1.0.7 — 2026-10-11 — contratos iniciais e planos de teste para as fases 02/03 registados; implementação e testes permanecem pendentes.
+- 1.0.8 — 2026-10-11 — contrato inicial de risco soberano documentado; limites numéricos e testes permanecem pendentes.
