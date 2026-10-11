@@ -1,9 +1,46 @@
+---
+projeto: "BRICKMASTER RAIZ"
+repositorio: "carlos-andrade/BRICKMASTER_GERAL"
+tipo_documento: "README_MODULO"
+fase: "MODULO_001"
+id_documento: "BM-DOC-MODULO-001-README"
+titulo: "MÓDULO 001 — Linha de abertura e projeções percentuais"
+status: "PLANEJADO"
+versao: "1.0.0"
+data_criacao: "N/A"
+data_atualizacao: "2026-10-11"
+origem: "Conteúdo preexistente; histórico Git"
+autoridade_documental: "LAYOUT"
+cadeia_autoridade: "PROMPT → CARTA → LAYOUT ÚNICO → CÓDIGO"
+rastreabilidade: "PR feat/cabecalho-padrao-documental"
+escopo: "Descrição funcional e estado do Módulo 001"
+objetivo: "Documentar objetivo, critérios e limites sem presumir validação"
+dependencias: "ESPECIFICACAO.md; tests/; evidencias/; Manual NTSL 4.4"
+---
+
 # MÓDULO 001 — Linha de abertura e projeções percentuais
+
+> **Projeto:** BRICKMASTER RAIZ  
+> **Repositório:** carlos-andrade/BRICKMASTER_GERAL  
+> **Tipo:** README DE MÓDULO  
+> **Fase:** MÓDULO 001  
+> **ID:** BM-DOC-MODULO-001-README  
+> **Status:** PLANEJADO  
+> **Versão:** 1.0.0  
+> **Criação:** N/A  
+> **Atualização:** 2026-10-11  
+> **Origem:** Conteúdo preexistente; histórico Git  
+> **Autoridade:** LAYOUT  
+> **Rastreabilidade:** PR feat/cabecalho-padrao-documental
 
 **Projeto:** BRICKMASTER RAIZ  
 **Estado:** ESPECIFICAÇÃO INICIAL — NÃO APROVADO PARA INTEGRAÇÃO  
 **Prioridade:** Fundacional  
 **Isolamento:** Obrigatório
+
+## Contexto Histórico
+
+README preexistente do primeiro módulo; conteúdo funcional e limitações foram preservados nesta padronização.
 
 ## 1. Objetivo
 
@@ -92,3 +129,23 @@ Este módulo apenas estabelece uma referência visual e níveis percentuais. Os 
 ## 9. Estado de aprovação
 
 **Estado atual:** especificação inicial registada. Implementação, execução e aprovação ainda pendentes. Não declarar o módulo testado até existirem evidências verificáveis.
+
+## Estado
+
+PLANEJADO — não aprovado para integração.
+
+## Evidências
+
+O próprio documento e os artefatos ligados na estrutura da pasta. Não foram adicionadas evidências de execução.
+
+## Validação
+
+A padronização documental não representa validação técnica do módulo.
+
+## Resultado
+
+README com cabeçalho rastreável e conteúdo original preservado.
+
+## Próxima Ação
+
+Fechar as decisões técnicas em aberto e executar o plano de testes isolados.
