@@ -6,7 +6,7 @@ fase: "GOVERNANCA_E_INVENTARIO"
 id_documento: "BM-ROADMAP-EXECUCAO-00-08-001"
 titulo: "BRICKMASTER RAIZ — Roadmap de execução e validação (Fases 00–08)"
 status: "EXPERIMENTAL"
-versao: "1.0.8"
+versao: "1.0.9"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-11"
 origem: "Decisões e instruções do projeto BRICKMASTER RAIZ; histórico Git preservado"
@@ -57,9 +57,9 @@ O plano possui nove etapas numeradas de 00 a 08: uma fase 00 de inventário/rast
 | 03 — Estado do gráfico / Giroscópio | Instrumento, tipo de gráfico, ticks incluindo 60K, sessão, localização do preço e confiança | Máquina de estados e contrato de contexto | Estado explica a posição operacional; transições determinísticas; contexto inválido bloqueia sinal | CONTRATO INICIAL DOCUMENTADO; IMPLEMENTAÇÃO/TESTES PENDENTES |
 | 04 — Estrutura e módulos de mercado | Inventariar FVG-ATLAS, liquidez, VWAP/TWAP, delta cumulativo, volume financeiro, VIX, IBOV e Market DNA conforme fontes disponíveis | Catálogo de módulos com contratos, dependências e testes isolados | Definições objetivas, limites e testes próprios; sem dados presumidos | PARCIAL — FVG-ATLAS inventariado; restantes módulos por auditar |
 | 05 — Decisão e risco soberano | Separar inteligência, sinal, decisão, dimensionamento, limites de perda, bloqueios e meta experimental de 1% | Contrato de decisão e camada soberana de risco | Risco pode vetar qualquer sinal; meta de 1% desde a abertura é hipótese, nunca garantia | CONTRATO INICIAL DOCUMENTADO; LIMITES E TESTES PENDENTES |
-| 06 — NTSL, Profit, execução conciliada e Watchdog | Compatibilidade NTSL 4.4, comportamento no Profit, ordens/posições, reconciliação e monitorização | Código isolado, matriz de compatibilidade, watchdog e eventos | Compilação e testes documentados; estado conciliado com plataforma; sem ordens reais por padrão | PARCIAL — revisão estática de candidato de volume; compilação/Profit pendentes |
-| 07 — Testes, replay e backtest | Testes unitários/contratuais, falhas, replay, backtest e gráficos atemporais/ticks | Plano de testes, datasets identificados, resultados e limitações | Resultados reproduzíveis, custos e limitações explícitos; sem alegar rentabilidade futura | PENDENTE |
-| 08 — Integração e produção | Integrar módulos aprovados, observabilidade, rollback, configuração e lançamento | Release candidate, checklist de produção e plano de reversão | Portões anteriores aprovados, CI verde e aprovação explícita para execução | PENDENTE |
+| 06 — NTSL, Profit, execução conciliada e Watchdog | Compatibilidade NTSL 4.4, comportamento no Profit, ordens/posições, reconciliação e monitorização | Código isolado, matriz de compatibilidade, watchdog e eventos | Compilação e testes documentados; estado conciliado com plataforma; sem ordens reais por padrão | CONTRATOS INICIAIS DOCUMENTADOS; IMPLEMENTAÇÃO/PROFIT PENDENTES |
+| 07 — Testes, replay e backtest | Testes unitários/contratuais, falhas, replay, backtest e gráficos atemporais/ticks | Plano de testes, datasets identificados, resultados e limitações | Resultados reproduzíveis, custos e limitações explícitos; sem alegar rentabilidade futura | PLANO DE VALIDAÇÃO DOCUMENTADO; EXECUÇÃO PENDENTE |
+| 08 — Integração e produção | Integrar módulos aprovados, observabilidade, rollback, configuração e lançamento | Release candidate, checklist de produção e plano de reversão | Portões anteriores aprovados, CI verde e aprovação explícita para execução | PORTÕES DOCUMENTADOS; PRODUÇÃO BLOQUEADA |
 
 ### Arquitetura obrigatória
 
@@ -166,6 +166,15 @@ Roadmap versionado com nove etapas explícitas (00–08), oito fases de implemen
 - Limites de perda, exposição, tentativas e parâmetros de conta continuam por aprovar; não foram inventados valores numéricos.
 - Todos os testes de risco estão NOT_RUN; sem simulação, teste Profit ou execução real.
 
+### Contratos de execução/Watchdog e portões das fases 07/08
+
+- Execução conciliada: `MODULOS/005-EXECUCAO-CONCILIADA/ESPECIFICACAO.md` e plano de testes.
+- Watchdog: `MODULOS/006-WATCHDOG/ESPECIFICACAO.md` e plano de testes.
+- Fases 07/08: `GOVERNANCA/PLANO_VALIDACAO_FASE07_08.md`.
+- Os contratos definem estados de ordem, idempotência, reconciliação com Profit, heartbeat, freshness e política fail-closed. Os tempos-limite dependem de medição; não foram inventados.
+- Todos os testes de execução/Watchdog estão NOT_RUN. Não houve compilação, simulação ou envio de ordens.
+- Fase 08 continua bloqueada até aprovação dos portões, CI e testes técnicos, plano de rollback e autorização explícita separada para qualquer modo live.
+
 
 - O PR #4 foi integrado em `develop` após sucesso do workflow documental; `main` não foi alterada.
 - A branch `develop` foi criada a partir de `main` para cumprir o fluxo feature → develop → validação → main.
@@ -186,3 +195,4 @@ Roadmap versionado com nove etapas explícitas (00–08), oito fases de implemen
 - 1.0.6 — 2026-10-11 — revisão estática de candidato Cumulative Volume confrontada com Manual NTSL 4.4; testes de plataforma continuam pendentes.
 - 1.0.7 — 2026-10-11 — contratos iniciais e planos de teste para as fases 02/03 registados; implementação e testes permanecem pendentes.
 - 1.0.8 — 2026-10-11 — contrato inicial de risco soberano documentado; limites numéricos e testes permanecem pendentes.
+- 1.0.9 — 2026-10-11 — contratos iniciais de execução/Watchdog e portões de validação/release 07/08 registados.
