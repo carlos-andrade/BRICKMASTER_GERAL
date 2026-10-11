@@ -33,7 +33,7 @@ dependencias: "BRICKMASTER_GERAL main; GitHub API; GOVERNANCA/NORMA-CABECALHO-PA
 
 ## Contexto Histórico
 
-Este inventário foi gerado a partir da árvore recursiva do GitHub para `main`, sem modificar ou eliminar ficheiros do repositório. Regista caminhos, tamanhos e blob SHAs como ponto de comparação para futuras alterações. O inventário anterior indicado na norma documental contabilizava 209 ficheiros; este snapshot devolveu 212 blobs e a árvore não está truncada. A diferença pode refletir alterações posteriores ou critérios de contagem; não se declara equivalência sem reconciliação histórica.
+Este inventário foi gerado a partir da árvore recursiva do GitHub para `main`, sem modificar ou eliminar ficheiros do repositório. Regista caminhos, tamanhos e blob SHAs como ponto de comparação para futuras alterações. O inventário anterior indicado na norma documental contabilizava 209 ficheiros: 10 Markdown, 69 HTML, 92 SRC, 34 TXT, 2 DOCX, 1 PDF e 1 PNG. O snapshot atual tem 212 blobs. A reconciliação com o PR #2 confirma três ficheiros adicionados: `GOVERNANCA/NORMA-CABECALHO-PADRAO.md`, `.github/workflows/validar-cabecalhos-documentais.yml` e `scripts/validar_cabecalhos_markdown.sh`. A norma adicionou o 11.º Markdown; os outros dois ficheiros são o workflow e o script. Portanto, 209 + 3 = 212, sem diferença residual de contagem.
 
 ## Estado
 
@@ -41,7 +41,7 @@ Este inventário foi gerado a partir da árvore recursiva do GitHub para `main`,
 - **Árvore truncada:** `false`.
 - **Total de blobs/ficheiros:** 212.
 - **Cobertura semântica de cada artefacto:** ainda não executada.
-- **Branches:** a listagem consultada contém `main`, `feat/brickmaster-arquitetura-modular-v1`, `feat/cabecalho-padrao-documental`, `feat/roadmap-execucao-fases-00-08` e `feature/governanca-fundacao`; não foi encontrada `develop` nessa listagem.
+- **Branches no momento do snapshot de branches:** a listagem inicial não continha `develop`. A branch `develop` foi criada posteriormente a partir de `main` para cumprir o fluxo de integração do projeto.
 - **CI documental:** execução atual do workflow no PR #4 concluiu SUCCESS após a correção do cabeçalho. Execução inicial falhou por falta de Front Matter YAML no roadmap anterior; histórico preservado.
 
 ### Contagem por extensão
@@ -79,7 +79,8 @@ Este inventário foi gerado a partir da árvore recursiva do GitHub para `main`,
 - A resposta indica `truncated=false`.
 - Total de artefactos enumerados: 212.
 - Workflow após correção do roadmap: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/38181312307 — conclusão SUCCESS.
-- PR de trabalho: https://github.com/carlos-andrade/BRICKMASTER_GERAL/pull/4.
+- PR #2, que permite reconciliar a contagem histórica: https://github.com/carlos-andrade/BRICKMASTER_GERAL/pull/2 (três ficheiros adicionados; os restantes alteraram documentos existentes).
+- PR #4, que publicou este inventário e o roadmap em `develop`: https://github.com/carlos-andrade/BRICKMASTER_GERAL/pull/4.
 - A lista integral de caminhos, tamanhos e hashes está abaixo; os hashes são os blob SHAs devolvidos pelo GitHub para este snapshot.
 
 ## Validação
@@ -88,7 +89,7 @@ A validação realizada é **estrutural**: a árvore foi enumerada, a resposta n
 
 ## Resultado
 
-Baseline estrutural reproduzível de 212 ficheiros em `main`, com contagem por extensão e hashes de cada artefacto. A Fase 00 está **parcialmente concluída**: a enumeração estrutural está documentada; falta a auditoria semântica por grupos de artefactos e a reconciliação com o inventário histórico de 209 ficheiros citado na norma.
+Baseline estrutural reproduzível de 212 ficheiros em `main`, com contagem por extensão e hashes de cada artefacto. A Fase 00 está **parcialmente concluída**: a enumeração estrutural está documentada e a diferença de contagem 209 → 212 foi reconciliada com o PR #2; falta a auditoria semântica por grupos de artefactos.
 
 ## Próxima Ação
 
