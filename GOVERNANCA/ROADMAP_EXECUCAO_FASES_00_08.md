@@ -6,7 +6,7 @@ fase: "GOVERNANCA_E_INVENTARIO"
 id_documento: "BM-ROADMAP-EXECUCAO-00-08-001"
 titulo: "BRICKMASTER RAIZ — Roadmap de execução e validação (Fases 00–08)"
 status: "EXPERIMENTAL"
-versao: "1.0.4"
+versao: "1.0.5"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-11"
 origem: "Decisões e instruções do projeto BRICKMASTER RAIZ; histórico Git preservado"
@@ -135,6 +135,14 @@ Roadmap versionado com nove etapas explícitas (00–08), oito fases de implemen
 - O registo mestre foi atualizado para marcar o inventário FVG como inicial/concluído e para registar Market DNA como lacuna de inventário: não foi identificado como módulo na árvore `BRICKMASTER_GERAL/main` consultada. Isso não prova que não exista noutro histórico/conversa.
 - A evidência de regressão é proveniente da documentação FVG-ATLAS; não é teste executado nesta sessão, nem prova de integração ou compatibilidade Profit/NTSL no BRICKMASTER.
 
+### Inventário de candidatos de fluxo — fase 04 em curso
+
+- Foram identificados candidatos existentes para VWAP, TWAP, delta e volume financeiro em `ROBÔ_TRADE/` e `BRICKMASTER_CLAUDE/CÓDIGO NTSL/`; os caminhos e hashes constam em `GOVERNANCA/INVENTARIO_CANDIDATOS_FLUXO_FASE04_2026-10-11.md`.
+- O código `BRICKMASTER_CumulativeVolume_Standalone.src` declara no comentário inicial Manual NTSL v4.2; compatibilidade com Manual 4.4 ainda não foi verificada.
+- Os códigos de delta encontrados têm nomes/limitações associados a Renko; não devem ser presumidos compatíveis com gráficos de ticks/60K.
+- Giroscópio, Liquidez, Contador de Toques e Watchdog não foram encontrados por nome de ficheiro na árvore atual; a auditoria semântica continua parcial e a ausência por nome não prova inexistência em históricos ou outros repositórios.
+- Market DNA foi acrescentado ao registo como lacuna de inventário; nenhuma implementação foi presumida.
+
 
 - O PR #4 foi integrado em `develop` após sucesso do workflow documental; `main` não foi alterada.
 - A branch `develop` foi criada a partir de `main` para cumprir o fluxo feature → develop → validação → main.
@@ -151,3 +159,4 @@ Roadmap versionado com nove etapas explícitas (00–08), oito fases de implemen
 - 1.0.2 — 2026-10-11 — inventário estrutural registado, correspondência entre domínios lógicos e camadas L0–L9 clarificada e checkpoint de continuidade acrescentado.
 - 1.0.3 — 2026-10-11 — reconciliação da contagem histórica de ficheiros e correção do estado do inventário.
 - 1.0.4 — 2026-10-11 — inventário inicial FVG-ATLAS registado, fase 04 marcada parcial e lacuna Market DNA identificada.
+- 1.0.5 — 2026-10-11 — candidatos legados de fluxo/VWAP/TWAP/volume inventariados e limites de compatibilidade registados.
