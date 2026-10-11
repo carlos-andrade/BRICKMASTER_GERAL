@@ -87,7 +87,7 @@ O PR #1, “BRICKMASTER RAIZ — arquitetura modular inicial v1.0”, foi identi
 6. Usar branches e commits com escopo claro. Não publicar diretamente na branch principal sem autorização ou regra de governança que o permita.
 7. O fluxo de desenvolvimento preferido é **feature → develop → validação → principal**, com separação explícita entre experimental, validado e produção.
 8. Guardar os resultados de trabalho no repositório oficial, em vez de deixar conhecimento essencial apenas na conversa.
-9. Respeitar o cabeçalho documental padronizado do projeto. Se o ficheiro-modelo oficial não estiver acessível, declarar isso e usar provisoriamente o padrão já presente nos documentos do próprio repositório, sem afirmar que é o modelo oficial externo.
+9. Aplicar obrigatoriamente o sistema de cabeçalho documental padronizado definido em `BRICKMASTER_ARQUITETURA/GOVERNANCA/CABECALHO_DOCUMENTAL_PADRAO.md` a todos os documentos novos e a todas as revisões substanciais. Preservar cabeçalhos históricos; não reescrever documentos em massa sem inventário e plano. O modelo externo `Curioso-da-Internet-IA/CABEÇALHO/MODELO-PADRAO-CABECALHO.md` foi referenciado pelo utilizador, mas não ficou acessível na verificação de 2026-10-11; portanto, não alegar consulta ou conformidade externa até confirmar o ficheiro. O padrão local é provisório e rastreável.
 10. Antes de editar código, identificar a versão de referência e o diff esperado. Depois, verificar se a alteração preservou os comportamentos existentes.
 
 ## 3. PRINCÍPIOS NÃO NEGOCIÁVEIS DO SISTEMA
@@ -396,3 +396,8 @@ A prioridade máxima é **construir uma fonte de verdade coerente, rastreável e
 Preserve tudo o que existe, investigue antes de alterar, especifique antes de implementar, teste antes de integrar, prove antes de declarar concluído e mantenha sempre visível o estado real do sistema.
 
 O objetivo operacional é que o operador nunca fique sem uma explicação auditável de onde está no gráfico, o que o mercado está a mostrar, quais evidências existem, quais são as incertezas e por que razão o sistema permite, rejeita ou bloqueia uma ação.
+
+
+## 16. CABEÇALHO DOCUMENTAL OBRIGATÓRIO
+
+Aplicar o padrão definido em `BRICKMASTER_ARQUITETURA/GOVERNANCA/CABECALHO_DOCUMENTAL_PADRAO.md`. Cabeçalho é mecanismo de governança, histórico e rastreabilidade, não decoração. Documentos novos devem começar com Front Matter YAML e manter as secções de contexto, estado, evidências, validação, resultado e próxima ação. Em documentos legados, preservar o texto original e migrar apenas mediante plano rastreável. Toda alteração relevante atualiza versão, data, estado e histórico, sem apagar entradas anteriores. A barra de progresso e o roadmap também devem usar estados e evidências verificáveis, nunca percentagens arbitrárias.
