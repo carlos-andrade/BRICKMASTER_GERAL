@@ -6,7 +6,7 @@ fase: "GOVERNANCA_E_INVENTARIO"
 id_documento: "BM-ROADMAP-EXECUCAO-00-08-001"
 titulo: "BRICKMASTER RAIZ — Roadmap de execução e validação (Fases 00–08)"
 status: "EXPERIMENTAL"
-versao: "1.0.1"
+versao: "1.0.2"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-11"
 origem: "Decisões e instruções do projeto BRICKMASTER RAIZ; histórico Git preservado"
@@ -51,7 +51,7 @@ O plano possui nove etapas numeradas de 00 a 08: uma fase 00 de inventário/rast
 
 | Etapa | Escopo | Entregável mínimo | Critério de aceitação | Estado |
 |---|---|---|---|---|
-| 00 — Inventário e rastreabilidade | Fontes, versões, módulos, branches, workflows, testes e dívidas técnicas; preservar históricos | Inventário com referências, matriz de evidências e decisões | Fontes críticas identificadas; conflitos registados sem invenção | EM EXECUÇÃO |
+| 00 — Inventário e rastreabilidade | Fontes, versões, módulos, branches, workflows, testes e dívidas técnicas; preservar históricos | Inventário com referências, matriz de evidências e decisões | Fontes críticas identificadas; conflitos registados sem invenção | PARCIAL — snapshot de 212 artefactos; auditoria semântica pendente |
 | 01 — Arquitetura e governança | Contratos de módulos, dependências, versionamento, estados e fluxo de branches | Arquitetura de referência, ADRs, regras de integração e checkpoint mestre | Cobertura documental comparada com a estrutura real e CI | PARCIAL |
 | 02 — Dados, sessão e abertura | Fontes, timestamps, sessão B3, abertura do dia, qualidade, atraso e reconciliação | Contrato de dados/sessão com proveniência e freshness | Dados ausentes, atrasados ou contraditórios reduzem confiança ou bloqueiam consumo; abertura reproduzível | PARCIAL — especificação incompleta |
 | 03 — Estado do gráfico / Giroscópio | Instrumento, tipo de gráfico, ticks incluindo 60K, sessão, localização do preço e confiança | Máquina de estados e contrato de contexto | Estado explica a posição operacional; transições determinísticas; contexto inválido bloqueia sinal | POR ESPECIFICAR/VALIDAR |
@@ -71,6 +71,21 @@ O plano possui nove etapas numeradas de 00 a 08: uma fase 00 de inventário/rast
 6. **Watchdog:** deteta dados obsoletos, perda de ligação, divergência de estado e falhas; em falha, reduz confiança ou bloqueia.
 
 O **Giroscópio** consolida o contexto e informa ao operador a sua posição operacional no gráfico. Não é sinal autónomo nem autorização para negociar.
+
+### Correspondência com as camadas detalhadas da baseline arquitetural
+
+A lista de seis domínios acima é uma vista lógica resumida; não substitui nem renumera as camadas L0–L9 definidas em `ARQUITETURA/BRICKMASTER_RAIZ/ARQUITETURA_MODULAR_BASELINE_2026-10-11.md`.
+
+| Domínio lógico do roadmap | Camadas detalhadas | Regra de fronteira |
+|---|---|---|
+| Dados | L0 — Dados e integridade; L1 — Relógio e estado da sessão | Entrega dados com proveniência, qualidade e estado de sessão; não produz decisão de trading |
+| Inteligência | L2 — Giroscópio; L3 — Estrutura de preço; L4 — Fluxo; L5 — Calendário macroeconómico | Produz contexto e eventos observáveis, não ordens |
+| Decisão | L6 — Motor de hipóteses e confluência | Produz hipótese/sinal explicável, sujeito ao veto do risco |
+| Risco soberano | L7 — Risco e objetivo diário | Pode bloquear decisão e execução, independentemente do sinal |
+| Execução conciliada | L8 — Execução NTSL | Recebe apenas decisões autorizadas; permanece desativada por padrão |
+| Watchdog | L9 — Observabilidade e auditoria | Monitora freshness, sessão, falhas e divergências; não autoriza operação |
+
+Esta correspondência evita que a vista resumida de seis domínios seja interpretada como substituição da arquitetura detalhada existente.
 
 ### Critérios comuns de passagem
 
@@ -108,7 +123,18 @@ Roadmap versionado com nove etapas explícitas (00–08), oito fases de implemen
 4. Registar a decisão sobre a branch `develop` e o fluxo de promoção.
 5. Só depois iniciar alterações funcionais às fases 02 e 03.
 
+## Checkpoint de continuidade — 2026-10-11
+
+- O PR #4 foi integrado em `develop` após sucesso do workflow documental; `main` não foi alterada.
+- A branch `develop` foi criada a partir de `main` para cumprir o fluxo feature → develop → validação → main.
+- O snapshot recursivo em `GOVERNANCA/INVENTARIO_FASE_00_SNAPSHOT_2026-10-11.md` regista 212 blobs na árvore de `main`, com `truncated=false`.
+- O workflow de cabeçalhos documentais passou no head do PR: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/38181403462
+- A revisão focalizada do Módulo 001 encontrou notação matemática ambígua na lista de percentagens; a especificação foi clarificada por tabela e o changelog atualizado. Nenhum código NTSL foi alterado.
+- O Módulo 001 continua sem implementação NTSL na sua pasta e o plano de testes continua marcado como não executado; logo, não está aprovado para integração.
+- A contagem atual de 212 blobs não foi reconciliada com os 209 ficheiros citados na norma. A Fase 00 continua PARCIAL.
+
 ## Histórico de versões
 
 - 1.0.0 — 2026-10-11 — formalização inicial do roadmap 00–08.
 - 1.0.1 — 2026-10-11 — correção do cabeçalho para Front Matter YAML e inclusão das secções obrigatórias após auditoria do validador documental.
+- 1.0.2 — 2026-10-11 — inventário estrutural registado, correspondência entre domínios lógicos e camadas L0–L9 clarificada e checkpoint de continuidade acrescentado.
