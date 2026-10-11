@@ -6,7 +6,7 @@ Uma proposta não é uma decisão aprovada apenas por estar registrada aqui.
 - Estado: PROPOSTA
 - Data: 2026-10-11
 - Contexto: regras e decisões distribuídas dificultam continuidade e auditoria.
-- Proposta: centralizar governança em GOVERNANÇA/, com índice, inventário, histórico e checkpoints.
+- Proposta: centralizar governança em GOVERNANCA/, com índice, inventário, histórico e checkpoints.
 - Alternativas: documentação dispersa ou arquivo único.
 - Consequências: maior rastreabilidade; exige inventário inicial e manutenção contínua.
 - Evidência: branch feature/governanca-fundacao. Aprovação e merge ainda não comprovados.
