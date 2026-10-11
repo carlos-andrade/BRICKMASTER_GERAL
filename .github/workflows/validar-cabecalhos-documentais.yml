@@ -1,0 +1,22 @@
+name: Validar cabeçalhos documentais
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - develop
+      - "feat/**"
+
+permissions:
+  contents: read
+
+jobs:
+  validar-markdown:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+      - name: Validar cabeçalhos e secções obrigatórias
+        shell: bash
+        run: bash scripts/validar_cabecalhos_markdown.sh
