@@ -53,8 +53,8 @@ Este registo é um índice de trabalho. Os estados abaixo descrevem o que está 
 | BM-REF-001 | Referências externas | VIX e IBOV como contexto | A inventariar | Definir proveniência, atraso e regra de uso |
 | BM-MDNA-001 | Market DNA | Responsabilidade funcional por definir a partir dos artefactos anteriores | Não consta como módulo identificado na árvore `main` consultada; especificação/código a localizar ou criar após inventário | Recuperar decisões anteriores, delimitar entradas/saídas e criar contrato sem duplicar módulos existentes |
 | BM-RISK-001 | Gestão de risco | Limites, exposição e interrupção | Contrato inicial e plano de testes criados em `MODULOS/004-RISCO-SOBERANO/`; limites numéricos por aprovar | Aprovar política versionada sem defaults inventados; testar veto, limite diário, exposição e reconciliação |
-| BM-EXEC-001 | Adaptador NTSL | Implementação e execução controlada | A inventariar | Verificar código e compatibilidade com Manual NTSL 4.4 |
-| BM-OBS-001 | Watchdog/Auditoria | Saúde dos dados, logs e alertas | Não localizado por nome de ficheiro na árvore atual; auditoria semântica ainda parcial | Definir heartbeat, freshness, timeouts, divergência de estado e política fail-closed |
+| BM-EXEC-001 | Adaptador NTSL | Implementação e execução controlada | Contrato inicial em `MODULOS/005-EXECUCAO-CONCILIADA/`; sem implementação nem teste Profit | Implementar dry-run/simulação, mapear estados Profit e validar idempotência/reconciliação; LIVE permanece desativado |
+| BM-OBS-001 | Watchdog/Auditoria | Saúde dos dados, logs e alertas | Contrato inicial em `MODULOS/006-WATCHDOG/`; sem implementação nem teste de recuperação | Medir freshness, definir heartbeat/timeouts e testar bloqueio/recuperação fail-closed |
 
 ## 2. Modelo obrigatório de checkpoint
 
@@ -168,3 +168,5 @@ Manter este registo como índice de trabalho; atualizar cada módulo somente com
 - 1.0.2 — 2026-10-11 — inventário de candidatos de fluxo/VWAP/TWAP/volume acrescentado; lacunas por nome de ficheiro registadas sem declarar inexistência absoluta.
 
 - 1.0.6 — 2026-10-11 — contrato e plano de testes do risco soberano registados; parâmetros e execução permanecem pendentes.
+
+- 1.0.7 — 2026-10-11 — contratos iniciais de execução conciliada e Watchdog registados; implementação e testes pendentes.
