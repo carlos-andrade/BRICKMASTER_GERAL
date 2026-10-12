@@ -5,8 +5,8 @@ tipo_documento: "AUDITORIA_DE_FONTE"
 fase: "FASE_02_DADOS_SESSAO_ABERTURA"
 id_documento: "BM-DATA-001-AUDITORIA-FONTE-NTSl44"
 titulo: "Auditoria documental — candidatos à abertura oficial no Manual NTSL 4.4"
-status: "REVISAO_DOCUMENTAL; VALIDACAO_PROFIT_PENDENTE; MATRIZ_SEIS_SIMBOLOS_SEM_RESTRICAO_60K"
-versao: "0.6.0"
+status: "REVISAO_DOCUMENTAL; VALIDACAO_PROFIT_PENDENTE; DADOS_HISTORICOS_B3_SEIS_SIMBOLOS_SEM_PROFIT_TEMPO_REAL"
+versao: "0.7.0"
 data_criacao: "2026-10-12"
 data_atualizacao: "2026-10-12"
 origem: "Manual NTSL versão 4.4 — 03-08-2026, ficheiro fornecido no projeto"
@@ -26,7 +26,7 @@ Em 2026-10-12 foi aprovada a política B: usar o preço oficial de abertura forn
 
 ## Estado
 
-REVISÃO DOCUMENTAL CONCLUÍDA; símbolos Profit abrangidos: INDFUT, DOFUT, IND, DOL, WIN e WDO; não há restrição a gráfico de 60.000 ticks; execução no Profit e evidências ainda pendentes. Os seis símbolos são aceites como identificadores usados pelo operador, mas cada símbolo, contrato/vencimento e código B3 efetivo devem ser registados individualmente.
+REVISÃO DOCUMENTAL CONCLUÍDA; validação deve usar somente dados históricos já armazenados no repositório B3; não usar Profit em tempo real. Símbolos abrangidos: INDFUT, DOFUT, IND, DOL, WIN e WDO. Cobertura de dados por símbolo/contrato ainda precisa ser verificada nos artefactos versionados; não há restrição a gráfico de 60.000 ticks.
 
 ## Achados suportados pelo Manual 4.4
 
@@ -40,54 +40,54 @@ REVISÃO DOCUMENTAL CONCLUÍDA; símbolos Profit abrangidos: INDFUT, DOFUT, IND,
 
 O Manual 4.4 oferece candidatos para investigação — `OpenD(0)`, `OpenDaily(0)` e uma série diária explícita — mas a documentação consultada não permite declarar qualquer um deles como fonte oficial universal já validada. Não codificar a escolha como facto confirmado.
 
-## Plano de verificação no Profit
+## Plano de validação offline com dados históricos armazenados
 
-Registar separadamente para cada um dos seis símbolos — INDFUT, DOFUT, IND, DOL, WIN e WDO — em cada data de pregão, usando a configuração de gráfico efetivamente escolhida no Profit, sem requisito de 60.000 ticks:
+Usar exclusivamente arquivos já versionados no repositório B3. Para cada símbolo — INDFUT, DOFUT, IND, DOL, WIN e WDO — e cada data coberta, registar:
 - ticker/contrato e vencimento, plataforma/feed e versão do Profit;
-- nome e semântica do campo de abertura exibido pela plataforma, com captura ou exportação;
-- sessão/fuso e tratamento de leilão, se aplicável;
-- valores de `OpenD(0)`, `OpenDaily(0)`, `Open` e série diária explicitamente configurada, sem assumir equivalência;
-- valor oficial de referência disponível na plataforma ou numa fonte oficial aprovada;
-- comparação dos valores na configuração de gráfico efetivamente usada no Profit, sem exigir 60.000 ticks, no início da sessão e após carregar/reprocessar o gráfico;
-- timestamp, modo (histórico/replay/tempo real), discrepâncias e evidências anexadas ao repositório.
+- nome e semântica do campo de abertura presente no arquivo histórico oficial, quando fornecido;
+- data de pregão, sessão/fuso apenas quando constarem da fonte ou de contrato documentado;
+- campos OHLC efetivamente presentes no dataset e sua semântica documentada; não simular valores de `OpenD(0)`, `OpenDaily(0)` ou `Open` do Profit;
+- valor de abertura disponível na fonte histórica armazenada e referência documental da fonte;
+- comparação entre arquivos/camadas armazenadas apenas quando tiverem mesma data, instrumento, contrato e semântica;
+- caminho, hash SHA-256, data de referência, versão do parser, cobertura e discrepâncias; anexar evidências ao repositório.
 
-Critério: aprovar uma combinação fonte/campo/instrumento apenas após equivalência demonstrada em casos repetíveis e tratamento explícito de ausências, atrasos e divergências. Até lá, a referência mantém-se `UNKNOWN`/pendente e o Módulo 001 não deve tratar níveis como confirmados.
+Critério: aprovar a fonte histórica para cálculo offline apenas após confirmar arquivo armazenado, integridade, cobertura do instrumento/contrato, semântica do campo e repetibilidade. Se o campo ou instrumento não existir na base, registar lacuna e manter `UNKNOWN`/`BLOCKED`. Esta validação offline não certifica o comportamento de funções NTSL no runtime do Profit; isso exigirá posteriormente um teste específico quando houver exportação/evidência armazenada do Profit.
 
-## Matriz de validação atual — seis símbolos Profit / gráfico sem restrição de periodicidade
+## Matriz de validação offline — seis símbolos e dados armazenados
 
-A execução abrangerá INDFUT, DOFUT, IND, DOL, WIN e WDO. A declaração do operador confirma que utiliza estes símbolos no Profit; não os torna equivalentes entre si nem prova, por si só, o contrato subjacente. Não é exigido gráfico de 60.000 ticks. Cada evidência deve identificar o símbolo apresentado no Profit, código B3 efetivo, ativo/contrato, vencimento, data do pregão e fonte/feed.
+A validação abrangerá INDFUT, DOFUT, IND, DOL, WIN e WDO usando apenas dados históricos armazenados. A declaração do operador confirma os símbolos usados no Profit, mas não prova mapeamento entre eles. Cada linha deve identificar fonte, caminho de arquivo, hash, data de pregão, código B3/ativo, contrato/vencimento quando disponível e cobertura. A periodicidade de gráfico não é dependência da validação offline.
 
-| Símbolo Profit | Estado da identificação | Verificação obrigatória |
+| Símbolo | Estado da identificação | Verificação obrigatória na base armazenada |
 |---|---|---|
-| `INDFUT` | Utilizado pelo operador; metadados efetivos pendentes | Registar código B3, contrato/vencimento e abertura oficial |
-| `DOFUT` | Utilizado pelo operador; metadados efetivos pendentes | Registar código B3, contrato/vencimento e abertura oficial |
-| `IND` | Utilizado pelo operador; contrato/vencimento pendentes | Registar instrumento efetivo e abertura oficial |
-| `DOL` | Utilizado pelo operador; contrato/vencimento pendentes | Registar instrumento efetivo e abertura oficial |
-| `WIN` | Utilizado pelo operador; contrato/vencimento pendentes | Registar instrumento efetivo e abertura oficial |
-| `WDO` | Utilizado pelo operador; contrato/vencimento pendentes | Registar instrumento efetivo e abertura oficial |
+| `INDFUT` | Símbolo usado pelo operador; mapeamento histórico não provado | Procurar cobertura/mapeamento em cadastro e datasets B3 armazenados; se ausente, lacuna explícita |
+| `DOFUT` | Símbolo usado pelo operador; mapeamento histórico não provado | Procurar cobertura/mapeamento em cadastro e datasets B3 armazenados; se ausente, lacuna explícita |
+| `IND` | Símbolo usado pelo operador; contrato/vencimento pendentes | Localizar código/contrato e campo de abertura em dados armazenados adequados a futuros |
+| `DOL` | Símbolo usado pelo operador; contrato/vencimento pendentes | Localizar código/contrato e campo de abertura em dados armazenados adequados a futuros |
+| `WIN` | Símbolo usado pelo operador; contrato/vencimento pendentes | Localizar código/contrato e campo de abertura em dados armazenados adequados a futuros |
+| `WDO` | Símbolo usado pelo operador; contrato/vencimento pendentes | Localizar código/contrato e campo de abertura em dados armazenados adequados a futuros |
 
 Para cada um dos seis símbolos, preencher os seguintes campos independentemente:
 
 | Dimensão | Evidência requerida | Regra de aceitação |
 |---|---|---|
 | Gráfico utilizado | Tipo e periodicidade reais do Profit | Não exigir 60.000 ticks |
-| Referência da plataforma | Nome do campo, valor, captura/exportação e timestamp | Não inferir o preço oficial sem contexto identificável |
-| `Open` | Valor observado | Abertura de candle; não presumir abertura oficial |
-| `OpenD(0)` | Valor observado ou erro/indisponível | Candidato; só aprovar após comparação repetível |
-| `OpenDaily(0)` | Valor observado ou erro/indisponível | Candidato; só aprovar após comparação repetível |
-| Série diária explícita | Configuração, período e valor | Registar possíveis divergências de período/série |
-| Persistência | Início da sessão e após recarregar/reprocessar | Referência não pode mudar silenciosamente |
-| Resultado | PASS/FAIL/BLOCKED com evidência | Sem referência observável ou com conflito: `UNKNOWN/INVALID` |
+| Referência histórica | Campo de abertura/OHLC no arquivo armazenado, quando existente | Não inferir campo que não esteja no layout/dataset |
+| Campo `open` da fonte | Valor armazenado e semântica documentada | Não confundir com abertura de candle do Profit |
+| `OpenD(0)` | Não executável offline sem output armazenado do Profit | Manter sem validação runtime; não sintetizar valor |
+| `OpenDaily(0)` | Não executável offline sem output armazenado do Profit | Manter sem validação runtime; não sintetizar valor |
+| Série histórica diária | Fonte, caminho, hash e campos presentes | Comparar somente com outra fonte de semântica compatível |
+| Reprocessamento | Mesmo arquivo/hash e mesma versão do parser | Resultado determinístico; sem alterações silenciosas |
+| Resultado | PASS/FAIL/BLOCKED com evidência | Sem arquivo/campo/contrato comprovado: `UNKNOWN/BLOCKED` |
 
 ### Procedimento de recolha
 
-1. Repetir o procedimento para cada símbolo INDFUT, DOFUT, IND, DOL, WIN e WDO no Profit; registar código efetivo, contrato/vencimento, tipo de gráfico, data, feed, versão da plataforma, sessão e fuso. Confirmar o instrumento efetivo no cadastro/plataforma; não assumir equivalência apenas pelo nome.
-2. Registar o campo de abertura oficial apresentado pela plataforma e a evidência visual/exportada com timestamp.
-3. Sem alterar o gráfico, observar e anotar separadamente `Open`, `OpenD(0)`, `OpenDaily(0)` e a série diária explícita disponível. Se a função não compilar, não estiver disponível ou não devolver valor, registar isso — não substituir silenciosamente.
-4. Repetir os passos de observação para os outros cinco símbolos até completar os seis instrumentos, sem copiar valores ou mapeamentos de um símbolo para outro.
-5. Comparar cada candidato com o campo de referência oficial no início da sessão e após recarregar/reprocessar o gráfico. Anotar diferenças em pontos, timestamp e contexto.
-6. Repetir em outra sessão de pregão antes de aprovar uma fonte/campo por instrumento. Uma coincidência isolada não certifica equivalência.
-7. Anexar capturas/exports e a tabela preenchida ao repositório antes de alterar o estado de qualquer teste para PASS.
+1. Inventariar apenas arquivos já armazenados em `carlos-andrade/B3`, começando por manifestos, COTAHIST normalizado, cadastro BVBG.028.02 e diretórios `dados/market_data`/`dados/bdi`.
+2. Para cada arquivo candidato, verificar existência do conteúdo efetivo, SHA-256, data de referência, layout e status do manifesto.
+3. Inspecionar o layout do arquivo armazenado e identificar se contém preço de abertura, OHLC, instrumento, contrato/vencimento e granularidade necessários.
+4. Cruzar cada símbolo com o cadastro histórico de instrumentos. Não mapear INDFUT/DOFUT para IND/DOL por suposição.
+5. Comparar fontes armazenadas apenas quando instrumento, contrato, data e semântica forem compatíveis. Separar EOD de intraday/tick.
+6. Reprocessar os mesmos arquivos e confirmar determinismo. Registar datas ausentes, campos ausentes e discrepâncias.
+7. Se a base não cobrir um símbolo/contrato/campo, não criar dados substitutos: registar a lacuna e solicitar a atualização no repositório B3. A execução de `OpenD`/`OpenDaily` no Profit fica fora do escopo offline.
 
 ## Evidências
 
@@ -108,9 +108,9 @@ Achados documentais:
 - `docs/ingestao/PARTE03_B3_INTRADAY_CONTRATO_V1.0.md` e `docs/ingestao/PARTE03_NEGOCIO_A_NEGOCIO_CONTRATO_V1.1.md` indicam que a captura dos binários intraday/negócio a negócio e a validação do dataset continuam pendentes no estado documentado.
 - O ficheiro COTAHIST diário de 2026-10-09 tem manifesto `VALIDADO`, 19.213 linhas e 25 campos. A leitura pesquisável do CSV não encontrou linhas com os símbolos `WIN` ou `WDO`; este resultado não prova ausência em todas as datas, mas não fornece uma abertura de contrato para os instrumentos-alvo.
 
-Conclusão: o B3 contém metodologia e dados diários EOD, incluindo um campo de abertura diária, mas a evidência encontrada não fornece valores certificados de abertura para INDFUT/DOFUT no Profit. O tipo de gráfico de validação não é restringido a 60.000 ticks. COTAHIST/EOD não substitui a validação do campo de abertura efetivamente utilizado pelo Profit, nem comprova o comportamento de `Open`, `OpenD(0)` ou `OpenDaily(0)`.
+Conclusão da auditoria da árvore: há COTAHIST RAW anual e diário selecionado, manifestos de qualidade e dataset anual 2026 via Git LFS; a cobertura de futuros/símbolos-alvo ainda precisa ser medida a partir do conteúdo efetivo. `dados/market_data/` contém READMEs/inventário, mas não foram encontrados arquivos RAW BVBG.086.01/BVBG.187.01 nem arquivos tick/negócio a negócio nessa camada. `dados/bdi/2026/` apresenta README sem datasets de negócio a negócio na árvore inspecionada. A documentação de intraday/negócio a negócio já declara a captura pendente. Assim, não há base evidencial suficiente para validar offline a abertura dos seis símbolos; o gap foi formalmente solicitado em https://github.com/carlos-andrade/B3/issues/6.
 
-A consulta às páginas oficiais da B3 indica `IND` para Futuro de Ibovespa e `DOL` para Futuro de Dólar, e distingue `WIN` e `WDO` como minicontratos. O operador confirmou que utiliza todos os seis símbolos (`INDFUT`, `DOFUT`, `IND`, `DOL`, `WIN`, `WDO`) no Profit. Essa confirmação estabelece o âmbito operacional, mas não prova equivalência entre símbolos nem identifica automaticamente contrato/vencimento; os metadados efetivos devem ser registados por símbolo.
+A consulta às páginas oficiais B3 indica `IND` e `DOL` para futuros cheios e `WIN`/`WDO` para minicontratos. O operador confirmou que usa também os símbolos `INDFUT` e `DOFUT`. Esta confirmação define o escopo, mas não prova que sejam aliases equivalentes nem identifica o vencimento. O cadastro BVBG.028.02 armazenado deve ser usado para mapear o instrumento quando houver correspondência verificável.
 
 Fontes oficiais adicionais:
 - https://www.b3.com.br/pt_br/produtos-e-servicos/negociacao/renda-variavel/futuro-de-ibovespa.htm
@@ -125,18 +125,19 @@ Referências B3:
 
 ## Validação
 
-Revisão documental estática apenas. Não houve execução de código, compilação, replay ou teste no Profit.
+Revisão estática da árvore e dos manifestos armazenados. Não houve download/extração dos binários Git LFS neste passo, análise completa de todas as linhas COTAHIST, compilação NTSL, replay, backtest ou teste no Profit. Os dados necessários para validar os seis instrumentos ainda não estão demonstrados como disponíveis em forma diretamente utilizável.
 
 ## Resultado
 
-A política B está documentada. A fonte/campo oficial ainda não foi certificada. Não existem evidências para marcar o Módulo 002 como validado.
+A política de validação offline por dados armazenados está definida. A cobertura de dados por símbolo e a fonte histórica de abertura ainda não estão certificadas. O Módulo 002 permanece não validado; a lacuna foi registada na issue B3 #6.
 
 ## Próxima Ação
 
-Executar a comparação controlada no Profit e guardar os resultados como evidências antes de selecionar a função/campo de implementação.
+Aguardar/acompanhar a atualização solicitada em B3 issue #6; quando os arquivos históricos necessários estiverem armazenados, executar a matriz offline e registrar cobertura, integridade e resultados. Não depender do Profit em tempo real. A semântica runtime de funções NTSL continuará explicitamente não validada até existir evidência armazenada apropriada.
 
 ## Histórico de versões
 
+- 0.7.0 — 2026-10-12 — política ajustada para validação offline com dados já armazenados; auditoria identificou ausência de datasets brutos intraday/derivativos na camada market_data e criou-se B3 issue #6 para completar cobertura; nenhum teste Profit é alegado.
 - 0.6.0 — 2026-10-12 — escopo ampliado a seis símbolos utilizados pelo operador: INDFUT, DOFUT, IND, DOL, WIN e WDO; testes de abertura continuam pendentes e cada instrumento/contrato deve ser validado separadamente.
 - 0.5.0 — 2026-10-12 — verificação em páginas oficiais B3: códigos genéricos documentados são IND/DOL, distintos de WIN/WDO; aliases INDFUT/DOFUT precisam de mapeamento no Profit.
 - 0.4.0 — 2026-10-12 — correção do escopo para INDFUT e DOFUT, sem requisito de gráfico de 60.000 ticks; correspondência dos símbolos com código/contrato B3 exigida.
