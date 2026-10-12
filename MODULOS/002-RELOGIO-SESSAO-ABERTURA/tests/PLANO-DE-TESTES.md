@@ -5,8 +5,8 @@ tipo_documento: "PLANO_DE_TESTES"
 fase: "FASE_02_DADOS_SESSAO_ABERTURA"
 id_documento: "BM-DATA-001-TESTES"
 titulo: "Plano de testes — Relógio, sessão e abertura"
-status: "PLANEADO; NAO_EXECUTADO; INDFUT_DOFUT_SEM_RESTRICAO_60K"
-versao: "0.6.0"
+status: "PLANEADO; NAO_EXECUTADO; SEIS_SIMBOLOS_SEM_RESTRICAO_60K"
+versao: "0.7.0"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-12"
 origem: "Contrato BM-DATA-001-ESPECIFICACAO"
@@ -42,7 +42,7 @@ Matriz de aceitação inicial pronta.
 
 ## Próxima Ação
 
-Executar primeiro a matriz INDFUT e DOFUT na configuração de gráfico efetivamente usada no Profit, sem exigir 60.000 ticks; confirmar código B3/contrato/vencimento, anexar evidências e só então selecionar fonte/campo por instrumento. Depois implementar o módulo e executar os casos. Todos os casos continuam NOT_RUN.
+Executar a matriz dos seis símbolos INDFUT, DOFUT, IND, DOL, WIN e WDO na configuração de gráfico efetivamente usada no Profit, sem exigir 60.000 ticks; registar contrato/vencimento e comparar a abertura oficial com os candidatos por instrumento. Depois implementar o módulo e executar os casos. Todos os casos continuam NOT_RUN.
 
 | ID | Caso | Resultado esperado | Estado |
 |---|---|---|---|
@@ -71,10 +71,23 @@ Executar primeiro a matriz INDFUT e DOFUT na configuração de gráfico efetivam
 | DS-23 | DOFUT — persistência da referência | Abertura não muda ao recarregar/reprocessar; diferenças ficam auditadas | NOT_RUN |
 | DS-24 | Adequação de COTAHIST/EOD | Não usar `preabe` como substituto automático da abertura confirmada do Profit; exigir correspondência de símbolo/código B3, contrato, data e semântica | NOT_RUN |
 | DS-25 | Adequação de market data intraday B3 | Confirmar arquivo binário, granularidade e campos antes de usar como evidência de abertura/tick; documentação isolada não conta como dataset capturado | NOT_RUN |
-| DS-26 | Mapeamento dos símbolos Profit/B3 | Confirmar se INDFUT e DOFUT são aliases no Profit para contratos B3 de códigos IND e DOL; registar símbolo, contrato/vencimento e fonte de mapeamento | NOT_RUN |
+| DS-26 | Identidade e metadados dos seis símbolos Profit/B3 | Para INDFUT, DOFUT, IND, DOL, WIN e WDO, registar separadamente o símbolo visível, instrumento/código B3 efetivo, contrato/vencimento e fonte de mapeamento; não presumir equivalência entre símbolos | NOT_RUN |
+| DS-27 | IND — configuração real do Profit | Registar símbolo, código efetivo, contrato, sessão, campo oficial e candidatos com evidência | NOT_RUN |
+| DS-28 | IND — comparar candidatos | Comparar campo oficial com `Open`, `OpenD(0)`, `OpenDaily(0)` e série diária explícita | NOT_RUN |
+| DS-29 | IND — persistência da referência | Confirmar abertura após recarregar/reprocessar; auditar qualquer diferença | NOT_RUN |
+| DS-30 | DOL — configuração real do Profit | Registar símbolo, código efetivo, contrato, sessão, campo oficial e candidatos com evidência | NOT_RUN |
+| DS-31 | DOL — comparar candidatos | Comparar campo oficial com `Open`, `OpenD(0)`, `OpenDaily(0)` e série diária explícita | NOT_RUN |
+| DS-32 | DOL — persistência da referência | Confirmar abertura após recarregar/reprocessar; auditar qualquer diferença | NOT_RUN |
+| DS-33 | WIN — configuração real do Profit | Registar símbolo, código efetivo, contrato, sessão, campo oficial e candidatos com evidência | NOT_RUN |
+| DS-34 | WIN — comparar candidatos | Comparar campo oficial com `Open`, `OpenD(0)`, `OpenDaily(0)` e série diária explícita | NOT_RUN |
+| DS-35 | WIN — persistência da referência | Confirmar abertura após recarregar/reprocessar; auditar qualquer diferença | NOT_RUN |
+| DS-36 | WDO — configuração real do Profit | Registar símbolo, código efetivo, contrato, sessão, campo oficial e candidatos com evidência | NOT_RUN |
+| DS-37 | WDO — comparar candidatos | Comparar campo oficial com `Open`, `OpenD(0)`, `OpenDaily(0)` e série diária explícita | NOT_RUN |
+| DS-38 | WDO — persistência da referência | Confirmar abertura após recarregar/reprocessar; auditar qualquer diferença | NOT_RUN |
 
 ## Histórico de versões
 
+- 0.7.0 — 2026-10-12 — matriz ampliada a INDFUT, DOFUT, IND, DOL, WIN e WDO; adicionados DS-27–DS-38 para configuração, comparação de candidatos e persistência em IND/DOL/WIN/WDO; todos os casos permanecem NOT_RUN.
 - 0.6.0 — 2026-10-12 — acrescentado DS-26 para validar o mapeamento entre aliases Profit e códigos oficiais B3 IND/DOL; todos os casos permanecem NOT_RUN.
 - 0.5.0 — 2026-10-12 — escopo corrigido para INDFUT/DOFUT sem requisito de gráfico de 60.000 ticks; mapeamento de código B3/contrato explicitamente pendente; todos os testes NOT_RUN.
 - 0.4.0 — 2026-10-12 — incorporada verificação cruzada do repositório B3; adicionados DS-24/DS-25 para adequação EOD/intraday; todos continuam NOT_RUN.
