@@ -6,7 +6,7 @@ fase: "GOVERNANCA_E_ROADMAP_00_08"
 id_documento: "BM-CKPT-ROADMAP-2026-10-11-001"
 titulo: "Checkpoint mestre — execução do roadmap BRICKMASTER 00–08"
 status: "CHECKPOINT_ATUAL; FASES_TECNICAS_AINDA_NAO_VALIDADAS"
-versao: "1.0.7"
+versao: "1.0.8"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-12"
 origem: "Execução GitHub e auditorias registadas nesta sessão"
@@ -32,7 +32,7 @@ O repositório oficial foi auditado e a sequência feature → develop → valid
 |---|---|---|---|
 | 00 — Inventário | PARCIAL | Inventário recursivo de 212 blobs, hashes/caminhos e reconciliação 209 + 3 = 212 | Auditoria semântica integral dos artefactos ainda incompleta |
 | 01 — Arquitetura/governança | PARCIAL | Roadmap, norma documental, mapeamento dos seis domínios lógicos às camadas L0–L9; branch develop e CI | Contratos técnicos e integração ainda não validados |
-| 02 — Dados/sessão/abertura | POLÍTICA B APROVADA; IMPLEMENTAÇÃO PENDENTE | Módulo 002 v0.2.0 e 17 casos de teste planeados | Fonte/campo oficial por instrumento e sessão/fuso por confirmar; seis símbolos selecionados (INDFUT, DOFUT, IND, DOL, WIN e WDO); tipo de gráfico não restringido a 60.000 ticks; 38 casos planeados e NOT_RUN |
+| 02 — Dados/sessão/abertura | POLÍTICA B APROVADA; IMPLEMENTAÇÃO PENDENTE | Módulo 002 v0.2.0 e 17 casos de teste planeados | Fonte/campo oficial por instrumento e sessão/fuso por confirmar; seis símbolos selecionados (INDFUT, DOFUT, IND, DOL, WIN e WDO); validação apenas com dados históricos armazenados; 44 casos planeados e NOT_RUN |
 | 03 — Giroscópio | CONTRATO INICIAL | Módulo 003 com contrato de contexto e 13 casos de teste | Implementação e testes de localização/conflito/60K NOT_RUN |
 | 04 — Estrutura/módulos de mercado | PARCIAL | FVG-ATLAS inventariado (249 blobs, V2.1.33 referenciada); candidatos VWAP/TWAP/delta/volume listados | Contratos, compatibilidade e testes BRICKMASTER pendentes; Market DNA e outros módulos por localizar/recuperar |
 | 05 — Risco soberano | CONTRATO INICIAL | Módulo 004 e plano de 12 testes | Limites de perda/exposição/tentativas e política versionada por aprovar; testes NOT_RUN |
@@ -80,9 +80,9 @@ Há contratos iniciais e planos de teste para as principais fronteiras de dados/
 
 ## Próxima Ação
 
-1. Executar a matriz controlada no Profit para INDFUT, DOFUT, IND, DOL, WIN e WDO na configuração de gráfico efetivamente usada, sem exigir 60.000 ticks; registar código/instrumento efetivo e contrato/vencimento e comparar campo oficial da plataforma com `Open`, `OpenD(0)`, `OpenDaily(0)` e série diária explícita por símbolo.
+1. Auditar os dados históricos já armazenados em `carlos-andrade/B3` para INDFUT, DOFUT, IND, DOL, WIN e WDO; verificar cobertura por instrumento/contrato, hash, data, granularidade e campo de abertura. Não depender de Profit em tempo real nem simular outputs de funções NTSL.
 2. Registar contrato/vencimento, data, sessão/fuso, versão/feed, timestamps, valores, discrepâncias e capturas/exports no repositório. Manter `UNKNOWN/INVALID` enquanto a fonte não for demonstrada.
-3. Só após evidência repetível, aprovar fonte/campo por instrumento e implementar sessão/abertura e Giroscópio isoladamente.
+3. Só após a base armazenada cobrir os instrumentos e campos necessários, executar testes offline repetíveis e aprovar a fonte histórica por instrumento. A semântica runtime NTSL/Profit continua fora do que pode ser comprovado offline.
 4. Resolver os achados estáticos de CumulativeVolume numa variante separada, sem substituir o ficheiro histórico.
 5. Recuperar/definir contratos para Liquidez, Contador de Toques e Market DNA.
 6. Aprovar limites soberanos de risco antes de dimensionar ou autorizar qualquer ordem.
@@ -109,10 +109,16 @@ O repositório `carlos-andrade/B3` foi consultado para a fonte de abertura. O co
 
 - 1.0.4 — 2026-10-12 — verificação cruzada do B3 registada; dados EOD distinguidos da validação Profit.
 - 1.0.5 — 2026-10-12 — correção do escopo para INDFUT/DOFUT; gráfico de 60.000 ticks desconsiderado; mapeamento B3/contrato pendente.
+- 1.0.8 — 2026-10-12 — regra operacional alterada para usar apenas dados históricos armazenados; registada lacuna de cobertura B3 e issue #6; plano Módulo 002 ampliado para 44 casos, todos NOT_RUN.
 - 1.0.7 — 2026-10-12 — âmbito ampliado aos seis símbolos utilizados no Profit (INDFUT, DOFUT, IND, DOL, WIN e WDO); plano Módulo 002 ampliado para 38 casos, todos NOT_RUN.
 - 1.0.6 — 2026-10-12 — acrescentada verificação de códigos oficiais B3 IND/DOL versus aliases Profit INDFUT/DOFUT; teste de mapeamento permanece NOT_RUN.
 
 
 ## Correção de escopo — 2026-10-12
 
-O utilizador confirmou que utiliza no Profit seis símbolos: INDFUT, DOFUT, IND, DOL, WIN e WDO, e determinou desconsiderar o requisito de gráfico de 60.000 ticks para esta validação. A matriz deve usar a configuração real escolhida no Profit, sem periodicidade fixa. A identificação operacional dos seis símbolos está registada; instrumento/código B3 efetivo, contrato/vencimento, sessão e fonte de abertura devem ser registados separadamente para cada símbolo, sem presumir equivalência. As páginas oficiais B3 consultadas documentam IND/DOL para os futuros cheios e WIN/WDO para minicontratos; os metadados efetivos de INDFUT/DOFUT ainda precisam de evidência no Profit. Os 38 casos planeados permanecem NOT_RUN; esta alteração é documental e não certifica a fonte de abertura.
+O utilizador confirmou que utiliza no Profit seis símbolos: INDFUT, DOFUT, IND, DOL, WIN e WDO, e determinou que a validação use sempre dados históricos já armazenados, sem depender do Profit em tempo real. A identificação operacional dos seis símbolos está registada; instrumento/código B3 efetivo, contrato/vencimento e fonte histórica de abertura devem ser resolvidos a partir do cadastro e dos arquivos versionados, sem presumir equivalência. A auditoria inicial da árvore B3 encontrou COTAHIST anual via Git LFS e datas diárias selecionadas, mas não encontrou RAW BVBG.086.01/BVBG.187.01 nem dados intraday/negócio a negócio em `dados/market_data`; a documentação B3 também declara esses dados pendentes. Foi criada a solicitação de atualização https://github.com/carlos-andrade/B3/issues/6. O plano Módulo 002 tem 44 casos, todos NOT_RUN; esta alteração não certifica a fonte de abertura.
+
+
+## Política operacional — dados históricos armazenados — 2026-10-12
+
+O utilizador determinou que todas as validações devem usar os dados históricos já armazenados em `carlos-andrade/B3`; não é possível consumir dados do Profit em tempo real neste fluxo. A execução deve ser offline e reproduzível, com fonte, caminho, data de referência, SHA-256, granularidade, parser e cobertura registados. Uma auditoria inicial identificou documentação de Market Data e contratos de ingestão, mas não encontrou arquivos brutos BVBG.086.01/BVBG.187.01 nem datasets intraday/negócio a negócio armazenados em `dados/market_data`; a captura está pendente na documentação de ingestão. Foi aberta a issue [B3 #6](https://github.com/carlos-andrade/B3/issues/6) para completar e documentar a cobertura histórica dos seis símbolos. COTAHIST/EOD só pode ser usado para os instrumentos/campos que sua cobertura e semântica realmente comprovarem. O comportamento runtime de `Open`, `OpenD(0)` e `OpenDaily(0)` no Profit não pode ser certificado apenas com documentação ou datasets externos; permanece explicitamente fora da validação offline.
