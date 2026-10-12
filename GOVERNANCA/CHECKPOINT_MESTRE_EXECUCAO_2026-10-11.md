@@ -6,7 +6,7 @@ fase: "GOVERNANCA_E_ROADMAP_00_08"
 id_documento: "BM-CKPT-ROADMAP-2026-10-11-001"
 titulo: "Checkpoint mestre — execução do roadmap BRICKMASTER 00–08"
 status: "CHECKPOINT_ATUAL; FASES_TECNICAS_AINDA_NAO_VALIDADAS"
-versao: "1.5.0"
+versao: "1.6.0"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-12"
 origem: "Execução GitHub e auditorias registadas nesta sessão"
@@ -213,3 +213,12 @@ A execução [B3 FASE10 2005](https://github.com/carlos-andrade/B3/actions/runs/
 - A abertura dos seis símbolos permanece UNKNOWN/BLOCKED; esta prova é apenas da integridade do dataset COTAHIST 2005, não da sua aplicabilidade a futuros.
 
 - 1.5.0 — 2026-10-12 — evidência CI LFS/RAW/NORMALIZED de 2005 incorporada; DS-46 parcialmente aprovado apenas para esse objeto.
+
+
+## Probe offline COTAHIST 2026-10-09 — 2026-10-12
+
+Foi processado o CSV diário `COTAHIST_D09102026.csv` armazenado em B3. O manifesto declara VALIDADO, 19.213 registos e 25 campos. No conteúdo lido, as correspondências exatas de `CODNEG` para os seis símbolos foram zero; houve quatro prefixos DOL (`DOLA11`, `DOLB11`, `DOLX11`, `DOLL39`) mas nenhum correspondeu ao padrão de contrato futuro datado. Prefixo isolado é insuficiente para mapear instrumentos.
+
+Evidência: `MODULOS/002-RELOGIO-SESSAO-ABERTURA/data/PROBE_COTAHIST_D09102026_COBERTURA_SIMBOLOS.csv`. DS-49 = PASS apenas para o probe de uma data; não prova ausência em outros pregões ou fontes. DS-45 continua NOT_RUN; DS-46 PARTIAL_PASS_2005. A abertura dos seis símbolos permanece UNKNOWN/BLOCKED.
+
+- 1.6.0 — 2026-10-12 — acrescentado probe offline de um pregão e guardrail contra falsos positivos por prefixo.
