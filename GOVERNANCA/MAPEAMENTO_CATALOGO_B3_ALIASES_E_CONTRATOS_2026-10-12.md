@@ -24,7 +24,11 @@ dependencias: "B3 issue #6; INVENTARIO_B3_2026-09-22.csv; ESTATISTICAS_BVBG028_2
 
 Em 2026-10-12, foi processado o conteúdo integral do CSV versionado `ativos/catalogo/INVENTARIO_B3_2026-09-22.csv` no repositório `carlos-andrade/B3`. A extração foi feita a partir do objeto Git blob identificado pelo SHA Git `5d88fa0e319d8398e992537de51bda691dc4a5ab`. Esse identificador é um Git blob SHA (SHA-1), não deve ser rotulado como SHA-256 do conteúdo.
 
-## Resultado de parsing
+## Estado
+
+**Extração do catálogo: PASS.** O mapeamento dos aliases da plataforma continua `UNKNOWN/BLOCKED`.
+
+## Evidências
 
 | Verificação | Resultado | Estado |
 |---|---:|---|
@@ -66,7 +70,7 @@ A matriz completa de 70 contratos extraídos foi gravada em:
 
 O CSV derivado conserva a data de referência, ticker, ID, família, descrições, CFI, datas de negociação, vencimento, multiplicador, mercado, caminho de origem, Git blob SHA e estado de mapeamento. O Git blob SHA da origem é uma identidade Git, não um SHA-256 do conteúdo.
 
-## Integridade e limitações
+## Validação
 
 - A contagem integral do CSV e a extração dos 70 contratos foram executadas sobre o conteúdo retornado pelo objeto Git do repositório.
 - A matriz extraída tem 70 IDs únicos e os quatro campos mínimos (ID, vencimento, multiplicador, CFI) preenchidos em todos os registos.
@@ -74,7 +78,7 @@ O CSV derivado conserva a data de referência, ticker, ID, família, descriçõe
 - Os objetos Git LFS de COTAHIST não foram descarregados nem re-hashados independentemente nesta execução. DS-46 continua NOT_RUN.
 - Não houve análise de preço histórico, COTAHIST por contrato, fonte de abertura, compilação NTSL, execução no Profit, replay, backtest ou ordens.
 
-## Próximas ações
+## Próxima Ação
 
 1. Solicitar evidência documental de como os aliases `INDFUT` e `DOFUT` são resolvidos pela plataforma e qual a série/contrato escolhido; não deduzir isso apenas do cadastro B3.
 2. Obter dados históricos de preço para contratos identificados e verificar a existência e semântica do campo de abertura.
