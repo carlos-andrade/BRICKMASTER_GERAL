@@ -6,7 +6,7 @@ fase: "FASE_02_DADOS_SESSAO_ABERTURA"
 id_documento: "BM-DATA-001-TESTES"
 titulo: "Plano de testes — Relógio, sessão e abertura"
 status: "PLANEADO; NAO_EXECUTADO; INDFUT_DOFUT_SEM_RESTRICAO_60K"
-versao: "0.4.0"
+versao: "0.5.0"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-12"
 origem: "Contrato BM-DATA-001-ESPECIFICACAO"
@@ -69,10 +69,11 @@ Executar primeiro a matriz INDFUT e DOFUT na configuração de gráfico efetivam
 | DS-21 | DOFUT — comparar candidatos | Comparar campo oficial com `Open`, `OpenD(0)`, `OpenDaily(0)` e série diária explícita | NOT_RUN |
 | DS-22 | INDFUT — persistência da referência | Abertura não muda ao recarregar/reprocessar; diferenças ficam auditadas | NOT_RUN |
 | DS-23 | DOFUT — persistência da referência | Abertura não muda ao recarregar/reprocessar; diferenças ficam auditadas | NOT_RUN |
-| DS-24 | Adequação de COTAHIST/EOD | Não usar `preabe` como substituto automático da abertura confirmada do Profit 60K; exigir correspondência de instrumento, contrato, data e semântica | NOT_RUN |
+| DS-24 | Adequação de COTAHIST/EOD | Não usar `preabe` como substituto automático da abertura confirmada do Profit; exigir correspondência de símbolo/código B3, contrato, data e semântica | NOT_RUN |
 | DS-25 | Adequação de market data intraday B3 | Confirmar arquivo binário, granularidade e campos antes de usar como evidência de abertura/tick; documentação isolada não conta como dataset capturado | NOT_RUN |
 
 ## Histórico de versões
 
-- 0.4.0 — 2026-10-12 — incorporada verificação cruzada do repositório B3; adicionados DS-24/DS-25 para adequação EOD/intraday; todos continuam NOT_RUN.\n- 0.3.0 — 2026-10-12 — matriz explícita WINFUT/DOLFUT em 60.000 ticks e seis casos específicos adicionados; testes continuam não executados.
+- 0.5.0 — 2026-10-12 — escopo corrigido para INDFUT/DOFUT sem requisito de gráfico de 60.000 ticks; mapeamento de código B3/contrato explicitamente pendente; todos os testes NOT_RUN.\n- 0.4.0 — 2026-10-12 — incorporada verificação cruzada do repositório B3; adicionados DS-24/DS-25 para adequação EOD/intraday; todos continuam NOT_RUN.
+- 0.3.0 — 2026-10-12 — matriz explícita WINFUT/DOLFUT em 60.000 ticks e seis casos específicos adicionados; testes continuam não executados.
 - 0.2.0 — 2026-10-12 — casos acrescentados para política B e validação de fontes oficiais; testes não executados.
