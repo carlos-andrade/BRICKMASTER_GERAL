@@ -6,7 +6,7 @@ fase: "FASE_02_DADOS_SESSAO_ABERTURA"
 id_documento: "BM-DATA-001-TESTES"
 titulo: "Plano de testes — Relógio, sessão e abertura"
 status: "49_CASOS; DS-47_DS-48_DS-49_PASS_COM_LIMITES; DS-45_NOT_RUN; DS-46_PARTIAL_PASS_2005"
-versao: "1.0.5"
+versao: "1.0.6"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-12"
 origem: "Contrato BM-DATA-001-ESPECIFICACAO"
@@ -139,7 +139,7 @@ DS-46 passa parcialmente apenas para o objeto NORMALIZED de 2005; os restantes o
 
 Fonte: `dados/cotahist/normalized/diario/COTAHIST_D09102026.csv`; manifesto `COTAHIST_D09102026_quality.json` declara `VALIDADO`, 19.213 registos, 25 campos e SHA-256 normalizado `f39ec9919b27aa5716a2aa4cebea852f38849389067627238bf2bcf8e17eeed2`. Git blob SHA do CSV: `ec8c33a699f2ef5b1bb88b919b30852b904a069b` (não SHA-256).
 
-Parsing executado: zero correspondências exatas em `CODNEG` para IND/INDFUT/DOL/DOFUT/WIN/WDO; zero prefixos IND/WIN/WDO; quatro prefixos DOL (`DOLA11`, `DOLB11`, `DOLX11`, `DOLL39`) sem correspondência ao padrão de ticker futuro datado. DS-49 PASS significa que o probe executou e o guardrail de prefixo funcionou; não certifica cobertura em outros pregões ou a fonte de abertura.
+Parsing executado: zero correspondências exatas em `CODNEG` para IND/INDFUT/DOL/DOFUT/WIN/WDO; zero prefixos IND/WIN/WDO; quatro prefixos DOL (`DOLA11`, `DOLB11`, `DOLX11`, `DOLL39`). `DOLX11` corresponde a uma regex frouxa de ticker, mas os campos `NOMRES=TREND DOLAR`, `ESPECI=CI`, `TPMERC=010`, `CODBDI=14` não confirmam um contrato futuro. DS-49 PASS significa que o probe executou e o guardrail contra falsos positivos foi aplicado; não certifica cobertura em outros pregões ou a fonte de abertura.
 
 - 1.0.4 — 2026-10-12 — DS-49 PASS com escopo de uma data; DS-45 NOT_RUN e DS-46 PARTIAL_PASS_2005 mantidos.
 
