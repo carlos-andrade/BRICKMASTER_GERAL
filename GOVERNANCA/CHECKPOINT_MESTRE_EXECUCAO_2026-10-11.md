@@ -6,7 +6,7 @@ fase: "GOVERNANCA_E_ROADMAP_00_08"
 id_documento: "BM-CKPT-ROADMAP-2026-10-11-001"
 titulo: "Checkpoint mestre — execução do roadmap BRICKMASTER 00–08"
 status: "CHECKPOINT_ATUAL; FASES_TECNICAS_AINDA_NAO_VALIDADAS"
-versao: "1.0.2"
+versao: "1.0.3"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-12"
 origem: "Execução GitHub e auditorias registadas nesta sessão"
@@ -32,7 +32,7 @@ O repositório oficial foi auditado e a sequência feature → develop → valid
 |---|---|---|---|
 | 00 — Inventário | PARCIAL | Inventário recursivo de 212 blobs, hashes/caminhos e reconciliação 209 + 3 = 212 | Auditoria semântica integral dos artefactos ainda incompleta |
 | 01 — Arquitetura/governança | PARCIAL | Roadmap, norma documental, mapeamento dos seis domínios lógicos às camadas L0–L9; branch develop e CI | Contratos técnicos e integração ainda não validados |
-| 02 — Dados/sessão/abertura | POLÍTICA B APROVADA; IMPLEMENTAÇÃO PENDENTE | Módulo 002 v0.2.0 e 17 casos de teste planeados | Fonte/campo oficial por instrumento e sessão/fuso por confirmar; todos os testes NOT_RUN |
+| 02 — Dados/sessão/abertura | POLÍTICA B APROVADA; IMPLEMENTAÇÃO PENDENTE | Módulo 002 v0.2.0 e 17 casos de teste planeados | Fonte/campo oficial por instrumento e sessão/fuso por confirmar; WINFUT e DOLFUT selecionados para gráfico de 60.000 ticks; testes NOT_RUN |
 | 03 — Giroscópio | CONTRATO INICIAL | Módulo 003 com contrato de contexto e 13 casos de teste | Implementação e testes de localização/conflito/60K NOT_RUN |
 | 04 — Estrutura/módulos de mercado | PARCIAL | FVG-ATLAS inventariado (249 blobs, V2.1.33 referenciada); candidatos VWAP/TWAP/delta/volume listados | Contratos, compatibilidade e testes BRICKMASTER pendentes; Market DNA e outros módulos por localizar/recuperar |
 | 05 — Risco soberano | CONTRATO INICIAL | Módulo 004 e plano de 12 testes | Limites de perda/exposição/tentativas e política versionada por aprovar; testes NOT_RUN |
@@ -80,8 +80,9 @@ Há contratos iniciais e planos de teste para as principais fronteiras de dados/
 
 ## Próxima Ação
 
-1. Confirmar a política operacional da abertura para o Módulo 002.
-2. Implementar primeiro sessão/abertura e Giroscópio em modo isolado, com testes determinísticos e gráficos de ticks incluindo 60K.
+1. Executar a matriz controlada no Profit para WINFUT e DOLFUT em gráficos de 60.000 ticks, comparando campo oficial da plataforma com `Open`, `OpenD(0)`, `OpenDaily(0)` e série diária explícita.
+2. Registar contrato/vencimento, data, sessão/fuso, versão/feed, timestamps, valores, discrepâncias e capturas/exports no repositório. Manter `UNKNOWN/INVALID` enquanto a fonte não for demonstrada.
+3. Só após evidência repetível, aprovar fonte/campo por instrumento e implementar sessão/abertura e Giroscópio isoladamente.
 3. Resolver os achados estáticos de CumulativeVolume numa variante separada, sem substituir o ficheiro histórico.
 4. Recuperar/definir contratos para Liquidez, Contador de Toques e Market DNA.
 5. Aprovar limites soberanos de risco antes de dimensionar ou autorizar qualquer ordem.
@@ -98,4 +99,5 @@ O utilizador aprovou a política B para o Módulo 002: preço oficial de abertur
 
 - 1.0.1 — 2026-10-12 — checkpoint atualizado com a decisão de abertura oficial.
 
+- 1.0.3 — 2026-10-12 — instrumentos WINFUT e DOLFUT e gráfico de 60.000 ticks definidos para a validação prática; execução Profit e evidências continuam pendentes.
 - 1.0.2 — 2026-10-12 — referência à auditoria documental da fonte de abertura acrescentada; validação Profit continua pendente.
