@@ -5,8 +5,8 @@ tipo_documento: "PLANO_DE_TESTES"
 fase: "FASE_02_DADOS_SESSAO_ABERTURA"
 id_documento: "BM-DATA-001-TESTES"
 titulo: "Plano de testes — Relógio, sessão e abertura"
-status: "48_CASOS; DS-47_DS-48_PASS_COM_LIMITES; 46_CASOS_NOT_RUN"
-versao: "1.0.0"
+status: "48_CASOS; DS-47_DS-48_PASS_COM_LIMITES; DS-45_DS-46_NOT_RUN; COBERTURA_B3_EM_ATUALIZACAO"
+versao: "1.0.1"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-12"
 origem: "Contrato BM-DATA-001-ESPECIFICACAO"
@@ -107,3 +107,12 @@ Usar somente arquivos já armazenados em `carlos-andrade/B3`. Primeiro verificar
 - 0.4.0 — 2026-10-12 — incorporada verificação cruzada do repositório B3; adicionados DS-24/DS-25 para adequação EOD/intraday; todos continuam NOT_RUN.
 - 0.3.0 — 2026-10-12 — matriz explícita WINFUT/DOLFUT em 60.000 ticks e seis casos específicos adicionados; testes continuam não executados.
 - 0.2.0 — 2026-10-12 — casos acrescentados para política B e validação de fontes oficiais; testes não executados.
+
+
+## Atualização de evidência B3 — 2026-10-12
+
+Após a sequência de workflows de 2005, `COTAHIST_A2005.csv` passou a constar na pasta anual. A árvore atual lista 21 CSVs (1986–2005 e 2026) e 41 manifests (1986–2026); `COTAHIST_A2006.csv` ainda não aparece. A lacuna atual é 2006–2025. O manifesto de 2005 declara 181.408 linhas, 25 campos, período 2005-01-03 a 2005-12-29 e SHA-256 normalizado `9fe7ee30e135223f5d414d7ed678f2973645c2f8779f7e94b7a148794e6a847c`; o objeto LFS não foi re-hashado independentemente nesta execução.
+
+DS-45 permanece NOT_RUN porque a reconciliação de todos os anos não está concluída. DS-46 permanece NOT_RUN porque não houve download e SHA-256 independente dos objetos LFS. DS-47 e DS-48 continuam PASS com o escopo restrito descrito acima.
+
+- 1.0.1 — 2026-10-12 — atualização do estado dos normalizados anuais após workflows B3; lacuna corrigida de 2005–2025 para 2006–2025; DS-45/DS-46 permanecem NOT_RUN.
