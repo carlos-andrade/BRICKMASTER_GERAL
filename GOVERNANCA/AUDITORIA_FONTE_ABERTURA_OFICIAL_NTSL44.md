@@ -6,7 +6,7 @@ fase: "FASE_02_DADOS_SESSAO_ABERTURA"
 id_documento: "BM-DATA-001-AUDITORIA-FONTE-NTSl44"
 titulo: "Auditoria documental — candidatos à abertura oficial no Manual NTSL 4.4"
 status: "REVISAO_DOCUMENTAL; VALIDACAO_PROFIT_PENDENTE; MATRIZ_INDFUT_DOFUT_SEM_RESTRICAO_60K"
-versao: "0.3.0"
+versao: "0.4.0"
 data_criacao: "2026-10-12"
 data_atualizacao: "2026-10-12"
 origem: "Manual NTSL versão 4.4 — 03-08-2026, ficheiro fornecido no projeto"
@@ -26,7 +26,7 @@ Em 2026-10-12 foi aprovada a política B: usar o preço oficial de abertura forn
 
 ## Estado
 
-REVISÃO DOCUMENTAL CONCLUÍDA; instrumentos selecionados: WINFUT e DOLFUT; gráfico de validação: 60.000 ticks; execução no Profit e evidências ainda pendentes.
+REVISÃO DOCUMENTAL CONCLUÍDA; instrumentos solicitados: INDFUT e DOFUT; não há restrição a gráfico de 60.000 ticks; execução no Profit e evidências ainda pendentes. A correspondência dos símbolos com códigos B3 e contrato/vencimento deve ser registada antes da aceitação.
 
 ## Achados suportados pelo Manual 4.4
 
@@ -57,7 +57,7 @@ Critério: aprovar uma combinação fonte/campo/instrumento apenas após equival
 
 A execução será feita nos dois símbolos solicitados, sem presumir que a mesma fonte/campo serve para ambos. Não é exigido gráfico de 60.000 ticks. Cada linha de evidência deve identificar o símbolo real no Profit, código de negociação B3, contrato/vencimento e data do pregão.
 
-| Dimensão | WINFUT | DOLFUT | Regra de aceitação |
+| Dimensão | INDFUT | DOFUT | Regra de aceitação |
 |---|---|---|---|
 | Gráfico utilizado | Configuração real no Profit | Configuração real no Profit | Registar tipo/periodicidade usados; não exigir 60.000 ticks |
 | Referência da plataforma | Registar campo e valor visível | Registar campo e valor visível | Captura/exportação identificável, não valor inferido visualmente sem contexto |
@@ -97,7 +97,7 @@ Achados documentais:
 - `docs/ingestao/PARTE03_B3_INTRADAY_CONTRATO_V1.0.md` e `docs/ingestao/PARTE03_NEGOCIO_A_NEGOCIO_CONTRATO_V1.1.md` indicam que a captura dos binários intraday/negócio a negócio e a validação do dataset continuam pendentes no estado documentado.
 - O ficheiro COTAHIST diário de 2026-10-09 tem manifesto `VALIDADO`, 19.213 linhas e 25 campos. A leitura pesquisável do CSV não encontrou linhas com os símbolos `WIN` ou `WDO`; este resultado não prova ausência em todas as datas, mas não fornece uma abertura de contrato para os instrumentos-alvo.
 
-Conclusão: o B3 contém metodologia e dados diários EOD, incluindo um campo de abertura diária, mas a evidência encontrada não fornece valores certificados de abertura para INDFUT/DOFUT no contexto específico do Profit, sem restrição a gráfico de 60.000 ticks. COTAHIST/EOD não substitui a validação do campo de abertura efetivamente utilizado pelo Profit, nem comprova o comportamento de `Open`, `OpenD(0)` ou `OpenDaily(0)`. A documentação B3 consultada usa WIN/WDO como instrumentos-alvo noutro contrato de ingestão; a correspondência com INDFUT/DOFUT continua por confirmar.
+Conclusão: o B3 contém metodologia e dados diários EOD, incluindo um campo de abertura diária, mas a evidência encontrada não fornece valores certificados de abertura para INDFUT/DOFUT no Profit. O tipo de gráfico de validação não é restringido a 60.000 ticks. COTAHIST/EOD não substitui a validação do campo de abertura efetivamente utilizado pelo Profit, nem comprova o comportamento de `Open`, `OpenD(0)` ou `OpenDaily(0)`. A documentação B3 consultada usa WIN/WDO como instrumentos-alvo noutro contrato de ingestão; a correspondência com INDFUT/DOFUT continua por confirmar.
 
 Referências B3:
 - https://github.com/carlos-andrade/B3/blob/main/docs/ingestao/PARTE01_CONTRATO_NORMALIZED_COTAHIST_V1.0.md
@@ -120,5 +120,6 @@ Executar a comparação controlada no Profit e guardar os resultados como evidê
 
 ## Histórico de versões
 
-- 0.3.0 — 2026-10-12 — verificação cruzada do B3; identificada abertura EOD no COTAHIST, mas sem evidência suficiente para certificar WINFUT/DOLFUT em Profit 60K; testes práticos continuam pendentes.\n- 0.2.0 — 2026-10-12 — matriz operacional definida para WINFUT e DOLFUT em gráficos de 60.000 ticks; nenhuma execução no Profit declarada.
+- 0.4.0 — 2026-10-12 — correção do escopo para INDFUT e DOFUT, sem requisito de gráfico de 60.000 ticks; correspondência dos símbolos com código/contrato B3 exigida.\n- 0.3.0 — 2026-10-12 — verificação cruzada do B3; identificada abertura EOD no COTAHIST, mas sem evidência suficiente para certificar WINFUT/DOLFUT em Profit 60K; testes práticos continuam pendentes.
+- 0.2.0 — 2026-10-12 — matriz operacional definida para WINFUT e DOLFUT em gráficos de 60.000 ticks; nenhuma execução no Profit declarada.
 - 0.1.0 — 2026-10-12 — primeira auditoria documental de candidatos à abertura oficial.
