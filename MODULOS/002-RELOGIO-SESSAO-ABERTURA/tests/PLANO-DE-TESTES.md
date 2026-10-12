@@ -5,8 +5,8 @@ tipo_documento: "PLANO_DE_TESTES"
 fase: "FASE_02_DADOS_SESSAO_ABERTURA"
 id_documento: "BM-DATA-001-TESTES"
 titulo: "Plano de testes — Relógio, sessão e abertura"
-status: "PLANEADO; NAO_EXECUTADO; SEIS_SIMBOLOS_SEM_RESTRICAO_60K"
-versao: "0.7.0"
+status: "PLANEADO; NAO_EXECUTADO; SEIS_SIMBOLOS_DADOS_ARMAZENADOS_OFFLINE"
+versao: "0.8.0"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-12"
 origem: "Contrato BM-DATA-001-ESPECIFICACAO"
@@ -26,7 +26,7 @@ Criado antes da implementação para impedir que o primeiro candle visível seja
 
 ## Estado
 
-PLANEADO — todos os casos NOT_RUN.
+PLANEADO — todos os casos NOT_RUN. A execução deste plano deve usar somente dados históricos já armazenados no repositório B3; não há acesso a Profit em tempo real neste fluxo.
 
 ## Evidências
 
@@ -42,7 +42,7 @@ Matriz de aceitação inicial pronta.
 
 ## Próxima Ação
 
-Executar a matriz dos seis símbolos INDFUT, DOFUT, IND, DOL, WIN e WDO na configuração de gráfico efetivamente usada no Profit, sem exigir 60.000 ticks; registar contrato/vencimento e comparar a abertura oficial com os candidatos por instrumento. Depois implementar o módulo e executar os casos. Todos os casos continuam NOT_RUN.
+Usar somente arquivos já armazenados em `carlos-andrade/B3`. Primeiro verificar a cobertura real de cada símbolo/contrato, hash, manifesto, campos e semântica. A cobertura insuficiente de derivativos históricos foi solicitada em [B3 issue #6](https://github.com/carlos-andrade/B3/issues/6). Não simular resultados de funções NTSL nem depender do Profit em tempo real. Todos os casos continuam NOT_RUN.
 
 | ID | Caso | Resultado esperado | Estado |
 |---|---|---|---|
@@ -63,30 +63,38 @@ Executar a matriz dos seis símbolos INDFUT, DOFUT, IND, DOL, WIN e WDO na confi
 | DS-15 | Fontes oficiais divergem | INVALID/BLOCKED até resolução documentada | NOT_RUN |
 | DS-16 | Campo NTSL/Profit não equivale à abertura oficial | Rejeitar como substituto e manter UNKNOWN | NOT_RUN |
 | DS-17 | Correção oficial da abertura | Evento auditável; nenhuma alteração silenciosa dos níveis | NOT_RUN |
-| DS-18 | INDFUT — configuração real do Profit | Símbolo, código B3, contrato, sessão, campo oficial e candidatos registados com evidência | NOT_RUN |
-| DS-19 | DOFUT — configuração real do Profit | Símbolo, código B3, contrato, sessão, campo oficial e candidatos registados com evidência | NOT_RUN |
-| DS-20 | INDFUT — comparar candidatos | Comparar campo oficial com `Open`, `OpenD(0)`, `OpenDaily(0)` e série diária explícita | NOT_RUN |
-| DS-21 | DOFUT — comparar candidatos | Comparar campo oficial com `Open`, `OpenD(0)`, `OpenDaily(0)` e série diária explícita | NOT_RUN |
-| DS-22 | INDFUT — persistência da referência | Abertura não muda ao recarregar/reprocessar; diferenças ficam auditadas | NOT_RUN |
-| DS-23 | DOFUT — persistência da referência | Abertura não muda ao recarregar/reprocessar; diferenças ficam auditadas | NOT_RUN |
+| DS-18 | INDFUT — cobertura histórica armazenada | Localizar arquivos B3 armazenados e registar fonte, data, hash, campos e contrato; se ausente, documentar lacuna | NOT_RUN |
+| DS-19 | DOFUT — cobertura histórica armazenada | Localizar arquivos B3 armazenados e registar fonte, data, hash, campos e contrato; se ausente, documentar lacuna | NOT_RUN |
+| DS-20 | INDFUT — validar abertura offline | Validar apenas campo de abertura existente em fonte histórica armazenada e sua semântica; não executar funções NTSL offline | NOT_RUN |
+| DS-21 | DOFUT — validar abertura offline | Validar apenas campo de abertura existente em fonte histórica armazenada e sua semântica; não executar funções NTSL offline | NOT_RUN |
+| DS-22 | INDFUT — determinismo offline | Mesmo arquivo/hash e versão do parser produzem resultado repetível; diferenças ficam auditadas | NOT_RUN |
+| DS-23 | DOFUT — determinismo offline | Mesmo arquivo/hash e versão do parser produzem resultado repetível; diferenças ficam auditadas | NOT_RUN |
 | DS-24 | Adequação de COTAHIST/EOD | Não usar `preabe` como substituto automático da abertura confirmada do Profit; exigir correspondência de símbolo/código B3, contrato, data e semântica | NOT_RUN |
 | DS-25 | Adequação de market data intraday B3 | Confirmar arquivo binário, granularidade e campos antes de usar como evidência de abertura/tick; documentação isolada não conta como dataset capturado | NOT_RUN |
-| DS-26 | Identidade e metadados dos seis símbolos Profit/B3 | Para INDFUT, DOFUT, IND, DOL, WIN e WDO, registar separadamente o símbolo visível, instrumento/código B3 efetivo, contrato/vencimento e fonte de mapeamento; não presumir equivalência entre símbolos | NOT_RUN |
+| DS-26 | Identidade e metadados dos seis símbolos Profit/B3 | Usar cadastro e arquivos armazenados para mapear INDFUT, DOFUT, IND, DOL, WIN e WDO; não presumir equivalência entre símbolos | NOT_RUN |
 | DS-27 | IND — configuração real do Profit | Registar símbolo, código efetivo, contrato, sessão, campo oficial e candidatos com evidência | NOT_RUN |
-| DS-28 | IND — comparar candidatos | Comparar campo oficial com `Open`, `OpenD(0)`, `OpenDaily(0)` e série diária explícita | NOT_RUN |
-| DS-29 | IND — persistência da referência | Confirmar abertura após recarregar/reprocessar; auditar qualquer diferença | NOT_RUN |
+| DS-28 | IND — validar abertura offline | Validar campos históricos armazenados e semântica; funções NTSL não são executadas offline | NOT_RUN |
+| DS-29 | IND — determinismo offline | Mesmo arquivo/hash e parser reproduzem resultado; auditar qualquer diferença | NOT_RUN |
 | DS-30 | DOL — configuração real do Profit | Registar símbolo, código efetivo, contrato, sessão, campo oficial e candidatos com evidência | NOT_RUN |
-| DS-31 | DOL — comparar candidatos | Comparar campo oficial com `Open`, `OpenD(0)`, `OpenDaily(0)` e série diária explícita | NOT_RUN |
-| DS-32 | DOL — persistência da referência | Confirmar abertura após recarregar/reprocessar; auditar qualquer diferença | NOT_RUN |
+| DS-31 | DOL — validar abertura offline | Validar campos históricos armazenados e semântica; funções NTSL não são executadas offline | NOT_RUN |
+| DS-32 | DOL — determinismo offline | Mesmo arquivo/hash e parser reproduzem resultado; auditar qualquer diferença | NOT_RUN |
 | DS-33 | WIN — configuração real do Profit | Registar símbolo, código efetivo, contrato, sessão, campo oficial e candidatos com evidência | NOT_RUN |
-| DS-34 | WIN — comparar candidatos | Comparar campo oficial com `Open`, `OpenD(0)`, `OpenDaily(0)` e série diária explícita | NOT_RUN |
-| DS-35 | WIN — persistência da referência | Confirmar abertura após recarregar/reprocessar; auditar qualquer diferença | NOT_RUN |
+| DS-34 | WIN — validar abertura offline | Validar campos históricos armazenados e semântica; funções NTSL não são executadas offline | NOT_RUN |
+| DS-35 | WIN — determinismo offline | Mesmo arquivo/hash e parser reproduzem resultado; auditar qualquer diferença | NOT_RUN |
 | DS-36 | WDO — configuração real do Profit | Registar símbolo, código efetivo, contrato, sessão, campo oficial e candidatos com evidência | NOT_RUN |
-| DS-37 | WDO — comparar candidatos | Comparar campo oficial com `Open`, `OpenD(0)`, `OpenDaily(0)` e série diária explícita | NOT_RUN |
-| DS-38 | WDO — persistência da referência | Confirmar abertura após recarregar/reprocessar; auditar qualquer diferença | NOT_RUN |
+| DS-37 | WDO — validar abertura offline | Validar campos históricos armazenados e semântica; funções NTSL não são executadas offline | NOT_RUN |
+| DS-38 | WDO — determinismo offline | Mesmo arquivo/hash e parser reproduzem resultado; auditar qualquer diferença | NOT_RUN |
+
+| DS-39 | Manifesto e integridade dos dados | Para cada arquivo usado, verificar SHA-256, data de referência, versão do parser e status de qualidade | NOT_RUN |
+| DS-40 | Cobertura temporal | Identificar datas/pregões presentes e ausentes; não tratar uma amostra de dias como série contínua | NOT_RUN |
+| DS-41 | Granularidade da fonte | Classificar cada fonte como EOD, barra, intraday ou negócio a negócio; não substituir granularidade ausente | NOT_RUN |
+| DS-42 | Ausência de dados de Profit em tempo real | Confirmar que os testes offline não exigem feed/exportação live nem simulam saída de funções NTSL | NOT_RUN |
+| DS-43 | Campo oficial de abertura armazenado | Verificar no layout e no arquivo real se existe campo de abertura aplicável ao contrato; se não existir, registrar lacuna | NOT_RUN |
+| DS-44 | Lacuna de dados e bloqueio | Se não houver arquivo/campo/contrato comprovado, manter `UNKNOWN/BLOCKED` e encaminhar pedido de atualização para B3 issue #6 | NOT_RUN |
 
 ## Histórico de versões
 
+- 0.8.0 — 2026-10-12 — reorientado para dados históricos armazenados, sem Profit em tempo real; DS-18–DS-23 reespecificados para cobertura e determinismo offline; DS-27–DS-38 reespecificados; DS-39–DS-44 adicionados para integridade, cobertura e lacunas.
 - 0.7.0 — 2026-10-12 — matriz ampliada a INDFUT, DOFUT, IND, DOL, WIN e WDO; adicionados DS-27–DS-38 para configuração, comparação de candidatos e persistência em IND/DOL/WIN/WDO; todos os casos permanecem NOT_RUN.
 - 0.6.0 — 2026-10-12 — acrescentado DS-26 para validar o mapeamento entre aliases Profit e códigos oficiais B3 IND/DOL; todos os casos permanecem NOT_RUN.
 - 0.5.0 — 2026-10-12 — escopo corrigido para INDFUT/DOFUT sem requisito de gráfico de 60.000 ticks; mapeamento de código B3/contrato explicitamente pendente; todos os testes NOT_RUN.
