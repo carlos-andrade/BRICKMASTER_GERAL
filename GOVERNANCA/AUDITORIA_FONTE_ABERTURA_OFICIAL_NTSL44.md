@@ -6,7 +6,7 @@ fase: "FASE_02_DADOS_SESSAO_ABERTURA"
 id_documento: "BM-DATA-001-AUDITORIA-FONTE-NTSl44"
 titulo: "Auditoria documental — candidatos à abertura oficial no Manual NTSL 4.4"
 status: "REVISAO_DOCUMENTAL; VALIDACAO_PROFIT_PENDENTE; DADOS_HISTORICOS_B3_SEIS_SIMBOLOS_SEM_PROFIT_TEMPO_REAL"
-versao: "1.0.1"
+versao: "1.0.2"
 data_criacao: "2026-10-12"
 data_atualizacao: "2026-10-12"
 origem: "Manual NTSL versão 4.4 — 03-08-2026, ficheiro fornecido no projeto"
@@ -179,3 +179,10 @@ O hash acima é declarado pelo ponteiro LFS/manifesto; o objeto físico não foi
 A árvore B3 contém o manifesto `COTAHIST_A2006_quality.json`, que declara `VALIDADO`, 198.367 linhas, 25 campos, período 2006-01-02 a 2006-12-28 e SHA-256 normalizado `d9025ebcc01413111c67a0bb573f4ff2676aae2105e8204f19d13f9a313ee69d`. Porém, o caminho canónico `dados/cotahist/normalized/anual/COTAHIST_A2006.csv` devolve 404. Estado: `MANIFEST_PRESENTE / CSV_CANÓNICO_AUSENTE / UNKNOWN-BLOCKED`. A FASE00 de governança de 2006 não certifica a presença física do CSV.
 
 A B3 issue #6 foi atualizada para solicitar materialização/verificação do arquivo ou correção do manifesto. Até essa reconciliação, DS-45 permanece NOT_RUN; DS-46 também permanece NOT_RUN porque o conteúdo LFS não foi descarregado e o hash não foi recalculado independentemente. A abertura dos seis símbolos de futuros continua não validada.
+
+
+## Prova de integridade do objeto COTAHIST 2005 — 2026-10-12
+
+A execução [B3 FASE10 2005](https://github.com/carlos-andrade/B3/actions/runs/38253210219) usou checkout com Git LFS ativo, calculou SHA-256 dos bytes de RAW e NORMALIZED e comparou todos os 25 campos. O log registou `VALIDADO`, hashes coincidentes com manifesto/sidecar, 181.408 registos de cada lado e zero divergências.
+
+Esta evidência valida a integridade do dataset COTAHIST 2005 dentro do escopo da FASE10. Não demonstra que COTAHIST contenha a abertura aplicável a IND/DOL/WIN/WDO ou aos aliases INDFUT/DOFUT. O mapeamento e a fonte de abertura continuam UNKNOWN/BLOCKED. DS-46 é apenas PARTIAL_PASS_2005; DS-45 continua NOT_RUN e o ano 2006 permanece bloqueado por manifesto sem CSV canónico.

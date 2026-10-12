@@ -6,7 +6,7 @@ fase: "GOVERNANCA_E_ROADMAP_00_08"
 id_documento: "BM-CKPT-ROADMAP-2026-10-11-001"
 titulo: "Checkpoint mestre — execução do roadmap BRICKMASTER 00–08"
 status: "CHECKPOINT_ATUAL; FASES_TECNICAS_AINDA_NAO_VALIDADAS"
-versao: "1.4.0"
+versao: "1.5.0"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-12"
 origem: "Execução GitHub e auditorias registadas nesta sessão"
@@ -199,3 +199,17 @@ A matriz regista, para INDFUT, DOFUT, IND, DOL, WIN e WDO, a correspondência ex
 O estado COTAHIST foi atualizado dinamicamente: 21 CSVs anuais listados (1986–2005 e 2026), 41 manifests; 2006–2025 sem CSV canónico listado, e 2006 tem manifesto `VALIDADO` sem o CSV no caminho canónico. B3 issue #6 foi atualizada para solicitar a reconciliação.
 
 - 1.4.0 — 2026-10-12 — publicada matriz operacional de cobertura dos seis símbolos; mantém os bloqueios de alias, abertura, anos normalizados e LFS.
+
+
+## Evidência CI de Git LFS — COTAHIST 2005 — 2026-10-12
+
+A execução [B3 FASE10 2005](https://github.com/carlos-andrade/B3/actions/runs/38253210219) terminou com success. O log comprova checkout com Git LFS ativo e cálculo independente de SHA-256 dos bytes de RAW e NORMALIZED, com correspondência ao manifesto/sidecar e comparação integral de 25 campos.
+
+- RAW SHA-256: `41eac6d743d9c3e812bb001c4d327582fa7c408dbc99ff4a1734698da8b18f52`.
+- NORMALIZED SHA-256: `9fe7ee30e135223f5d414d7ed678f2973645c2f8779f7e94b7a148794e6a847c`.
+- Contagem RAW/NORMALIZED: 181.408/181.408; divergências: 0.
+- Estado de teste: DS-46 = `PARTIAL_PASS_2005`; não se generaliza para os outros objetos LFS.
+- DS-45 permanece NOT_RUN; a reconciliação anual não terminou. O CSV 2006 continua ausente apesar do manifesto VALIDADO.
+- A abertura dos seis símbolos permanece UNKNOWN/BLOCKED; esta prova é apenas da integridade do dataset COTAHIST 2005, não da sua aplicabilidade a futuros.
+
+- 1.5.0 — 2026-10-12 — evidência CI LFS/RAW/NORMALIZED de 2005 incorporada; DS-46 parcialmente aprovado apenas para esse objeto.

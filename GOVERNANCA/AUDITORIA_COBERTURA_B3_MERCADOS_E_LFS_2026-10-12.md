@@ -6,7 +6,7 @@ fase: "FASE_02_DADOS_SESSAO_ABERTURA"
 id_documento: "BM-DATA-002-AUDITORIA-B3-COBERTURA-2026-10-12"
 titulo: "Auditoria de cobertura B3 — COTAHIST, Git LFS e market data"
 status: "AUDITORIA_DA_ARVORE_CONCLUIDA; COBERTURA_SEMANTICA_DOS_SEIS_SIMBOLOS_NAO_CONFIRMADA"
-versao: "1.3.0"
+versao: "1.4.0"
 data_criacao: "2026-10-12"
 data_atualizacao: "2026-10-12"
 origem: "Inspeção de diretórios, manifests, metadados Git LFS e documentação no repositório público carlos-andrade/B3"
@@ -151,3 +151,18 @@ Foi criada a matriz CSV de cobertura dos seis símbolos, com uma linha por símb
 A matriz distingue família de contrato da resolução do alias Profit. Todos os seis permanecem `UNKNOWN/BLOCKED` para validação de abertura; `INDFUT` e `DOFUT` não são associados a IND/DOL por inferência. A situação de COTAHIST 2006 continua `MANIFEST_PRESENTE / CSV_CANÓNICO_AUSENTE`.
 
 - 1.3.0 — 2026-10-12 — adicionada matriz operacional CSV dos seis símbolos, com fonte, granularidade, cobertura e bloqueios.
+
+
+## Prova física de Git LFS — COTAHIST 2005 — 2026-10-12
+
+A verificação dos logs da execução [B3 FASE10 — Validação Independente Integral 2005](https://github.com/carlos-andrade/B3/actions/runs/38253210219) encontrou uma prova física bem-sucedida do objeto LFS de 2005. O workflow usa checkout com `lfs: true`, calcula SHA-256 dos bytes de RAW e NORMALIZED e compara o NORMALIZED com manifesto e sidecar.
+
+Resultado registado no log:
+- `status=VALIDADO`; `decision=LIBERADO_PARA_FASE11`
+- RAW SHA-256: `41eac6d743d9c3e812bb001c4d327582fa7c408dbc99ff4a1734698da8b18f52`
+- NORMALIZED SHA-256: `9fe7ee30e135223f5d414d7ed678f2973645c2f8779f7e94b7a148794e6a847c`
+- 181.408 registos RAW e 181.408 normalizados; 25 campos verificados; zero divergências.
+
+**Correção de escopo:** o objeto NORMALIZED de 2005 tem prova de integridade via CI; não foi recalculado localmente nesta sessão. Isto constitui progresso parcial do requisito LFS, não certifica todos os objetos anuais. DS-46 fica `PARTIAL_PASS_2005`; os restantes objetos LFS continuam sem prova independente. DS-45 continua NOT_RUN e o problema 2006 persiste: manifesto `VALIDADO` sem CSV canónico listado.
+
+- 1.4.0 — 2026-10-12 — incorporada evidência CI de SHA-256 físico e validação independente de COTAHIST 2005; DS-46 passa parcialmente apenas para 2005.
