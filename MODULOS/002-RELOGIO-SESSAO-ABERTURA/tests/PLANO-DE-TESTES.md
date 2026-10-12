@@ -6,7 +6,7 @@ fase: "FASE_02_DADOS_SESSAO_ABERTURA"
 id_documento: "BM-DATA-001-TESTES"
 titulo: "Plano de testes — Relógio, sessão e abertura"
 status: "PLANEADO; NAO_EXECUTADO; INDFUT_DOFUT_SEM_RESTRICAO_60K"
-versao: "0.5.0"
+versao: "0.6.0"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-12"
 origem: "Contrato BM-DATA-001-ESPECIFICACAO"
@@ -71,9 +71,11 @@ Executar primeiro a matriz INDFUT e DOFUT na configuração de gráfico efetivam
 | DS-23 | DOFUT — persistência da referência | Abertura não muda ao recarregar/reprocessar; diferenças ficam auditadas | NOT_RUN |
 | DS-24 | Adequação de COTAHIST/EOD | Não usar `preabe` como substituto automático da abertura confirmada do Profit; exigir correspondência de símbolo/código B3, contrato, data e semântica | NOT_RUN |
 | DS-25 | Adequação de market data intraday B3 | Confirmar arquivo binário, granularidade e campos antes de usar como evidência de abertura/tick; documentação isolada não conta como dataset capturado | NOT_RUN |
+| DS-26 | Mapeamento dos símbolos Profit/B3 | Confirmar se INDFUT e DOFUT são aliases no Profit para contratos B3 de códigos IND e DOL; registar símbolo, contrato/vencimento e fonte de mapeamento | NOT_RUN |
 
 ## Histórico de versões
 
+- 0.6.0 — 2026-10-12 — acrescentado DS-26 para validar o mapeamento entre aliases Profit e códigos oficiais B3 IND/DOL; todos os casos permanecem NOT_RUN.
 - 0.5.0 — 2026-10-12 — escopo corrigido para INDFUT/DOFUT sem requisito de gráfico de 60.000 ticks; mapeamento de código B3/contrato explicitamente pendente; todos os testes NOT_RUN.
 - 0.4.0 — 2026-10-12 — incorporada verificação cruzada do repositório B3; adicionados DS-24/DS-25 para adequação EOD/intraday; todos continuam NOT_RUN.
 - 0.3.0 — 2026-10-12 — matriz explícita WINFUT/DOLFUT em 60.000 ticks e seis casos específicos adicionados; testes continuam não executados.
