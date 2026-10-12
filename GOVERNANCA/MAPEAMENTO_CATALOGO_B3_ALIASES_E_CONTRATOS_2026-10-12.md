@@ -78,6 +78,10 @@ O CSV derivado conserva a data de referência, ticker, ID, família, descriçõe
 - Os objetos Git LFS de COTAHIST não foram descarregados nem re-hashados independentemente nesta execução. DS-46 continua NOT_RUN.
 - Não houve análise de preço histórico, COTAHIST por contrato, fonte de abertura, compilação NTSL, execução no Profit, replay, backtest ou ordens.
 
+## Resultado
+
+A extração de famílias de contratos e a validação do guardrail de aliases foram executadas. A disponibilidade de dados de abertura e a correspondência dos aliases não estão certificadas.
+
 ## Próxima Ação
 
 1. Solicitar evidência documental de como os aliases `INDFUT` e `DOFUT` são resolvidos pela plataforma e qual a série/contrato escolhido; não deduzir isso apenas do cadastro B3.
