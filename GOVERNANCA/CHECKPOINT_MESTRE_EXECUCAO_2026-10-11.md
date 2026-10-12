@@ -6,7 +6,7 @@ fase: "GOVERNANCA_E_ROADMAP_00_08"
 id_documento: "BM-CKPT-ROADMAP-2026-10-11-001"
 titulo: "Checkpoint mestre — execução do roadmap BRICKMASTER 00–08"
 status: "CHECKPOINT_ATUAL; FASES_TECNICAS_AINDA_NAO_VALIDADAS"
-versao: "1.7.0"
+versao: "1.8.0"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-12"
 origem: "Execução GitHub e auditorias registadas nesta sessão"
@@ -233,3 +233,44 @@ Artefacto por pregão: `MODULOS/002-RELOGIO-SESSAO-ABERTURA/data/PROBE_COTAHIST_
 DS-49 PASS significa que a leitura e o guardrail foram executados nos 15 ficheiros; o resultado não prova ausência em datas não armazenadas. DS-45 continua NOT_RUN; DS-46 PARTIAL_PASS_2005; abertura dos seis símbolos UNKNOWN/BLOCKED.
 
 - 1.7.0 — 2026-10-12 — ampliado probe a 15 ficheiros e corrigido falso positivo DOLX11.
+
+
+## Checkpoint — continuidade de validação offline B3 — 2026-10-12
+
+### Evidência confirmada
+
+1. A matriz de cobertura dos seis símbolos foi produzida a partir do catálogo BVBG.028.02: 120.973 registos, 32 campos, 70 contratos futuros datados encontrados nas famílias IND (12), WIN (11), DOL (24) e WDO (23). Não há correspondência exata no campo `TckrSymb` para IND, INDFUT, DOL, DOFUT, WIN ou WDO. Não inferir aliases.
+2. O probe dos 15 CSVs diários armazenados (2026-09-21 a 2026-10-09) processou 253.156 registos e não encontrou correspondências exatas para os seis símbolos-base. O candidato regex-only `DOLX11` não foi confirmado como futuro.
+3. A execução B3 FASE10 2005 comprovou hash RAW/NORMALIZED, 181.408 registos por lado, 25 campos e zero divergências. DS-46 permanece parcial, apenas para o objeto de 2005.
+4. A árvore anual lista 41 RAW ZIPs/manifests e 21 CSVs normalizados anuais (1986–2005 e 2026). Os CSVs canónicos de 2006–2025 não aparecem listados. O manifesto de 2006 declara `VALIDADO`, mas o CSV canónico retorna 404.
+
+### Ação corretiva preparada
+
+Foi criada a branch B3 `feat/cotahist-2006-offline-recovery`, com FASE01–FASE11, validação independente pós-recuperação, Gate 06–08 e documentação. Usa apenas o RAW já armazenado e não altera manifestos/sidecars para forçar aprovação. A tentativa de abrir PR via integração devolveu 403; a branch não foi integrada nem executada. A `main` B3 permanece inalterada. Comparação: https://github.com/carlos-andrade/B3/compare/main...feat/cotahist-2006-offline-recovery.
+
+### Bloqueios novos
+
+- Certificação anual automática e gerador do dataset oficial falharam para 1998 porque o manifesto usa parser 1.1.1 e o script exige 1.1.0.
+- O sidecar SHA-256 de 1998 diverge do hash declarado no manifesto/ponteiro LFS. A correção depende de verificar bytes reais; não atualizar hashes por inferência.
+- O workflow de certificação avisou que o CSV de 1987 não era ponteiro LFS como esperado; investigar política de armazenamento.
+- COTAHIST é EOD e não demonstra cobertura semântica da abertura dos seis símbolos de futuros.
+
+### Estado do Módulo 002
+
+- DS-45: `PARTIAL_PASS_BLOCKED_2006_2025` — inventário estrutural feito; reconciliação integral de conteúdo/hash pendente.
+- DS-46: `PARTIAL_PASS_2005` — somente 2005 tem prova CI de hash físico e reconciliação independente.
+- DS-47: `PASS` limitado à extração do catálogo.
+- DS-48: `PASS` limitado ao guardrail de não inferência de aliases.
+- DS-49: `PASS` limitado ao probe EOD de 15 pregões.
+- Abertura dos seis símbolos: `UNKNOWN/BLOCKED`.
+- Sem compilação NTSL/Profit, replay, backtest ou ordens.
+
+### Próximos gates
+
+1. Rever e integrar a proposta B3 de recuperação 2006 por processo autorizado; só depois observar a execução real das fases.
+2. Resolver a compatibilidade do parser 1.1.1 e a divergência de hash de 1998 com evidência independente.
+3. Verificar o objeto LFS de 1987 e restantes anos, sem tratar ponteiros como conteúdo verificado.
+4. Executar DS-45 integralmente e expandir DS-46 para objetos restantes.
+5. Manter os seis símbolos bloqueados até existir fonte histórica armazenada que prove código/contrato, campo de abertura e semântica aplicável.
+
+- 1.8.0 — 2026-10-12 — checkpoint atualizado com evidências DS-47–DS-49, proposta de recuperação 2006 não integrada e falhas anuais de 1998/1987.
