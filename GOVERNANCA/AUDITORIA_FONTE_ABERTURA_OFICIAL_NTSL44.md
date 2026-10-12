@@ -5,7 +5,7 @@ tipo_documento: "AUDITORIA_DE_FONTE"
 fase: "FASE_02_DADOS_SESSAO_ABERTURA"
 id_documento: "BM-DATA-001-AUDITORIA-FONTE-NTSl44"
 titulo: "Auditoria documental — candidatos à abertura oficial no Manual NTSL 4.4"
-status: "REVISAO_DOCUMENTAL; VALIDACAO_PROFIT_PENDENTE; MATRIZ_WINFUT_DOLFUT_60K_DEFINIDA"
+status: "REVISAO_DOCUMENTAL; VALIDACAO_PROFIT_PENDENTE; MATRIZ_INDFUT_DOFUT_SEM_RESTRICAO_60K"
 versao: "0.3.0"
 data_criacao: "2026-10-12"
 data_atualizacao: "2026-10-12"
@@ -42,24 +42,24 @@ O Manual 4.4 oferece candidatos para investigação — `OpenD(0)`, `OpenDaily(0
 
 ## Plano de verificação no Profit
 
-Registar separadamente para WINFUT e DOLFUT, em cada data de pregão, usando gráfico de 60.000 ticks:
+Registar separadamente para INDFUT e DOFUT, em cada data de pregão, usando a configuração de gráfico efetivamente escolhida no Profit, sem requisito de 60.000 ticks:
 - ticker/contrato e vencimento, plataforma/feed e versão do Profit;
 - nome e semântica do campo de abertura exibido pela plataforma, com captura ou exportação;
 - sessão/fuso e tratamento de leilão, se aplicável;
 - valores de `OpenD(0)`, `OpenDaily(0)`, `Open` e série diária explicitamente configurada, sem assumir equivalência;
 - valor oficial de referência disponível na plataforma ou numa fonte oficial aprovada;
-- comparação dos valores em gráfico temporal e gráfico de ticks, incluindo 60K, no início da sessão e após carregar/reprocessar o gráfico;
+- comparação dos valores na configuração de gráfico efetivamente usada no Profit, sem exigir 60.000 ticks, no início da sessão e após carregar/reprocessar o gráfico;
 - timestamp, modo (histórico/replay/tempo real), discrepâncias e evidências anexadas ao repositório.
 
 Critério: aprovar uma combinação fonte/campo/instrumento apenas após equivalência demonstrada em casos repetíveis e tratamento explícito de ausências, atrasos e divergências. Até lá, a referência mantém-se `UNKNOWN`/pendente e o Módulo 001 não deve tratar níveis como confirmados.
 
-## Matriz de validação escolhida — WINFUT e DOLFUT / 60.000 ticks
+## Matriz de validação atual — INDFUT e DOFUT / gráfico sem restrição de periodicidade
 
-A execução será feita nos dois instrumentos, sem presumir que a mesma fonte/campo serve para ambos. Cada linha de evidência deve identificar contrato/vencimento e data do pregão.
+A execução será feita nos dois símbolos solicitados, sem presumir que a mesma fonte/campo serve para ambos. Não é exigido gráfico de 60.000 ticks. Cada linha de evidência deve identificar o símbolo real no Profit, código de negociação B3, contrato/vencimento e data do pregão.
 
 | Dimensão | WINFUT | DOLFUT | Regra de aceitação |
 |---|---|---|---|
-| Gráfico principal | 60.000 ticks | 60.000 ticks | Confirmar que o tipo de gráfico está efetivamente configurado para 60.000 ticks |
+| Gráfico utilizado | Configuração real no Profit | Configuração real no Profit | Registar tipo/periodicidade usados; não exigir 60.000 ticks |
 | Referência da plataforma | Registar campo e valor visível | Registar campo e valor visível | Captura/exportação identificável, não valor inferido visualmente sem contexto |
 | `Open` | Registar valor observado | Registar valor observado | Tratar como abertura do candle, não presumir abertura oficial |
 | `OpenD(0)` | Registar valor observado | Registar valor observado | Candidato; não aprovar sem comparação repetível |
@@ -70,10 +70,10 @@ A execução será feita nos dois instrumentos, sem presumir que a mesma fonte/c
 
 ### Procedimento de recolha
 
-1. Abrir o WINFUT num gráfico de 60.000 ticks no Profit e registar o contrato/vencimento, data, feed, versão da plataforma, sessão e fuso.
+1. Abrir o símbolo INDFUT no Profit e registar o código efetivo, contrato/vencimento, tipo de gráfico, data, feed, versão da plataforma, sessão e fuso. Confirmar a correspondência com o cadastro/código B3; não assumir equivalência pelo nome.
 2. Registar o campo de abertura oficial apresentado pela plataforma e a evidência visual/exportada com timestamp.
 3. Sem alterar o gráfico, observar e anotar separadamente `Open`, `OpenD(0)`, `OpenDaily(0)` e a série diária explícita disponível. Se a função não compilar, não estiver disponível ou não devolver valor, registar isso — não substituir silenciosamente.
-4. Repetir no DOLFUT, com os mesmos campos de metadados.
+4. Repetir no símbolo DOFUT, com os mesmos campos de metadados e confirmação de correspondência B3.
 5. Comparar cada candidato com o campo de referência oficial no início da sessão e após recarregar/reprocessar o gráfico. Anotar diferenças em pontos, timestamp e contexto.
 6. Repetir em outra sessão de pregão antes de aprovar uma fonte/campo por instrumento. Uma coincidência isolada não certifica equivalência.
 7. Anexar capturas/exports e a tabela preenchida ao repositório antes de alterar o estado de qualquer teste para PASS.
@@ -97,7 +97,7 @@ Achados documentais:
 - `docs/ingestao/PARTE03_B3_INTRADAY_CONTRATO_V1.0.md` e `docs/ingestao/PARTE03_NEGOCIO_A_NEGOCIO_CONTRATO_V1.1.md` indicam que a captura dos binários intraday/negócio a negócio e a validação do dataset continuam pendentes no estado documentado.
 - O ficheiro COTAHIST diário de 2026-10-09 tem manifesto `VALIDADO`, 19.213 linhas e 25 campos. A leitura pesquisável do CSV não encontrou linhas com os símbolos `WIN` ou `WDO`; este resultado não prova ausência em todas as datas, mas não fornece uma abertura de contrato para os instrumentos-alvo.
 
-Conclusão: o B3 contém metodologia e dados diários EOD, incluindo um campo de abertura diária, mas a evidência encontrada não fornece valores certificados de abertura para WINFUT/DOLFUT no contexto específico de um gráfico Profit de 60.000 ticks. COTAHIST/EOD não substitui a validação do campo de abertura efetivamente utilizado pelo Profit, nem comprova o comportamento de `Open`, `OpenD(0)` ou `OpenDaily(0)`.
+Conclusão: o B3 contém metodologia e dados diários EOD, incluindo um campo de abertura diária, mas a evidência encontrada não fornece valores certificados de abertura para INDFUT/DOFUT no contexto específico do Profit, sem restrição a gráfico de 60.000 ticks. COTAHIST/EOD não substitui a validação do campo de abertura efetivamente utilizado pelo Profit, nem comprova o comportamento de `Open`, `OpenD(0)` ou `OpenDaily(0)`. A documentação B3 consultada usa WIN/WDO como instrumentos-alvo noutro contrato de ingestão; a correspondência com INDFUT/DOFUT continua por confirmar.
 
 Referências B3:
 - https://github.com/carlos-andrade/B3/blob/main/docs/ingestao/PARTE01_CONTRATO_NORMALIZED_COTAHIST_V1.0.md
