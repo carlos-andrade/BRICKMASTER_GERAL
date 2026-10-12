@@ -6,7 +6,7 @@ fase: "GOVERNANCA_E_ROADMAP_00_08"
 id_documento: "BM-CKPT-ROADMAP-2026-10-11-001"
 titulo: "Checkpoint mestre — execução do roadmap BRICKMASTER 00–08"
 status: "CHECKPOINT_ATUAL; FASES_TECNICAS_AINDA_NAO_VALIDADAS"
-versao: "1.1.0"
+versao: "1.2.0"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-12"
 origem: "Execução GitHub e auditorias registadas nesta sessão"
@@ -167,3 +167,14 @@ DS-47 e DS-48 foram executados com resultado PASS, com escopo restrito ao parsin
 O plano passa a 48 casos: DS-47 e DS-48 PASS; DS-45 (reconciliação dos anos normalizados) e DS-46 (download e SHA-256 independente de objetos LFS) continuam NOT_RUN. Não houve execução NTSL/Profit, replay, backtest ou ordens.
 
 - 1.1.0 — 2026-10-12 — catálogo BVBG.028.02 processado; 70 contratos extraídos; DS-47/48 PASS com limites explícitos; aliases sem correspondência exata permanecem bloqueados.
+
+
+## Correção dinâmica da cobertura COTAHIST — 2026-10-12 13:07 UTC
+
+A auditoria B3 foi reconsultada após a sequência automática de workflows de 2005. O estado mudou: `COTAHIST_A2005.csv` agora está listado em `dados/cotahist/normalized/anual/` e o respetivo manifesto declara `VALIDADO`, 181.408 linhas, 25 campos e período 2005-01-03 a 2005-12-29. O ponteiro LFS declara SHA-256 `9fe7ee30e135223f5d414d7ed678f2973645c2f8779f7e94b7a148794e6a847c` e tamanho 23.748.257 bytes; o conteúdo físico não foi re-hashado independentemente neste ambiente.
+
+A pasta anual lista 21 CSVs (1986–2005 e 2026) e 41 manifests (1986–2026). `COTAHIST_A2006.csv` ainda não aparece no caminho canónico; a FASE00 de 2006 concluiu com sucesso, mas não certifica a normalização. A lacuna atual é 2006–2025. A issue [B3 #6](https://github.com/carlos-andrade/B3/issues/6) foi atualizada com esta correção.
+
+Não marcar DS-45 ou DS-46 como PASS: a reconciliação anual completa e a verificação física independente de LFS continuam pendentes. Os dados COTAHIST permanecem EOD; não demonstram abertura oficial dos seis símbolos de futuros nem substituem dados intraday. DS-47/DS-48 continuam PASS apenas para extração do catálogo/guardrail de não-inferência. Nenhum teste NTSL/Profit, replay, backtest ou ordem foi executado.
+
+- 1.2.0 — 2026-10-12 — atualização dinâmica da cobertura após materialização de COTAHIST 2005; lacuna atual 2006–2025; hashes LFS continuam declarados, não recalculados localmente.
