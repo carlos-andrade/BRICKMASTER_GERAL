@@ -6,7 +6,7 @@ fase: "FASE_02_DADOS_SESSAO_ABERTURA"
 id_documento: "BM-DATA-002-AUDITORIA-B3-COBERTURA-2026-10-12"
 titulo: "Auditoria de cobertura B3 — COTAHIST, Git LFS e market data"
 status: "AUDITORIA_DA_ARVORE_CONCLUIDA; COBERTURA_SEMANTICA_DOS_SEIS_SIMBOLOS_NAO_CONFIRMADA"
-versao: "1.4.0"
+versao: "1.5.0"
 data_criacao: "2026-10-12"
 data_atualizacao: "2026-10-12"
 origem: "Inspeção de diretórios, manifests, metadados Git LFS e documentação no repositório público carlos-andrade/B3"
@@ -166,3 +166,19 @@ Resultado registado no log:
 **Correção de escopo:** o objeto NORMALIZED de 2005 tem prova de integridade via CI; não foi recalculado localmente nesta sessão. Isto constitui progresso parcial do requisito LFS, não certifica todos os objetos anuais. DS-46 fica `PARTIAL_PASS_2005`; os restantes objetos LFS continuam sem prova independente. DS-45 continua NOT_RUN e o problema 2006 persiste: manifesto `VALIDADO` sem CSV canónico listado.
 
 - 1.4.0 — 2026-10-12 — incorporada evidência CI de SHA-256 físico e validação independente de COTAHIST 2005; DS-46 passa parcialmente apenas para 2005.
+
+
+## Probe offline de cobertura COTAHIST — pregão 2026-10-09
+
+Foi processado o CSV diário versionado `dados/cotahist/normalized/diario/COTAHIST_D09102026.csv`, identificado pelo Git blob SHA `ec8c33a699f2ef5b1bb88b919b30852b904a069b` (SHA Git, não SHA-256). O manifesto correspondente declara `VALIDADO`, 19.213 registos, 25 campos, data 2026-10-09 e SHA-256 normalizado `f39ec9919b27aa5716a2aa4cebea852f38849389067627238bf2bcf8e17eeed2`.
+
+Resultado do parsing do conteúdo armazenado:
+- 19.213 registos de dados e 25 campos.
+- Correspondências exatas em `CODNEG` para `IND`, `INDFUT`, `DOL`, `DOFUT`, `WIN` e `WDO`: zero.
+- Tickers que começam por `IND`, `WIN` ou `WDO`: zero.
+- Quatro tickers começam por `DOL`: `DOLA11`, `DOLB11`, `DOLX11`, `DOLL39`. Nenhum corresponde ao padrão de contrato futuro datado usado nesta extração. Isto demonstra que correspondência por prefixo, isoladamente, gera falsos positivos.
+- Nenhuma correspondência de contrato futuro datado para as quatro famílias-alvo foi encontrada nesta data.
+
+A evidência foi persistida em `MODULOS/002-RELOGIO-SESSAO-ABERTURA/data/PROBE_COTAHIST_D09102026_COBERTURA_SIMBOLOS.csv`; DS-49 fica PASS apenas para este probe negativo de uma data. Não prova ausência em todos os dias, anos ou fontes. COTAHIST é EOD e este resultado não valida a abertura dos seis símbolos. DS-45 continua NOT_RUN; DS-46 é PARTIAL_PASS_2005 apenas para o objeto COTAHIST 2005.
+
+- 1.5.0 — 2026-10-12 — probe offline de 2026-10-09 executado e registado; DS-49 PASS com escopo de uma data; prefixos DOL não tratados como contratos automaticamente.
