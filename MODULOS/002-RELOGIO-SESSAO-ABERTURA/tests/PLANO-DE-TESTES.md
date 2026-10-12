@@ -5,8 +5,8 @@ tipo_documento: "PLANO_DE_TESTES"
 fase: "FASE_02_DADOS_SESSAO_ABERTURA"
 id_documento: "BM-DATA-001-TESTES"
 titulo: "Plano de testes — Relógio, sessão e abertura"
-status: "PLANEADO; NAO_EXECUTADO; SEIS_SIMBOLOS_DADOS_ARMAZENADOS_OFFLINE"
-versao: "0.8.0"
+status: "PLANEADO; 46_CASOS_NOT_RUN; AUDITORIA_DE_COBERTURA_B3_EM_CURSO"
+versao: "0.9.0"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-12"
 origem: "Contrato BM-DATA-001-ESPECIFICACAO"
@@ -91,9 +91,12 @@ Usar somente arquivos já armazenados em `carlos-andrade/B3`. Primeiro verificar
 | DS-42 | Ausência de dados de Profit em tempo real | Confirmar que os testes offline não exigem feed/exportação live nem simulam saída de funções NTSL | NOT_RUN |
 | DS-43 | Campo oficial de abertura armazenado | Verificar no layout e no arquivo real se existe campo de abertura aplicável ao contrato; se não existir, registrar lacuna | NOT_RUN |
 | DS-44 | Lacuna de dados e bloqueio | Se não houver arquivo/campo/contrato comprovado, manter `UNKNOWN/BLOCKED` e encaminhar pedido de atualização para B3 issue #6 | NOT_RUN |
+| DS-45 | Reconciliação anual B3 | Comparar anos/arquivos RAW, CSVs normalizados e manifests; bloquear anos com artefacto normalizado ausente ou divergente | NOT_RUN |
+| DS-46 | Integridade de objeto Git LFS | Obter o objeto real, recalcular SHA-256 e comparar com o ponteiro LFS e manifest; não aceitar metadados como hash recalculado | NOT_RUN |
 
 ## Histórico de versões
 
+- 0.9.0 — 2026-10-12 — acrescentados DS-45 e DS-46 após auditoria da árvore B3: reconciliação RAW/normalizado/manifests e verificação independente de objetos Git LFS; total de 46 casos, todos NOT_RUN.
 - 0.8.0 — 2026-10-12 — reorientado para dados históricos armazenados, sem Profit em tempo real; DS-18–DS-23 reespecificados para cobertura e determinismo offline; DS-27–DS-38 reespecificados; DS-39–DS-44 adicionados para integridade, cobertura e lacunas.
 - 0.7.0 — 2026-10-12 — matriz ampliada a INDFUT, DOFUT, IND, DOL, WIN e WDO; adicionados DS-27–DS-38 para configuração, comparação de candidatos e persistência em IND/DOL/WIN/WDO; todos os casos permanecem NOT_RUN.
 - 0.6.0 — 2026-10-12 — acrescentado DS-26 para validar o mapeamento entre aliases Profit e códigos oficiais B3 IND/DOL; todos os casos permanecem NOT_RUN.
