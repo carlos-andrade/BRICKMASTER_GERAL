@@ -6,7 +6,7 @@ fase: "GOVERNANCA_E_ROADMAP_00_08"
 id_documento: "BM-CKPT-ROADMAP-2026-10-11-001"
 titulo: "Checkpoint mestre — execução do roadmap BRICKMASTER 00–08"
 status: "CHECKPOINT_ATUAL; FASES_TECNICAS_AINDA_NAO_VALIDADAS"
-versao: "1.2.0"
+versao: "1.3.0"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-12"
 origem: "Execução GitHub e auditorias registadas nesta sessão"
@@ -178,3 +178,12 @@ A pasta anual lista 21 CSVs (1986–2005 e 2026) e 41 manifests (1986–2026). `
 Não marcar DS-45 ou DS-46 como PASS: a reconciliação anual completa e a verificação física independente de LFS continuam pendentes. Os dados COTAHIST permanecem EOD; não demonstram abertura oficial dos seis símbolos de futuros nem substituem dados intraday. DS-47/DS-48 continuam PASS apenas para extração do catálogo/guardrail de não-inferência. Nenhum teste NTSL/Profit, replay, backtest ou ordem foi executado.
 
 - 1.2.0 — 2026-10-12 — atualização dinâmica da cobertura após materialização de COTAHIST 2005; lacuna atual 2006–2025; hashes LFS continuam declarados, não recalculados localmente.
+
+
+## Bloqueio adicional de integridade anual — COTAHIST 2006 — 2026-10-12
+
+O manifesto `COTAHIST_A2006_quality.json` declara `VALIDADO`, 198.367 linhas, 25 campos, período 2006-01-02 a 2006-12-28 e SHA-256 normalizado `d9025ebcc01413111c67a0bb573f4ff2676aae2105e8204f19d13f9a313ee69d`; contudo, `dados/cotahist/normalized/anual/COTAHIST_A2006.csv` não aparece na árvore e o caminho devolve 404. O estado correto é `MANIFEST_PRESENTE / CSV_CANÓNICO_AUSENTE / UNKNOWN-BLOCKED` até que o artefacto físico seja materializado e verificado ou o manifesto corrigido. A issue [B3 #6](https://github.com/carlos-andrade/B3/issues/6) foi atualizada.
+
+A cobertura atual observada é 21 CSVs anuais (1986–2005 e 2026), 41 manifests (1986–2026), e ausência de CSV canónico listado para 2006–2025. A FASE00 de 2006 com sucesso não certifica a normalização. Não declarar DS-45/DS-46 concluídos. Nenhum teste NTSL/Profit, replay, backtest ou ordem.
+
+- 1.3.0 — 2026-10-12 — registada discrepância entre manifesto VALIDADO e CSV normalizado ausente para 2006; estado bloqueado até prova física.
