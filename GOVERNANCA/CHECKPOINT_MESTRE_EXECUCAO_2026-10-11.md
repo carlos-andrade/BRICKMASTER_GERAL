@@ -6,7 +6,7 @@ fase: "GOVERNANCA_E_ROADMAP_00_08"
 id_documento: "BM-CKPT-ROADMAP-2026-10-11-001"
 titulo: "Checkpoint mestre — execução do roadmap BRICKMASTER 00–08"
 status: "CHECKPOINT_ATUAL; FASES_TECNICAS_AINDA_NAO_VALIDADAS"
-versao: "1.0.9"
+versao: "1.1.0"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-12"
 origem: "Execução GitHub e auditorias registadas nesta sessão"
@@ -151,3 +151,19 @@ O plano de testes passa de 44 para 46 casos com DS-45 (reconciliação RAW/norma
 5. Não promover para `main` até revisão e validação dos portões.
 
 - 1.0.9 — 2026-10-12 — auditoria complementar B3; identificada divergência entre 41 RAW/manifests anuais e 20 CSVs normalizados listados; esclarecido o tratamento de ponteiros Git LFS; plano ampliado para 46 casos NOT_RUN.
+
+
+## Extração efetiva do catálogo B3 — 2026-10-12
+
+Foi processado o conteúdo do CSV versionado `ativos/catalogo/INVENTARIO_B3_2026-09-22.csv`, Git blob SHA `5d88fa0e319d8398e992537de51bda691dc4a5ab` (identificador Git SHA-1, não SHA-256). A extração verificou 120.973 linhas de dados, 32 campos, e 70 contratos futuros datados com ID único, vencimento, multiplicador e CFI preenchidos: 12 IND, 11 WIN, 24 DOL e 23 WDO. Nenhum `TckrSymb` corresponde exatamente aos símbolos `IND`, `INDFUT`, `DOL`, `DOFUT`, `WIN` ou `WDO`.
+
+Evidências:
+- `GOVERNANCA/MAPEAMENTO_CATALOGO_B3_ALIASES_E_CONTRATOS_2026-10-12.md`
+- `MODULOS/002-RELOGIO-SESSAO-ABERTURA/data/MATRIZ_CONTRATOS_FUTUROS_BVBG028_2026-09-22.csv`
+- B3 issue #6: https://github.com/carlos-andrade/B3/issues/6
+
+DS-47 e DS-48 foram executados com resultado PASS, com escopo restrito ao parsing e ao guardrail de não-inferência. **Isto não valida o mapeamento de aliases Profit**: `INDFUT`/ `DOFUT` permanecem UNKNOWN/BLOCKED; os símbolos-base também não são contratos exatos no campo `TckrSymb`. O catálogo não contém preços de abertura nem dados de OHLC/negócios.
+
+O plano passa a 48 casos: DS-47 e DS-48 PASS; DS-45 (reconciliação dos anos normalizados) e DS-46 (download e SHA-256 independente de objetos LFS) continuam NOT_RUN. Não houve execução NTSL/Profit, replay, backtest ou ordens.
+
+- 1.1.0 — 2026-10-12 — catálogo BVBG.028.02 processado; 70 contratos extraídos; DS-47/48 PASS com limites explícitos; aliases sem correspondência exata permanecem bloqueados.
