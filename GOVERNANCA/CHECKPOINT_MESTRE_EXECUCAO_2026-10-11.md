@@ -6,7 +6,7 @@ fase: "GOVERNANCA_E_ROADMAP_00_08"
 id_documento: "BM-CKPT-ROADMAP-2026-10-11-001"
 titulo: "Checkpoint mestre — execução do roadmap BRICKMASTER 00–08"
 status: "CHECKPOINT_ATUAL; FASES_TECNICAS_AINDA_NAO_VALIDADAS"
-versao: "1.0.4"
+versao: "1.0.5"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-12"
 origem: "Execução GitHub e auditorias registadas nesta sessão"
@@ -105,7 +105,11 @@ O utilizador aprovou a política B para o Módulo 002: preço oficial de abertur
 
 ## Verificação cruzada B3 — 2026-10-12
 
-O repositório `carlos-andrade/B3` foi consultado para a fonte de abertura. O contrato COTAHIST documenta `preabe` como preço de abertura EOD; a camada Market Data classifica BVBG.186.01/BVBG.187.01 como EOD e não tick-by-tick; a documentação intraday/negócio a negócio consultada ainda marca a captura dos binários como pendente. Isso não certifica a abertura usada pelo Profit em WINFUT/DOLFUT no gráfico de 60.000 ticks. Mantêm-se os testes práticos `NOT_RUN` e a fonte do Módulo 002 não certificada.
+O repositório `carlos-andrade/B3` foi consultado para a fonte de abertura. O contrato COTAHIST documenta `preabe` como preço de abertura EOD; a camada Market Data classifica BVBG.186.01/BVBG.187.01 como EOD e não tick-by-tick; a documentação intraday/negócio a negócio consultada ainda marca a captura dos binários como pendente. Isso não certifica a abertura usada pelo Profit em INDFUT/DOFUT. O tipo de gráfico não é restringido a 60.000 ticks. Mantêm-se os testes práticos `NOT_RUN` e a fonte do Módulo 002 não certificada.
 
-- 1.0.4 — 2026-10-12 — verificação cruzada do B3 registada; dados EOD distinguidos da validação Profit 60K.
-\n\n## Correção de escopo — 2026-10-12\n\nO utilizador alterou os instrumentos-alvo para INDFUT e DOFUT e determinou desconsiderar o gráfico de 60.000 ticks. A matriz de validação deve usar a configuração real escolhida no Profit, sem requisito de periodicidade fixa. A correspondência dos símbolos Profit com os códigos/contratos B3 precisa ser documentada antes de comparar valores. Os testes permanecem NOT_RUN; esta alteração é documental e não certifica a fonte de abertura.\n
+- 1.0.4 — 2026-10-12 — verificação cruzada do B3 registada; dados EOD distinguidos da validação Profit.\n- 1.0.5 — 2026-10-12 — correção do escopo para INDFUT/DOFUT; gráfico de 60.000 ticks desconsiderado; mapeamento B3/contrato pendente.
+
+
+## Correção de escopo — 2026-10-12
+
+O utilizador alterou os instrumentos-alvo para INDFUT e DOFUT e determinou desconsiderar o gráfico de 60.000 ticks. A matriz de validação deve usar a configuração real escolhida no Profit, sem requisito de periodicidade fixa. A correspondência dos símbolos Profit com os códigos/contratos B3 precisa ser documentada antes de comparar valores. Os testes permanecem NOT_RUN; esta alteração é documental e não certifica a fonte de abertura.
