@@ -6,7 +6,7 @@ fase: "FASE_02_DADOS_SESSAO_ABERTURA"
 id_documento: "BM-DATA-002-AUDITORIA-B3-COBERTURA-2026-10-12"
 titulo: "Auditoria de cobertura B3 — COTAHIST, Git LFS e market data"
 status: "AUDITORIA_DA_ARVORE_CONCLUIDA; COBERTURA_SEMANTICA_DOS_SEIS_SIMBOLOS_NAO_CONFIRMADA"
-versao: "1.1.0"
+versao: "1.2.0"
 data_criacao: "2026-10-12"
 data_atualizacao: "2026-10-12"
 origem: "Inspeção de diretórios, manifests, metadados Git LFS e documentação no repositório público carlos-andrade/B3"
@@ -125,3 +125,18 @@ Evidência atual consultada em `main`:
 **Estado corrigido:** a lacuna de materialização anual observada na consulta atual é 2006–2025 (20 anos), não 2005–2025. O número de CSVs versionados é 21, não 20. A cobertura dos instrumentos-alvo e a semântica EOD para futuros continuam por comprovar. A lista deve continuar a ser atualizada porque os workflows B3 estão a avançar por fases.
 
 A solicitação foi atualizada em [B3 issue #6](https://github.com/carlos-andrade/B3/issues/6). Os testes DS-45 (reconciliação completa) e DS-46 (verificação física independente de LFS) permanecem `NOT_RUN`.
+
+
+## Discrepância de 2006: manifesto sem CSV canónico — 2026-10-12
+
+A reconsulta da árvore B3 encontrou uma divergência específica para 2006:
+
+- O manifesto `dados/cotahist/normalized/manifests/COTAHIST_A2006_quality.json` declara `status=VALIDADO`, 198.367 linhas, 25 campos, período 2006-01-02 a 2006-12-28 e SHA-256 normalizado declarado `d9025ebcc01413111c67a0bb573f4ff2676aae2105e8204f19d13f9a313ee69d`.
+- A consulta ao caminho `dados/cotahist/normalized/anual/COTAHIST_A2006.csv` devolve 404 e o ficheiro não aparece na listagem da pasta anual.
+- A FASE00 de governança 2006 concluiu com `success`, mas não certifica a existência física do CSV.
+
+Classificação: `MANIFEST_PRESENTE / CSV_CANÓNICO_AUSENTE / UNKNOWN-BLOCKED`. Não aceitar o estado do manifesto como substituto do arquivo. A B3 issue #6 foi atualizada para pedir materialização/prova física do CSV, ou correção do manifesto se prematuro.
+
+O estado atual observado é: 21 CSVs listados (1986–2005 e 2026), 41 manifests anuais (1986–2026), com 2006–2025 sem CSV canónico listado. Em 2006 há evidência de manifesto mas falta o artefacto no caminho esperado. Hashes declarados por ponteiro/manifesto não foram recalculados fisicamente neste ambiente.
+
+DS-45 continua NOT_RUN porque a reconciliação anual completa não está concluída; DS-46 continua NOT_RUN porque não houve download LFS e verificação independente do SHA-256. A lacuna de abertura para futuros permanece separada desta auditoria COTAHIST.
