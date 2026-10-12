@@ -6,7 +6,7 @@ fase: "FASE_02_DADOS_SESSAO_ABERTURA"
 id_documento: "BM-DATA-002-AUDITORIA-B3-COBERTURA-2026-10-12"
 titulo: "Auditoria de cobertura B3 — COTAHIST, Git LFS e market data"
 status: "AUDITORIA_DA_ARVORE_CONCLUIDA; COBERTURA_SEMANTICA_DOS_SEIS_SIMBOLOS_NAO_CONFIRMADA"
-versao: "1.2.0"
+versao: "1.3.0"
 data_criacao: "2026-10-12"
 data_atualizacao: "2026-10-12"
 origem: "Inspeção de diretórios, manifests, metadados Git LFS e documentação no repositório público carlos-andrade/B3"
@@ -140,3 +140,14 @@ Classificação: `MANIFEST_PRESENTE / CSV_CANÓNICO_AUSENTE / UNKNOWN-BLOCKED`. 
 O estado atual observado é: 21 CSVs listados (1986–2005 e 2026), 41 manifests anuais (1986–2026), com 2006–2025 sem CSV canónico listado. Em 2006 há evidência de manifesto mas falta o artefacto no caminho esperado. Hashes declarados por ponteiro/manifesto não foram recalculados fisicamente neste ambiente.
 
 DS-45 continua NOT_RUN porque a reconciliação anual completa não está concluída; DS-46 continua NOT_RUN porque não houve download LFS e verificação independente do SHA-256. A lacuna de abertura para futuros permanece separada desta auditoria COTAHIST.
+
+
+## Matriz operacional por símbolo — 2026-10-12
+
+Foi criada a matriz CSV de cobertura dos seis símbolos, com uma linha por símbolo e campos para correspondência exata do catálogo, família de contratos datados, estado COTAHIST EOD, lacunas de anos, presença de intraday/tick, campo de abertura, estado do alias e próxima ação:
+
+`MODULOS/002-RELOGIO-SESSAO-ABERTURA/data/MATRIZ_COBERTURA_SEIS_SIMBOLOS_2026-10-12.csv`
+
+A matriz distingue família de contrato da resolução do alias Profit. Todos os seis permanecem `UNKNOWN/BLOCKED` para validação de abertura; `INDFUT` e `DOFUT` não são associados a IND/DOL por inferência. A situação de COTAHIST 2006 continua `MANIFEST_PRESENTE / CSV_CANÓNICO_AUSENTE`.
+
+- 1.3.0 — 2026-10-12 — adicionada matriz operacional CSV dos seis símbolos, com fonte, granularidade, cobertura e bloqueios.
