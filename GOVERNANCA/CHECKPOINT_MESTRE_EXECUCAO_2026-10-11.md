@@ -6,7 +6,7 @@ fase: "GOVERNANCA_E_ROADMAP_00_08"
 id_documento: "BM-CKPT-ROADMAP-2026-10-11-001"
 titulo: "Checkpoint mestre — execução do roadmap BRICKMASTER 00–08"
 status: "CHECKPOINT_ATUAL; FASES_TECNICAS_AINDA_NAO_VALIDADAS"
-versao: "1.3.0"
+versao: "1.4.0"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-12"
 origem: "Execução GitHub e auditorias registadas nesta sessão"
@@ -187,3 +187,15 @@ O manifesto `COTAHIST_A2006_quality.json` declara `VALIDADO`, 198.367 linhas, 25
 A cobertura atual observada é 21 CSVs anuais (1986–2005 e 2026), 41 manifests (1986–2026), e ausência de CSV canónico listado para 2006–2025. A FASE00 de 2006 com sucesso não certifica a normalização. Não declarar DS-45/DS-46 concluídos. Nenhum teste NTSL/Profit, replay, backtest ou ordem.
 
 - 1.3.0 — 2026-10-12 — registada discrepância entre manifesto VALIDADO e CSV normalizado ausente para 2006; estado bloqueado até prova física.
+
+
+## Matriz consolidada dos seis símbolos — 2026-10-12
+
+Artefacto persistido:
+`MODULOS/002-RELOGIO-SESSAO-ABERTURA/data/MATRIZ_COBERTURA_SEIS_SIMBOLOS_2026-10-12.csv`
+
+A matriz regista, para INDFUT, DOFUT, IND, DOL, WIN e WDO, a correspondência exata observada no BVBG.028.02, a família de contratos datados encontrada, o estado das fontes EOD/intraday, a lacuna anual COTAHIST e o estado do campo de abertura. A extração do catálogo encontrou 70 contratos (IND 12, WIN 11, DOL 24, WDO 23), mas zero correspondências exatas dos seis símbolos-base em `TckrSymb`. Todos os símbolos permanecem `UNKNOWN/BLOCKED` para validação de abertura.
+
+O estado COTAHIST foi atualizado dinamicamente: 21 CSVs anuais listados (1986–2005 e 2026), 41 manifests; 2006–2025 sem CSV canónico listado, e 2006 tem manifesto `VALIDADO` sem o CSV no caminho canónico. B3 issue #6 foi atualizada para solicitar a reconciliação.
+
+- 1.4.0 — 2026-10-12 — publicada matriz operacional de cobertura dos seis símbolos; mantém os bloqueios de alias, abertura, anos normalizados e LFS.

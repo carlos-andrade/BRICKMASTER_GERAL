@@ -6,7 +6,7 @@ fase: "FASE_02_DADOS_SESSAO_ABERTURA"
 id_documento: "BM-DATA-003-MAPEAMENTO-CATALOGO-B3-2026-10-12"
 titulo: "Extração do catálogo BVBG.028.02 — famílias de futuros e aliases"
 status: "EXTRACAO_CATALOGO_PASS; MAPEAMENTO_ALIAS_PROFIT_UNKNOWN_BLOCKED"
-versao: "1.0.0"
+versao: "1.0.1"
 data_criacao: "2026-10-12"
 data_atualizacao: "2026-10-12"
 origem: "CSV versionado em carlos-andrade/B3, snapshot de cadastro BVBG.028.02 de 2026-09-22"
@@ -93,3 +93,10 @@ A extração de famílias de contratos e a validação do guardrail de aliases f
 ## Histórico de versões
 
 - 1.0.0 — 2026-10-12 — extraídos 70 contratos futuros datados de 120.973 registos; zero correspondências exatas para os seis símbolos-base; mapeamento dos aliases Profit continua UNKNOWN/BLOCKED.
+
+
+## Matriz consolidada por símbolo
+
+Para consulta operacional por símbolo e fonte, ver `MODULOS/002-RELOGIO-SESSAO-ABERTURA/data/MATRIZ_COBERTURA_SEIS_SIMBOLOS_2026-10-12.csv`. Esta matriz consolida a evidência do catálogo com as lacunas COTAHIST e intraday e mantém os seis símbolos em `UNKNOWN/BLOCKED` para abertura enquanto o alias/contrato e o campo de preço não forem comprovados.
+
+- 1.0.1 — 2026-10-12 — referenciada matriz consolidada de cobertura por símbolo e fonte.
