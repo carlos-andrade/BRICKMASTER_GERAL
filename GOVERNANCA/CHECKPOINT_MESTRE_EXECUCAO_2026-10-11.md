@@ -83,10 +83,10 @@ Há contratos iniciais e planos de teste para as principais fronteiras de dados/
 1. Executar a matriz controlada no Profit para WINFUT e DOLFUT em gráficos de 60.000 ticks, comparando campo oficial da plataforma com `Open`, `OpenD(0)`, `OpenDaily(0)` e série diária explícita.
 2. Registar contrato/vencimento, data, sessão/fuso, versão/feed, timestamps, valores, discrepâncias e capturas/exports no repositório. Manter `UNKNOWN/INVALID` enquanto a fonte não for demonstrada.
 3. Só após evidência repetível, aprovar fonte/campo por instrumento e implementar sessão/abertura e Giroscópio isoladamente.
-3. Resolver os achados estáticos de CumulativeVolume numa variante separada, sem substituir o ficheiro histórico.
-4. Recuperar/definir contratos para Liquidez, Contador de Toques e Market DNA.
-5. Aprovar limites soberanos de risco antes de dimensionar ou autorizar qualquer ordem.
-6. Executar testes no Profit e recolher evidências reproduzíveis antes de promover qualquer release.
+4. Resolver os achados estáticos de CumulativeVolume numa variante separada, sem substituir o ficheiro histórico.
+5. Recuperar/definir contratos para Liquidez, Contador de Toques e Market DNA.
+6. Aprovar limites soberanos de risco antes de dimensionar ou autorizar qualquer ordem.
+7. Executar testes no Profit e recolher evidências reproduzíveis antes de promover qualquer release.
 
 ## Histórico de versões
 
