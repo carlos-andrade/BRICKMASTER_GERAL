@@ -6,7 +6,7 @@ fase: "FASE_02_DADOS_SESSAO_ABERTURA"
 id_documento: "BM-DATA-001-TESTES"
 titulo: "Plano de testes — Relógio, sessão e abertura"
 status: "49_CASOS; DS-47_DS-48_DS-49_PASS_COM_LIMITES; DS-45_NOT_RUN; DS-46_PARTIAL_PASS_2005"
-versao: "1.0.4"
+versao: "1.0.5"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-12"
 origem: "Contrato BM-DATA-001-ESPECIFICACAO"
@@ -95,7 +95,7 @@ Usar somente arquivos já armazenados em `carlos-andrade/B3`. Primeiro verificar
 | DS-46 | Integridade de objeto Git LFS | Obter o objeto real, recalcular SHA-256 e comparar com o ponteiro LFS e manifest; não aceitar metadados como hash recalculado | PARTIAL_PASS_2005 |
 | DS-47 | Extração do catálogo BVBG.028.02 | Processar o CSV versionado, confirmar 120.973 registos/32 campos, extrair contratos futuros datados, verificar IDs e campos mínimos; evidência no relatório de mapeamento | PASS |
 | DS-48 | Guardrail de aliases | Procurar correspondência exata de IND, INDFUT, DOL, DOFUT, WIN e WDO em TckrSymb; não inferir alias a partir de família de contrato. Resultado: zero correspondências exatas; aliases permanecem UNKNOWN/BLOCKED | PASS |
-| DS-49 | Probe COTAHIST EOD por pregão | Processar COTAHIST_D09102026.csv; verificar cabeçalho/contagem e procurar CODNEG exato e padrão de contrato futuro datado para as seis famílias. Resultado limitado a 2026-10-09; prefixo DOL isolado não é correspondência de futuro | PASS |
+| DS-49 | Probe COTAHIST EOD — 15 pregões armazenados | Processar os 15 CSVs de 2026-09-21 a 2026-10-09; verificar 25 campos/contagens, CODNEG exato e candidatos por padrão. Resultado: 253.156 registos, zero aliases exatos; 15 candidatos regex-only DOLX11, não confirmados como futuros pelos campos do registo | PASS |
 
 ## Histórico de versões
 
@@ -142,3 +142,16 @@ Fonte: `dados/cotahist/normalized/diario/COTAHIST_D09102026.csv`; manifesto `COT
 Parsing executado: zero correspondências exatas em `CODNEG` para IND/INDFUT/DOL/DOFUT/WIN/WDO; zero prefixos IND/WIN/WDO; quatro prefixos DOL (`DOLA11`, `DOLB11`, `DOLX11`, `DOLL39`) sem correspondência ao padrão de ticker futuro datado. DS-49 PASS significa que o probe executou e o guardrail de prefixo funcionou; não certifica cobertura em outros pregões ou a fonte de abertura.
 
 - 1.0.4 — 2026-10-12 — DS-49 PASS com escopo de uma data; DS-45 NOT_RUN e DS-46 PARTIAL_PASS_2005 mantidos.
+
+
+## Correção DS-49 — candidatos regex-only versus futuros confirmados
+
+O probe foi ampliado aos 15 CSVs diários versionados entre 2026-09-21 e 2026-10-09. Total: 253.156 registos, 25 campos por ficheiro, zero correspondências exatas em `CODNEG` para os seis símbolos-base. A expressão regular frouxa encontra `DOLX11` uma vez por ficheiro; o registo tem `NOMRES=TREND DOLAR`, `ESPECI=CI`, `TPMERC=010`, `CODBDI=14`, pelo que não foi confirmado como contrato futuro. Não foram confirmados contratos futuros das famílias-alvo neste conjunto.
+
+Artefactos:
+- `PROBE_COTAHIST_D09102026_COBERTURA_SIMBOLOS.csv` — resumo do pregão 2026-10-09, corrigido.
+- `PROBE_COTAHIST_DIARIO_SELECIONADO_20260921_20261009.csv` — contagem por ficheiro, candidatos regex-only e campos de classificação.
+
+DS-49 PASS refere-se à execução do probe e à aplicação do guardrail, não a uma afirmação de ausência universal em COTAHIST. DS-45 permanece NOT_RUN; DS-46 PARTIAL_PASS_2005.
+
+- 1.0.5 — 2026-10-12 — escopo DS-49 ampliado e falso positivo DOLX11 corrigido.
