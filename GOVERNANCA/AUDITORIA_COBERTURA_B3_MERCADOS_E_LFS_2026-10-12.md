@@ -6,7 +6,7 @@ fase: "FASE_02_DADOS_SESSAO_ABERTURA"
 id_documento: "BM-DATA-002-AUDITORIA-B3-COBERTURA-2026-10-12"
 titulo: "Auditoria de cobertura B3 — COTAHIST, Git LFS e market data"
 status: "AUDITORIA_DA_ARVORE_CONCLUIDA; COBERTURA_SEMANTICA_DOS_SEIS_SIMBOLOS_NAO_CONFIRMADA"
-versao: "1.5.0"
+versao: "1.6.0"
 data_criacao: "2026-10-12"
 data_atualizacao: "2026-10-12"
 origem: "Inspeção de diretórios, manifests, metadados Git LFS e documentação no repositório público carlos-andrade/B3"
@@ -176,9 +176,29 @@ Resultado do parsing do conteúdo armazenado:
 - 19.213 registos de dados e 25 campos.
 - Correspondências exatas em `CODNEG` para `IND`, `INDFUT`, `DOL`, `DOFUT`, `WIN` e `WDO`: zero.
 - Tickers que começam por `IND`, `WIN` ou `WDO`: zero.
-- Quatro tickers começam por `DOL`: `DOLA11`, `DOLB11`, `DOLX11`, `DOLL39`. Nenhum corresponde ao padrão de contrato futuro datado usado nesta extração. Isto demonstra que correspondência por prefixo, isoladamente, gera falsos positivos.
-- Nenhuma correspondência de contrato futuro datado para as quatro famílias-alvo foi encontrada nesta data.
+- Quatro tickers começam por `DOL`: `DOLA11`, `DOLB11`, `DOLX11`, `DOLL39`. `DOLX11` também corresponde a uma expressão regular frouxa de ticker futuro, mas os campos disponíveis mostram `NOMRES=TREND DOLAR`, `ESPECI=CI`, `TPMERC=010`, `CODBDI=14`; não é um futuro confirmado. Tanto o prefixo como a expressão regular isolada podem gerar falsos positivos.
+- Nenhum contrato futuro foi confirmado nesta data; foi identificado um candidato regex-only (`DOLX11`) que não pode ser classificado como futuro sem atributos oficiais adicionais.
 
 A evidência foi persistida em `MODULOS/002-RELOGIO-SESSAO-ABERTURA/data/PROBE_COTAHIST_D09102026_COBERTURA_SIMBOLOS.csv`; DS-49 fica PASS apenas para este probe negativo de uma data. Não prova ausência em todos os dias, anos ou fontes. COTAHIST é EOD e este resultado não valida a abertura dos seis símbolos. DS-45 continua NOT_RUN; DS-46 é PARTIAL_PASS_2005 apenas para o objeto COTAHIST 2005.
 
 - 1.5.0 — 2026-10-12 — probe offline de 2026-10-09 executado e registado; DS-49 PASS com escopo de uma data; prefixos DOL não tratados como contratos automaticamente.
+
+
+## Correção e ampliação do probe diário — 15 pregões — 2026-10-12
+
+Uma revisão da regra do probe identificou que a expressão regular `^(IND|DOL|WIN|WDO)[FGHJKMNQUVXZ]\d{2}$` é insuficiente: `DOLX11` corresponde à expressão, mas o CSV diário apresenta `NOMRES=TREND DOLAR`, `ESPECI=CI`, `TPMERC=010`, `CODBDI=14`. A evidência disponível não confirma que esse registo seja um contrato futuro. O probe foi corrigido para separar **candidato sintático** de **contrato futuro confirmado**.
+
+Foram processados todos os 15 CSVs diários listados em `dados/cotahist/normalized/diario/` para datas entre 2026-09-21 e 2026-10-09:
+- 15 ficheiros; 253.156 registos no total; 25 campos por ficheiro.
+- Correspondências exatas em `CODNEG` para os seis símbolos-base: zero.
+- Candidatos regex-only: 15 no total, um por ficheiro, todos `DOLX11`.
+- Contratos futuros confirmados por esta fonte/probe: zero.
+- Prefixos DOL também incluem `DOLA11`, `DOLB11` e `DOLL39`; prefixo não é identidade de contrato.
+
+Artefactos:
+- `MODULOS/002-RELOGIO-SESSAO-ABERTURA/data/PROBE_COTAHIST_D09102026_COBERTURA_SIMBOLOS.csv` — resumo dos seis símbolos no pregão 2026-10-09, corrigido.
+- `MODULOS/002-RELOGIO-SESSAO-ABERTURA/data/PROBE_COTAHIST_DIARIO_SELECIONADO_20260921_20261009.csv` — resumo por cada um dos 15 CSVs e identificação do candidato regex-only.
+
+DS-49 PASS passa a significar que a leitura dos 15 ficheiros, a contagem e o guardrail contra falsos positivos foram executados. Não significa ausência universal de futuros no COTAHIST: o resultado limita-se aos 15 ficheiros armazenados. A cobertura dos seis símbolos e a fonte de abertura continuam UNKNOWN/BLOCKED.
+
+- 1.6.0 — 2026-10-12 — probe ampliado a 15 ficheiros; corrigido falso positivo DOLX11; distinção explícita entre regex-only e futuro confirmado.

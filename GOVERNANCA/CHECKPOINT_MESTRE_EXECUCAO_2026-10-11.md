@@ -6,7 +6,7 @@ fase: "GOVERNANCA_E_ROADMAP_00_08"
 id_documento: "BM-CKPT-ROADMAP-2026-10-11-001"
 titulo: "Checkpoint mestre — execução do roadmap BRICKMASTER 00–08"
 status: "CHECKPOINT_ATUAL; FASES_TECNICAS_AINDA_NAO_VALIDADAS"
-versao: "1.6.0"
+versao: "1.7.0"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-12"
 origem: "Execução GitHub e auditorias registadas nesta sessão"
@@ -217,8 +217,19 @@ A execução [B3 FASE10 2005](https://github.com/carlos-andrade/B3/actions/runs/
 
 ## Probe offline COTAHIST 2026-10-09 — 2026-10-12
 
-Foi processado o CSV diário `COTAHIST_D09102026.csv` armazenado em B3. O manifesto declara VALIDADO, 19.213 registos e 25 campos. No conteúdo lido, as correspondências exatas de `CODNEG` para os seis símbolos foram zero; houve quatro prefixos DOL (`DOLA11`, `DOLB11`, `DOLX11`, `DOLL39`) mas nenhum correspondeu ao padrão de contrato futuro datado. Prefixo isolado é insuficiente para mapear instrumentos.
+Foi processado o CSV diário `COTAHIST_D09102026.csv` armazenado em B3. O manifesto declara VALIDADO, 19.213 registos e 25 campos. No conteúdo lido, as correspondências exatas de `CODNEG` para os seis símbolos foram zero. Os quatro prefixos DOL (`DOLA11`, `DOLB11`, `DOLX11`, `DOLL39`) não bastam para mapear contratos. Uma expressão regular frouxa também encontra `DOLX11`, mas os campos (`NOMRES=TREND DOLAR`, `ESPECI=CI`, `TPMERC=010`, `CODBDI=14`) não confirmam um futuro.
 
 Evidência: `MODULOS/002-RELOGIO-SESSAO-ABERTURA/data/PROBE_COTAHIST_D09102026_COBERTURA_SIMBOLOS.csv`. DS-49 = PASS apenas para o probe de uma data; não prova ausência em outros pregões ou fontes. DS-45 continua NOT_RUN; DS-46 PARTIAL_PASS_2005. A abertura dos seis símbolos permanece UNKNOWN/BLOCKED.
 
 - 1.6.0 — 2026-10-12 — acrescentado probe offline de um pregão e guardrail contra falsos positivos por prefixo.
+
+
+## Correção do probe COTAHIST — 15 pregões selecionados — 2026-10-12
+
+A auditoria foi ampliada aos 15 CSVs diários versionados entre 2026-09-21 e 2026-10-09: 253.156 registos, 25 campos por ficheiro. Foram encontradas zero correspondências exatas para IND/INDFUT/DOL/DOFUT/WIN/WDO. Uma expressão regular frouxa encontrou 15 ocorrências de `DOLX11`, uma por ficheiro; o registo apresenta `NOMRES=TREND DOLAR`, `ESPECI=CI`, `TPMERC=010`, `CODBDI=14` e não está confirmado como futuro. **Candidatos sintáticos não são contratos futuros confirmados.** Não foram confirmados contratos futuros das famílias-alvo neste conjunto diário.
+
+Artefacto por pregão: `MODULOS/002-RELOGIO-SESSAO-ABERTURA/data/PROBE_COTAHIST_DIARIO_SELECIONADO_20260921_20261009.csv`. O artefacto de 2026-10-09 também foi corrigido para registar o candidato regex-only.
+
+DS-49 PASS significa que a leitura e o guardrail foram executados nos 15 ficheiros; o resultado não prova ausência em datas não armazenadas. DS-45 continua NOT_RUN; DS-46 PARTIAL_PASS_2005; abertura dos seis símbolos UNKNOWN/BLOCKED.
+
+- 1.7.0 — 2026-10-12 — ampliado probe a 15 ficheiros e corrigido falso positivo DOLX11.
