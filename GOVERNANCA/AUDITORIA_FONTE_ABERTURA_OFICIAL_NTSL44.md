@@ -6,7 +6,7 @@ fase: "FASE_02_DADOS_SESSAO_ABERTURA"
 id_documento: "BM-DATA-001-AUDITORIA-FONTE-NTSl44"
 titulo: "Auditoria documental — candidatos à abertura oficial no Manual NTSL 4.4"
 status: "REVISAO_DOCUMENTAL; VALIDACAO_PROFIT_PENDENTE; DADOS_HISTORICOS_B3_SEIS_SIMBOLOS_SEM_PROFIT_TEMPO_REAL"
-versao: "0.9.0"
+versao: "1.0.0"
 data_criacao: "2026-10-12"
 data_atualizacao: "2026-10-12"
 origem: "Manual NTSL versão 4.4 — 03-08-2026, ficheiro fornecido no projeto"
@@ -164,3 +164,11 @@ Aguardar/acompanhar a atualização solicitada em B3 issue #6; quando os arquivo
 - 0.3.0 — 2026-10-12 — verificação cruzada do B3; identificada abertura EOD no COTAHIST, mas sem evidência suficiente para certificar WINFUT/DOLFUT em Profit 60K; testes práticos continuam pendentes.
 - 0.2.0 — 2026-10-12 — matriz operacional definida para WINFUT e DOLFUT em gráficos de 60.000 ticks; nenhuma execução no Profit declarada.
 - 0.1.0 — 2026-10-12 — primeira auditoria documental de candidatos à abertura oficial.
+
+
+## Atualização de cobertura histórica B3 — 2026-10-12 13:07 UTC
+
+A extração de catálogo está registada em `GOVERNANCA/MAPEAMENTO_CATALOGO_B3_ALIASES_E_CONTRATOS_2026-10-12.md`. A árvore COTAHIST foi reconsultada depois de novos workflows B3: o CSV anual 2005 passou a constar na pasta normalizada e o manifesto declara `VALIDADO`, 181.408 linhas, 25 campos, período 2005-01-03 a 2005-12-29 e SHA-256 normalizado `9fe7ee30e135223f5d414d7ed678f2973645c2f8779f7e94b7a148794e6a847c`. A árvore lista 21 CSVs (1986–2005 e 2026) e 41 manifests (1986–2026); o CSV anual 2006 ainda não aparece. A lacuna de materialização atualmente observada é 2006–2025.
+
+O hash acima é declarado pelo ponteiro LFS/manifesto; o objeto físico não foi descarregado nem re-hashado independentemente. O avanço de 2005 não comprova cobertura de futuros ou semântica de abertura para os seis símbolos. O estado de aliases e abertura permanece UNKNOWN/BLOCKED quando não houver contrato e campo de preço comprovados. DS-45/DS-46 continuam NOT_RUN; DS-47/DS-48 PASS apenas para parsing do catálogo e guardrail de não-inferência.
+
