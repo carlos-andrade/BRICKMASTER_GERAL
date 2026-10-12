@@ -6,7 +6,7 @@ fase: "FASE_02_DADOS_SESSAO_ABERTURA"
 id_documento: "BM-DATA-001-AUDITORIA-FONTE-NTSl44"
 titulo: "Auditoria documental — candidatos à abertura oficial no Manual NTSL 4.4"
 status: "REVISAO_DOCUMENTAL; VALIDACAO_PROFIT_PENDENTE; DADOS_HISTORICOS_B3_SEIS_SIMBOLOS_SEM_PROFIT_TEMPO_REAL"
-versao: "1.0.0"
+versao: "1.0.1"
 data_criacao: "2026-10-12"
 data_atualizacao: "2026-10-12"
 origem: "Manual NTSL versão 4.4 — 03-08-2026, ficheiro fornecido no projeto"
@@ -172,3 +172,10 @@ A extração de catálogo está registada em `GOVERNANCA/MAPEAMENTO_CATALOGO_B3_
 
 O hash acima é declarado pelo ponteiro LFS/manifesto; o objeto físico não foi descarregado nem re-hashado independentemente. O avanço de 2005 não comprova cobertura de futuros ou semântica de abertura para os seis símbolos. O estado de aliases e abertura permanece UNKNOWN/BLOCKED quando não houver contrato e campo de preço comprovados. DS-45/DS-46 continuam NOT_RUN; DS-47/DS-48 PASS apenas para parsing do catálogo e guardrail de não-inferência.
 
+
+
+## Bloqueio de integridade COTAHIST 2006 — 2026-10-12
+
+A árvore B3 contém o manifesto `COTAHIST_A2006_quality.json`, que declara `VALIDADO`, 198.367 linhas, 25 campos, período 2006-01-02 a 2006-12-28 e SHA-256 normalizado `d9025ebcc01413111c67a0bb573f4ff2676aae2105e8204f19d13f9a313ee69d`. Porém, o caminho canónico `dados/cotahist/normalized/anual/COTAHIST_A2006.csv` devolve 404. Estado: `MANIFEST_PRESENTE / CSV_CANÓNICO_AUSENTE / UNKNOWN-BLOCKED`. A FASE00 de governança de 2006 não certifica a presença física do CSV.
+
+A B3 issue #6 foi atualizada para solicitar materialização/verificação do arquivo ou correção do manifesto. Até essa reconciliação, DS-45 permanece NOT_RUN; DS-46 também permanece NOT_RUN porque o conteúdo LFS não foi descarregado e o hash não foi recalculado independentemente. A abertura dos seis símbolos de futuros continua não validada.
