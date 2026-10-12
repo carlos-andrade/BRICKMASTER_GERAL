@@ -5,8 +5,8 @@ tipo_documento: "AUDITORIA_DE_COBERTURA_DE_DADOS"
 fase: "FASE_02_DADOS_SESSAO_ABERTURA"
 id_documento: "BM-DATA-002-AUDITORIA-B3-COBERTURA-2026-10-12"
 titulo: "Auditoria de cobertura B3 — COTAHIST, Git LFS e market data"
-status: "AUDITORIA_DA_ARVORE_CONCLUIDA; COBERTURA_SEMANTICA_DOS_SEIS_SIMBOLOS_NAO_CONFIRMADA"
-versao: "1.6.0"
+status: "AUDITORIA_DA_ARVORE_CONCLUIDA; DS45_PARTIAL_PASS_BLOCKED_2006_2025; DS46_PARTIAL_PASS_2005; SEIS_SIMBOLOS_UNKNOWN_BLOCKED"
+versao: "1.7.0"
 data_criacao: "2026-10-12"
 data_atualizacao: "2026-10-12"
 origem: "Inspeção de diretórios, manifests, metadados Git LFS e documentação no repositório público carlos-andrade/B3"
@@ -202,3 +202,48 @@ Artefactos:
 DS-49 PASS passa a significar que a leitura dos 15 ficheiros, a contagem e o guardrail contra falsos positivos foram executados. Não significa ausência universal de futuros no COTAHIST: o resultado limita-se aos 15 ficheiros armazenados. A cobertura dos seis símbolos e a fonte de abertura continuam UNKNOWN/BLOCKED.
 
 - 1.6.0 — 2026-10-12 — probe ampliado a 15 ficheiros; corrigido falso positivo DOLX11; distinção explícita entre regex-only e futuro confirmado.
+
+
+## Atualização operacional — recuperação 2006 e falhas de certificação anual — 2026-10-12
+
+### 1. Proposta de recuperação offline para 2006
+
+Foi criada no repositório B3 a branch `feat/cotahist-2006-offline-recovery`, com workflows FASE01–FASE11, validação independente FASE04 após recuperação, Gate 06–08 e o documento `docs/ingestao/PLANO_RECUPERACAO_COTAHIST_2006_OFFLINE_V1.md`.
+
+Comparação da branch: https://github.com/carlos-andrade/B3/compare/main...feat/cotahist-2006-offline-recovery.
+
+A cadeia proposta:
+- Usa apenas o RAW já armazenado `COTAHIST_A2006.ZIP`; não adquire nova cópia externa.
+- Valida hash RAW, checksum, estrutura ZIP, tipos de registo e comprimento de 245 bytes.
+- Regenera o CSV canónico através do parser versionado, mas não modifica manifesto/sidecar para forçar aprovação.
+- Exige comparação de hash, linhas, campos e datas com as declarações existentes.
+- Usa validação independente com checkout Git LFS efetivo na FASE10.
+- Dispara as fases 02–11 pela evidência da fase anterior, evitando execução paralela prematura.
+
+**Limite:** a branch não foi integrada nem executada. A tentativa de abrir uma PR pela integração GitHub devolveu 403 (`Resource not accessible by integration`); a `main` B3 permanece inalterada. O link de comparação está disponível para revisão. O CSV de 2006 continua ausente até prova de execução.
+
+### 2. Falhas atuais da certificação anual
+
+Foram consultados os logs das execuções:
+- [Certificação anual automática](https://github.com/carlos-andrade/B3/actions/runs/38253627749): falhou para o ano 1998; 40/41 anos certificados. O manifesto de 1998 usa `parser_version=1.1.1`, mas o certificador exige exatamente `1.1.0`.
+- [Gerador de dataset oficial V1](https://github.com/carlos-andrade/B3/actions/runs/38255299319): falhou com `1998: parser incompatível`.
+
+Não se deve alargar a versão permitida sem uma decisão explícita e evidência de compatibilidade. A publicação do dataset oficial deve também corrigir o caminho normalizado construído pelo gerador: usa `dados/cotahist/normalized/COTAHIST_A{year}.csv`, enquanto o caminho canónico observado é `dados/cotahist/normalized/anual/COTAHIST_A{year}.csv`.
+
+### 3. Divergência adicional de integridade — 1998
+
+O manifesto `COTAHIST_A1998_quality.json` e o ponteiro Git LFS declaram o SHA-256 normalizado `21b4740da8eb763259a0d859e261534de826449148c4d57d1f457f5721354e79`. O sidecar `COTAHIST_A1998.csv.sha256` declara `d1297e58cbbdf225f792b49a29f9143d3e041e66fd280808732e8c3513eb6bee`. Esta divergência requer verificação dos bytes reais; não corrigir o sidecar por suposição. O checkout da certificação também avisou que `COTAHIST_A1987.csv` não era um ponteiro LFS conforme esperado; a classificação correta é anomalia de armazenamento a investigar, não ausência automática do conteúdo.
+
+A B3 issue #6 foi atualizada com estes achados e com a branch proposta de recuperação de 2006.
+
+### 4. Estado dos testes BRICKMASTER
+
+- DS-45: `PARTIAL_PASS_BLOCKED_2006_2025` — inventário estrutural executado; 41 RAW ZIPs/manifests e 21 CSVs anuais listados; reconciliação integral de conteúdos ainda pendente.
+- DS-46: `PARTIAL_PASS_2005` — prova CI de hash físico e reconciliação integral para 2005; restantes objetos LFS não generalizados.
+- DS-47: `PASS` — extração do catálogo, 120.973 registos e 32 campos; famílias de contratos datados identificadas.
+- DS-48: `PASS` — guardrail de alias; zero correspondências exatas para os seis símbolos-base.
+- DS-49: `PASS` — probe de 15 pregões EOD, 253.156 registos, zero correspondências exatas e falso positivo `DOLX11` corretamente excluído.
+
+Os estados PASS de DS-47–DS-49 têm o escopo limitado registado no plano de testes; não certificam a abertura oficial dos seis símbolos. Todos os seis continuam `UNKNOWN/BLOCKED`. Não houve execução NTSL/Profit, replay, backtest ou envio de ordens.
+
+- 1.7.0 — 2026-10-12 — registada proposta de cadeia offline de recuperação de 2006, falhas de certificação anual de 1998, divergência de sidecar e estados parciais DS-45/DS-46.
