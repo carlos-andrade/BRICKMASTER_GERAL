@@ -6,7 +6,7 @@ fase: "FASE_02_DADOS_SESSAO_ABERTURA"
 id_documento: "BM-DATA-002-AUDITORIA-B3-COBERTURA-2026-10-12"
 titulo: "Auditoria de cobertura B3 — COTAHIST, Git LFS e market data"
 status: "AUDITORIA_DA_ARVORE_CONCLUIDA; COBERTURA_SEMANTICA_DOS_SEIS_SIMBOLOS_NAO_CONFIRMADA"
-versao: "1.0.0"
+versao: "1.1.0"
 data_criacao: "2026-10-12"
 data_atualizacao: "2026-10-12"
 origem: "Inspeção de diretórios, manifests, metadados Git LFS e documentação no repositório público carlos-andrade/B3"
@@ -108,3 +108,20 @@ A ausência de prova de cobertura não é prova de que o instrumento não exista
 ## Histórico de versões
 
 - 1.0.0 — 2026-10-12 — auditoria estrutural da árvore B3; identificada divergência entre 41 RAW/manifests anuais e 20 CSVs normalizados anuais listados; distinção explícita entre ponteiro Git LFS e conteúdo verificado; cobertura dos seis símbolos permanece UNKNOWN/BLOCKED.
+
+
+## Atualização de estado após workflows B3 — 2026-10-12 13:07 UTC
+
+A auditoria estrutural inicial registou 20 CSVs normalizados anuais e identificou 2005–2025 como lacuna. A árvore mudou durante o acompanhamento: o ficheiro anual de 2005 foi materializado/versionado após a sequência de workflows B3 de 2005.
+
+Evidência atual consultada em `main`:
+- `dados/cotahist/normalized/anual/COTAHIST_A2005.csv` existe como ponteiro Git LFS com SHA-256 declarado `9fe7ee30e135223f5d414d7ed678f2973645c2f8779f7e94b7a148794e6a847c`, tamanho declarado 23.748.257 bytes.
+- `COTAHIST_A2005_quality.json` declara `VALIDADO`, 181.408 linhas, 25 campos, período 2005-01-03 a 2005-12-29 e o mesmo hash declarado para o normalizado.
+- Workflows de recuperação, validação independente, certificação e transição de 2005 aparecem como `success`, incluindo [FASE10](https://github.com/carlos-andrade/B3/actions/runs/38253210219), [FASE11](https://github.com/carlos-andrade/B3/actions/runs/38253300794) e [FASE12](https://github.com/carlos-andrade/B3/actions/runs/38253381813).
+- A pasta anual lista agora 21 CSVs: 1986–2005 e 2026. Os manifests continuam listados para 1986–2026 (41 anos).
+- `COTAHIST_A2006.csv` ainda não aparece na pasta anual consultada; a FASE00 de 2006 terminou com sucesso, mas isso não significa que o normalizado de 2006 esteja concluído.
+- O hash declarado para 2005 foi lido do ponteiro/manifeste; o objeto LFS físico não foi descarregado nem re-hashado independentemente neste ambiente.
+
+**Estado corrigido:** a lacuna de materialização anual observada na consulta atual é 2006–2025 (20 anos), não 2005–2025. O número de CSVs versionados é 21, não 20. A cobertura dos instrumentos-alvo e a semântica EOD para futuros continuam por comprovar. A lista deve continuar a ser atualizada porque os workflows B3 estão a avançar por fases.
+
+A solicitação foi atualizada em [B3 issue #6](https://github.com/carlos-andrade/B3/issues/6). Os testes DS-45 (reconciliação completa) e DS-46 (verificação física independente de LFS) permanecem `NOT_RUN`.
