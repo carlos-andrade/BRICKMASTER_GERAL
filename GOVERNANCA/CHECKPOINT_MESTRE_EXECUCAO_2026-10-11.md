@@ -107,7 +107,8 @@ O utilizador aprovou a política B para o Módulo 002: preço oficial de abertur
 
 O repositório `carlos-andrade/B3` foi consultado para a fonte de abertura. O contrato COTAHIST documenta `preabe` como preço de abertura EOD; a camada Market Data classifica BVBG.186.01/BVBG.187.01 como EOD e não tick-by-tick; a documentação intraday/negócio a negócio consultada ainda marca a captura dos binários como pendente. Isso não certifica a abertura usada pelo Profit em INDFUT/DOFUT. O tipo de gráfico não é restringido a 60.000 ticks. Mantêm-se os testes práticos `NOT_RUN` e a fonte do Módulo 002 não certificada.
 
-- 1.0.4 — 2026-10-12 — verificação cruzada do B3 registada; dados EOD distinguidos da validação Profit.\n- 1.0.5 — 2026-10-12 — correção do escopo para INDFUT/DOFUT; gráfico de 60.000 ticks desconsiderado; mapeamento B3/contrato pendente.
+- 1.0.4 — 2026-10-12 — verificação cruzada do B3 registada; dados EOD distinguidos da validação Profit.
+- 1.0.5 — 2026-10-12 — correção do escopo para INDFUT/DOFUT; gráfico de 60.000 ticks desconsiderado; mapeamento B3/contrato pendente.
 
 
 ## Correção de escopo — 2026-10-12
