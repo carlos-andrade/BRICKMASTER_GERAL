@@ -6,7 +6,7 @@ fase: "GOVERNANCA_E_ROADMAP_00_08"
 id_documento: "BM-CKPT-ROADMAP-2026-10-11-001"
 titulo: "Checkpoint mestre — execução do roadmap BRICKMASTER 00–08"
 status: "CHECKPOINT_ATUAL; FASES_TECNICAS_AINDA_NAO_VALIDADAS"
-versao: "1.0.3"
+versao: "1.0.4"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-12"
 origem: "Execução GitHub e auditorias registadas nesta sessão"
@@ -101,3 +101,10 @@ O utilizador aprovou a política B para o Módulo 002: preço oficial de abertur
 
 - 1.0.3 — 2026-10-12 — instrumentos WINFUT e DOLFUT e gráfico de 60.000 ticks definidos para a validação prática; execução Profit e evidências continuam pendentes.
 - 1.0.2 — 2026-10-12 — referência à auditoria documental da fonte de abertura acrescentada; validação Profit continua pendente.
+
+
+## Verificação cruzada B3 — 2026-10-12
+
+O repositório `carlos-andrade/B3` foi consultado para a fonte de abertura. O contrato COTAHIST documenta `preabe` como preço de abertura EOD; a camada Market Data classifica BVBG.186.01/BVBG.187.01 como EOD e não tick-by-tick; a documentação intraday/negócio a negócio consultada ainda marca a captura dos binários como pendente. Isso não certifica a abertura usada pelo Profit em WINFUT/DOLFUT no gráfico de 60.000 ticks. Mantêm-se os testes práticos `NOT_RUN` e a fonte do Módulo 002 não certificada.
+
+- 1.0.4 — 2026-10-12 — verificação cruzada do B3 registada; dados EOD distinguidos da validação Profit 60K.
