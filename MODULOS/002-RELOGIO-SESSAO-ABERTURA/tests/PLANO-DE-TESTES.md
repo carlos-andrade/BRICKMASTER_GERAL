@@ -5,7 +5,7 @@ tipo_documento: "PLANO_DE_TESTES"
 fase: "FASE_02_DADOS_SESSAO_ABERTURA"
 id_documento: "BM-DATA-001-TESTES"
 titulo: "Plano de testes — Relógio, sessão e abertura"
-status: "PLANEADO; NAO_EXECUTADO; WINFUT_DOLFUT_60K_SELECIONADOS"
+status: "PLANEADO; NAO_EXECUTADO; INDFUT_DOFUT_SEM_RESTRICAO_60K"
 versao: "0.4.0"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-12"
@@ -42,7 +42,7 @@ Matriz de aceitação inicial pronta.
 
 ## Próxima Ação
 
-Executar primeiro a matriz WINFUT e DOLFUT em gráficos de 60.000 ticks, anexar evidências e só então selecionar fonte/campo por instrumento. Depois implementar o módulo e executar os casos. Todos os casos continuam NOT_RUN.
+Executar primeiro a matriz INDFUT e DOFUT na configuração de gráfico efetivamente usada no Profit, sem exigir 60.000 ticks; confirmar código B3/contrato/vencimento, anexar evidências e só então selecionar fonte/campo por instrumento. Depois implementar o módulo e executar os casos. Todos os casos continuam NOT_RUN.
 
 | ID | Caso | Resultado esperado | Estado |
 |---|---|---|---|
@@ -52,7 +52,7 @@ Executar primeiro a matriz WINFUT e DOLFUT em gráficos de 60.000 ticks, anexar 
 | DS-04 | Data/hora inválida | `INVALID`; consumidores bloqueados | NOT_RUN |
 | DS-05 | Mudança de sessão | Novo `session_id`; uma reinicialização | NOT_RUN |
 | DS-06 | Candle cruza limite de sessão em ticks | Regra determinística; sem dupla contagem | NOT_RUN |
-| DS-07 | Gráfico de 60K ticks | Transição verificada sem barras temporais fixas | NOT_RUN |
+| DS-07 | Tipo de gráfico utilizado | Registar configuração real; a validação da abertura não exige gráfico de 60.000 ticks | NOT_RUN |
 | DS-08 | Fonte atrasada | Confiança reduzida ou bloqueio segundo contrato | NOT_RUN |
 | DS-09 | Fontes contraditórias | `INVALID`; bloqueio explícito | NOT_RUN |
 | DS-10 | Histórico/replay/tempo real | Diferenças documentadas | NOT_RUN |
@@ -63,12 +63,12 @@ Executar primeiro a matriz WINFUT e DOLFUT em gráficos de 60.000 ticks, anexar 
 | DS-15 | Fontes oficiais divergem | INVALID/BLOCKED até resolução documentada | NOT_RUN |
 | DS-16 | Campo NTSL/Profit não equivale à abertura oficial | Rejeitar como substituto e manter UNKNOWN | NOT_RUN |
 | DS-17 | Correção oficial da abertura | Evento auditável; nenhuma alteração silenciosa dos níveis | NOT_RUN |
-| DS-18 | WINFUT — gráfico 60.000 ticks | Contrato, sessão, campo oficial e candidatos registados com evidência | NOT_RUN |
-| DS-19 | DOLFUT — gráfico 60.000 ticks | Contrato, sessão, campo oficial e candidatos registados com evidência | NOT_RUN |
-| DS-20 | WINFUT — comparar candidatos | Comparar campo oficial com `Open`, `OpenD(0)`, `OpenDaily(0)` e série diária explícita | NOT_RUN |
-| DS-21 | DOLFUT — comparar candidatos | Comparar campo oficial com `Open`, `OpenD(0)`, `OpenDaily(0)` e série diária explícita | NOT_RUN |
-| DS-22 | WINFUT — persistência da referência | Abertura não muda ao recarregar/reprocessar; diferenças ficam auditadas | NOT_RUN |
-| DS-23 | DOLFUT — persistência da referência | Abertura não muda ao recarregar/reprocessar; diferenças ficam auditadas | NOT_RUN |
+| DS-18 | INDFUT — configuração real do Profit | Símbolo, código B3, contrato, sessão, campo oficial e candidatos registados com evidência | NOT_RUN |
+| DS-19 | DOFUT — configuração real do Profit | Símbolo, código B3, contrato, sessão, campo oficial e candidatos registados com evidência | NOT_RUN |
+| DS-20 | INDFUT — comparar candidatos | Comparar campo oficial com `Open`, `OpenD(0)`, `OpenDaily(0)` e série diária explícita | NOT_RUN |
+| DS-21 | DOFUT — comparar candidatos | Comparar campo oficial com `Open`, `OpenD(0)`, `OpenDaily(0)` e série diária explícita | NOT_RUN |
+| DS-22 | INDFUT — persistência da referência | Abertura não muda ao recarregar/reprocessar; diferenças ficam auditadas | NOT_RUN |
+| DS-23 | DOFUT — persistência da referência | Abertura não muda ao recarregar/reprocessar; diferenças ficam auditadas | NOT_RUN |
 | DS-24 | Adequação de COTAHIST/EOD | Não usar `preabe` como substituto automático da abertura confirmada do Profit 60K; exigir correspondência de instrumento, contrato, data e semântica | NOT_RUN |
 | DS-25 | Adequação de market data intraday B3 | Confirmar arquivo binário, granularidade e campos antes de usar como evidência de abertura/tick; documentação isolada não conta como dataset capturado | NOT_RUN |
 
