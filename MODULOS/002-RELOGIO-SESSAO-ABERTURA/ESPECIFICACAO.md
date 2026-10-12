@@ -5,10 +5,10 @@ tipo_documento: "ESPECIFICACAO_TECNICA"
 fase: "FASE_02_DADOS_SESSAO_ABERTURA"
 id_documento: "BM-DATA-001-ESPECIFICACAO"
 titulo: "Contrato técnico — Relógio, sessão e abertura"
-status: "ESPECIFICACAO_INICIAL; DECISOES_OPERACIONAIS_PENDENTES"
-versao: "0.1.0"
+status: "POLITICA_DE_ABERTURA_APROVADA; IMPLEMENTACAO_PENDENTE"
+versao: "0.2.0"
 data_criacao: "2026-10-11"
-data_atualizacao: "2026-10-11"
+data_atualizacao: "2026-10-12"
 origem: "Roadmap BRICKMASTER RAIZ; Manual NTSL 4.4"
 autoridade_documental: "LAYOUT"
 cadeia_autoridade: "PROMPT → CARTA → LAYOUT ÚNICO → CÓDIGO"
@@ -22,11 +22,11 @@ dependencias: "Manual NTSL 4.4; calendário/sessão do instrumento; Módulo 001"
 
 ## Contexto Histórico
 
-Contrato novo, sem substituir artefactos históricos. A definição operacional da abertura não será presumida.
+Contrato novo, sem substituir artefactos históricos. Em 2026-10-12 foi aprovada a política B: usar o preço oficial de abertura fornecido pela plataforma ou por uma fonte oficial validada. A aprovação da política não valida ainda uma fonte concreta nem a implementação.
 
 ## Estado
 
-ESPECIFICAÇÃO INICIAL — NÃO IMPLEMENTADA. Fonte de abertura, horário oficial por instrumento e tolerância máxima de atraso ainda por confirmar.
+POLÍTICA APROVADA; IMPLEMENTAÇÃO PENDENTE. A regra de referência está decidida, mas a fonte concreta por instrumento, o horário oficial, o comportamento de leilões e os limites de frescura ainda têm de ser validados.
 
 ## Contrato
 
@@ -35,16 +35,23 @@ ESPECIFICAÇÃO INICIAL — NÃO IMPLEMENTADA. Fonte de abertura, horário ofici
 - Tipo de gráfico e configuração, incluindo ticks/60K.
 - Data/hora do candle, proveniência e modo de dados (histórico/replay/tempo real).
 - Definição versionada da sessão: início, fim, fuso e exceções.
-- Fonte e política do preço de abertura.
+- Fonte e política do preço oficial de abertura; identificação do campo oficial e prova de validação por instrumento/contrato.
 - Indicadores de qualidade/frescura.
 
-### Decisão operacional em aberto
-Antes da implementação, aprovar exatamente uma política:
-1. primeiro negócio observado após início oficial da sessão;
-2. preço oficial de abertura fornecido pela plataforma/fonte;
-3. abertura do primeiro candle elegível, apenas se a aproximação for explicitamente aceite e testada.
+### Política operacional aprovada — opção B
+A referência da sessão é o **preço oficial de abertura fornecido pela plataforma ou por uma fonte oficial validada**. Não usar o primeiro negócio observado, o primeiro candle visível nem o preço atual como substitutos automáticos.
 
-As opções não são intercambiáveis. Sem decisão e evidência, a abertura fica `UNKNOWN` e o Módulo 001 não fixa níveis como se a referência estivesse confirmada.
+A política está aprovada; a fonte concreta ainda precisa de ser registada por instrumento/contrato, com nome do fornecedor/plataforma, campo utilizado, significado do campo, timestamp, fuso, calendário/sessão, método de acesso, versão e evidência de correspondência com a abertura oficial. Não declarar uma fonte validada sem evidência observável e reproduzível.
+
+Regras:
+1. A plataforma/fonte principal deve ser configurada explicitamente por instrumento/contrato; não escolher silenciosamente uma fonte alternativa.
+2. Uma fonte secundária só pode ser usada se tiver sido validada e aprovada previamente para esse instrumento e sessão.
+3. Se o valor estiver ausente, atrasado além do limite medido/aprovado, for inválido ou houver contradição não resolvida entre fontes oficiais, manter a abertura `UNKNOWN`/ `INVALID` e bloquear os consumidores dependentes.
+4. Não inferir o preço oficial a partir de `Time()`, do primeiro candle do gráfico, do primeiro negócio visto após carregar o gráfico ou de uma fórmula de NTSL sem prova de que representa o campo oficial.
+5. O preço confirmado é imutável durante a sessão. Uma correção oficial da fonte exige evento auditável, nova versão da referência e política explícita de reprocessamento; não alterar silenciosamente os níveis.
+6. O Módulo 001 só calcula/expõe níveis quando recebe referência `CONFIRMED`, identificada por instrumento, sessão, fonte e timestamp.
+
+A decisão de política não constitui evidência de que o Profit disponibiliza o campo necessário no contexto NTSL escolhido. Isso será verificado no Manual NTSL 4.4 e no Profit real.
 
 ### Máquina de estados
 - `UNKNOWN`: instrumento, relógio ou configuração ausente/ambígua.
@@ -67,7 +74,7 @@ A transição para `ACTIVE` ocorre uma vez por sessão. A referência não é re
 - Sem sinais de compra/venda e sem envio de ordens.
 
 ### Dependências
-Módulo 001; configuração de sessão/calendário do instrumento; fonte de abertura aprovada; Manual NTSL 4.4.
+Módulo 001; configuração de sessão/calendário do instrumento; adaptador da plataforma/fonte oficial validada; registo de fontes aprovadas; Manual NTSL 4.4.
 
 ## Evidências
 
@@ -83,8 +90,10 @@ Estados explícitos e bloqueios documentados. Módulo ainda não implementado ne
 
 ## Próxima Ação
 
-Aprovar a fonte de abertura e horários por instrumento; implementar em branch isolada e executar o plano de testes.
+Inventariar o campo oficial disponibilizado pelo Profit e/ou fonte oficial validada para o instrumento prioritário; registar evidência, sessão e frescura; só depois implementar em branch isolada e executar o plano de testes.
 
 ## Histórico de versões
 
 - 0.1.0 — 2026-10-11 — primeiro contrato conceptual.
+
+- 0.2.0 — 2026-10-12 — aprovada a política B: preço oficial de abertura da plataforma ou fonte oficial validada; fonte concreta e validação técnica continuam pendentes.
