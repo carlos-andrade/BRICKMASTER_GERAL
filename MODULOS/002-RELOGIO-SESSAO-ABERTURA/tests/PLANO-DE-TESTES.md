@@ -5,8 +5,8 @@ tipo_documento: "PLANO_DE_TESTES"
 fase: "FASE_02_DADOS_SESSAO_ABERTURA"
 id_documento: "BM-DATA-001-TESTES"
 titulo: "Plano de testes — Relógio, sessão e abertura"
-status: "48_CASOS; DS-47_DS-48_PASS_COM_LIMITES; DS-45_NOT_RUN; DS-46_PARTIAL_PASS_2005"
-versao: "1.0.3"
+status: "49_CASOS; DS-47_DS-48_DS-49_PASS_COM_LIMITES; DS-45_NOT_RUN; DS-46_PARTIAL_PASS_2005"
+versao: "1.0.4"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-12"
 origem: "Contrato BM-DATA-001-ESPECIFICACAO"
@@ -95,6 +95,7 @@ Usar somente arquivos já armazenados em `carlos-andrade/B3`. Primeiro verificar
 | DS-46 | Integridade de objeto Git LFS | Obter o objeto real, recalcular SHA-256 e comparar com o ponteiro LFS e manifest; não aceitar metadados como hash recalculado | PARTIAL_PASS_2005 |
 | DS-47 | Extração do catálogo BVBG.028.02 | Processar o CSV versionado, confirmar 120.973 registos/32 campos, extrair contratos futuros datados, verificar IDs e campos mínimos; evidência no relatório de mapeamento | PASS |
 | DS-48 | Guardrail de aliases | Procurar correspondência exata de IND, INDFUT, DOL, DOFUT, WIN e WDO em TckrSymb; não inferir alias a partir de família de contrato. Resultado: zero correspondências exatas; aliases permanecem UNKNOWN/BLOCKED | PASS |
+| DS-49 | Probe COTAHIST EOD por pregão | Processar COTAHIST_D09102026.csv; verificar cabeçalho/contagem e procurar CODNEG exato e padrão de contrato futuro datado para as seis famílias. Resultado limitado a 2026-10-09; prefixo DOL isolado não é correspondência de futuro | PASS |
 
 ## Histórico de versões
 
@@ -132,3 +133,12 @@ A execução [B3 FASE10 — Validação Independente Integral 2005](https://gith
 DS-46 passa parcialmente apenas para o objeto NORMALIZED de 2005; os restantes objetos LFS continuam por verificar. DS-45 permanece NOT_RUN. A prova de integridade de COTAHIST 2005 não prova que COTAHIST cubra os contratos futuros-alvo ou o campo de abertura necessário.
 
 - 1.0.3 — 2026-10-12 — DS-46 alterado para PARTIAL_PASS_2005 com evidência CI; restantes objetos LFS pendentes.
+
+
+## Evidência DS-49 — probe limitado a 2026-10-09
+
+Fonte: `dados/cotahist/normalized/diario/COTAHIST_D09102026.csv`; manifesto `COTAHIST_D09102026_quality.json` declara `VALIDADO`, 19.213 registos, 25 campos e SHA-256 normalizado `f39ec9919b27aa5716a2aa4cebea852f38849389067627238bf2bcf8e17eeed2`. Git blob SHA do CSV: `ec8c33a699f2ef5b1bb88b919b30852b904a069b` (não SHA-256).
+
+Parsing executado: zero correspondências exatas em `CODNEG` para IND/INDFUT/DOL/DOFUT/WIN/WDO; zero prefixos IND/WIN/WDO; quatro prefixos DOL (`DOLA11`, `DOLB11`, `DOLX11`, `DOLL39`) sem correspondência ao padrão de ticker futuro datado. DS-49 PASS significa que o probe executou e o guardrail de prefixo funcionou; não certifica cobertura em outros pregões ou a fonte de abertura.
+
+- 1.0.4 — 2026-10-12 — DS-49 PASS com escopo de uma data; DS-45 NOT_RUN e DS-46 PARTIAL_PASS_2005 mantidos.
