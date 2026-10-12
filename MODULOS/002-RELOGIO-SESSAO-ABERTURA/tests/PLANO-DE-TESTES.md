@@ -6,7 +6,7 @@ fase: "FASE_02_DADOS_SESSAO_ABERTURA"
 id_documento: "BM-DATA-001-TESTES"
 titulo: "Plano de testes — Relógio, sessão e abertura"
 status: "48_CASOS; DS-47_DS-48_PASS_COM_LIMITES; DS-45_DS-46_NOT_RUN; COBERTURA_B3_EM_ATUALIZACAO"
-versao: "1.0.1"
+versao: "1.0.2"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-12"
 origem: "Contrato BM-DATA-001-ESPECIFICACAO"
@@ -116,3 +116,10 @@ Após a sequência de workflows de 2005, `COTAHIST_A2005.csv` passou a constar n
 DS-45 permanece NOT_RUN porque a reconciliação de todos os anos não está concluída. DS-46 permanece NOT_RUN porque não houve download e SHA-256 independente dos objetos LFS. DS-47 e DS-48 continuam PASS com o escopo restrito descrito acima.
 
 - 1.0.1 — 2026-10-12 — atualização do estado dos normalizados anuais após workflows B3; lacuna corrigida de 2005–2025 para 2006–2025; DS-45/DS-46 permanecem NOT_RUN.
+
+
+## Bloqueio de reconciliação — ano 2006 — 2026-10-12
+
+O manifesto `COTAHIST_A2006_quality.json` declara `VALIDADO`, 198.367 linhas, 25 campos e SHA-256 `d9025ebcc01413111c67a0bb573f4ff2676aae2105e8204f19d13f9a313ee69d`, mas o CSV `dados/cotahist/normalized/anual/COTAHIST_A2006.csv` não está listado e o caminho retorna 404. DS-45 continua NOT_RUN; não aceitar manifesto como prova do conteúdo físico. A issue B3 #6 solicita materialização e verificação do objeto ou correção do manifesto.
+
+- 1.0.2 — 2026-10-12 — registada discrepância manifesto/CSV em 2006; cobertura anual mantém-se bloqueada até reconciliação.
