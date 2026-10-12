@@ -6,7 +6,7 @@ fase: "FASE_02_DADOS_SESSAO_ABERTURA"
 id_documento: "BM-DATA-001-AUDITORIA-FONTE-NTSl44"
 titulo: "Auditoria documental — candidatos à abertura oficial no Manual NTSL 4.4"
 status: "REVISAO_DOCUMENTAL; VALIDACAO_PROFIT_PENDENTE; DADOS_HISTORICOS_B3_SEIS_SIMBOLOS_SEM_PROFIT_TEMPO_REAL"
-versao: "0.7.0"
+versao: "0.8.0"
 data_criacao: "2026-10-12"
 data_atualizacao: "2026-10-12"
 origem: "Manual NTSL versão 4.4 — 03-08-2026, ficheiro fornecido no projeto"
@@ -126,6 +126,18 @@ Referências B3:
 ## Validação
 
 Revisão estática da árvore e dos manifestos armazenados. Não houve download/extração dos binários Git LFS neste passo, análise completa de todas as linhas COTAHIST, compilação NTSL, replay, backtest ou teste no Profit. Os dados necessários para validar os seis instrumentos ainda não estão demonstrados como disponíveis em forma diretamente utilizável.
+
+## Adenda — cobertura física e Git LFS — 2026-10-12
+
+A auditoria complementar está documentada em [AUDITORIA_COBERTURA_B3_MERCADOS_E_LFS_2026-10-12.md](AUDITORIA_COBERTURA_B3_MERCADOS_E_LFS_2026-10-12.md). Os resultados que afetam esta auditoria são:
+
+- Existem 41 RAW ZIPs anuais (1986–2026) e 41 manifests de qualidade; a pasta de normalizados anuais lista somente 20 CSVs (1986–2004 e 2026). Os CSVs de 2005–2025 não estão listados em `dados/cotahist/normalized/anual/`, apesar de existirem manifests. Essa divergência exige atualização/reconciliação em B3.
+- Os tamanhos de 133/134 bytes na API podem representar ponteiros Git LFS, não ausência de conteúdo. Foram verificados ponteiros de 1986, 1988 e 2026 com SHA-256 e tamanho declarado; os objetos grandes não foram descarregados nem re-hashados nesta execução.
+- O catálogo BVBG.028.02 está armazenado, mas a extração integral e o mapeamento de `INDFUT`, `DOFUT`, `IND`, `DOL`, `WIN` e `WDO` para código/contrato continuam pendentes.
+- A presença de RAW e manifestos COTAHIST não demonstra, por si só, cobertura semântica dos futuros ou aplicabilidade do campo de abertura. O campo real por instrumento/contrato continua não confirmado.
+- O plano do Módulo 002 foi ampliado para 46 casos com DS-45 e DS-46. Todos permanecem `NOT_RUN`.
+
+A validação continua offline. Nenhum teste NTSL/Profit, replay, backtest ou ordem foi executado nesta adenda.
 
 ## Resultado
 
