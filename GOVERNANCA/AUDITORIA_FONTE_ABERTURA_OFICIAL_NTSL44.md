@@ -120,6 +120,7 @@ Executar a comparação controlada no Profit e guardar os resultados como evidê
 
 ## Histórico de versões
 
-- 0.4.0 — 2026-10-12 — correção do escopo para INDFUT e DOFUT, sem requisito de gráfico de 60.000 ticks; correspondência dos símbolos com código/contrato B3 exigida.\n- 0.3.0 — 2026-10-12 — verificação cruzada do B3; identificada abertura EOD no COTAHIST, mas sem evidência suficiente para certificar WINFUT/DOLFUT em Profit 60K; testes práticos continuam pendentes.
+- 0.4.0 — 2026-10-12 — correção do escopo para INDFUT e DOFUT, sem requisito de gráfico de 60.000 ticks; correspondência dos símbolos com código/contrato B3 exigida.
+- 0.3.0 — 2026-10-12 — verificação cruzada do B3; identificada abertura EOD no COTAHIST, mas sem evidência suficiente para certificar WINFUT/DOLFUT em Profit 60K; testes práticos continuam pendentes.
 - 0.2.0 — 2026-10-12 — matriz operacional definida para WINFUT e DOLFUT em gráficos de 60.000 ticks; nenhuma execução no Profit declarada.
 - 0.1.0 — 2026-10-12 — primeira auditoria documental de candidatos à abertura oficial.
