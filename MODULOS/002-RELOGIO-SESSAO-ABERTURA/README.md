@@ -5,10 +5,10 @@ tipo_documento: "README_MODULO"
 fase: "FASE_02_DADOS_SESSAO_ABERTURA"
 id_documento: "BM-DATA-001-README"
 titulo: "Módulo 002 — Relógio, sessão e abertura"
-status: "ESPECIFICACAO_INICIAL; IMPLEMENTACAO_PENDENTE"
-versao: "0.1.0"
+status: "POLITICA_B_APROVADA; IMPLEMENTACAO_PENDENTE"
+versao: "0.2.0"
 data_criacao: "2026-10-11"
-data_atualizacao: "2026-10-11"
+data_atualizacao: "2026-10-12"
 origem: "Roadmap BRICKMASTER RAIZ e Manual NTSL 4.4"
 autoridade_documental: "LAYOUT"
 cadeia_autoridade: "PROMPT → CARTA → LAYOUT ÚNICO → CÓDIGO"
@@ -26,7 +26,7 @@ O registo mestre identificava relógio/sessão/abertura como módulo fundador ai
 
 ## Estado
 
-ESPECIFICAÇÃO INICIAL. Sem implementação aprovada nesta pasta. A política de abertura e a sessão por instrumento permanecem por confirmar.
+POLÍTICA B APROVADA em 2026-10-12: utilizar o preço oficial de abertura da plataforma ou de fonte oficial validada. A fonte/campo concreto por instrumento, a sessão oficial e a validação no Profit continuam pendentes; o módulo não está implementado.
 
 ## Evidências
 
@@ -42,4 +42,10 @@ Módulo delimitado como fornecedor de estado temporal e referência de abertura;
 
 ## Próxima Ação
 
-Confirmar a fonte da abertura, horários e política para candles que cruzam a transição da sessão; implementar e testar isoladamente.
+Registar a fonte/campo oficial para o instrumento prioritário, confirmar sessão/horário e evidência de correspondência; implementar e testar isoladamente, incluindo gráficos de ticks/60K.
+
+## Decisão registada — 2026-10-12
+
+A opção B foi aprovada: preço oficial de abertura fornecido pela plataforma ou por fonte oficial validada. A aprovação define a política, não certifica uma fonte específica. Na ausência de referência fiável ou perante contradições, o estado permanece `UNKNOWN/INVALID` e os consumidores dependentes ficam bloqueados.
+
+- 0.2.0 — 2026-10-12 — política B registada; implementação e fonte concreta pendentes.

@@ -6,9 +6,9 @@ fase: "GOVERNANCA_DOCUMENTAL"
 id_documento: "BM-DOC-ARQUITETURA-BRICKMASTER-RAIZ-REGISTRO-MODULOS-E-CHECKPOINTS"
 titulo: "BRICKMASTER RAIZ — Registo de módulos e checkpoints"
 status: "PLANEJADO"
-versao: "1.0.2"
+versao: "1.0.3"
 data_criacao: "2026-10-11"
-data_atualizacao: "2026-10-11"
+data_atualizacao: "2026-10-12"
 origem: "Conteúdo preexistente; ver histórico Git e referências internas"
 autoridade_documental: "GOVERNANCA"
 cadeia_autoridade: "PROMPT → CARTA → LAYOUT ÚNICO → CÓDIGO"
@@ -43,7 +43,7 @@ Este registo é um índice de trabalho. Os estados abaixo descrevem o que está 
 | ID | Módulo | Responsabilidade | Estado do inventário | Próxima ação |
 |---|---|---|---|---|
 | BM-CORE-001 | GIROSCÓPIO | Contexto central e localização do operador no gráfico | Contrato inicial e plano de testes criados em `MODULOS/003-GIROSCOPIO/`; sem código nem testes executados | Implementar localização/contexto mínimo e executar testes de qualidade, conflito, bloqueio e 60K ticks |
-| BM-DATA-001 | Relógio/Sessão/Abertura | Identificar sessão e referência diária | Contrato inicial e plano de testes criados em `MODULOS/002-RELOGIO-SESSAO-ABERTURA/`; política de abertura por confirmar | Confirmar fonte da abertura e horários; implementar máquina de estados e executar testes de transição |
+| BM-DATA-001 | Relógio/Sessão/Abertura | Identificar sessão e referência diária | Política B aprovada em 2026-10-12: preço oficial da plataforma/fonte oficial validada; implementação pendente | Identificar e validar campo/fonte por instrumento, confirmar sessão/fuso/frescura, implementar máquina de estados e executar testes |
 | BM-STRUCT-001 | Estrutura de preço | Swings, deslocamento e rompimento | A inventariar | Mapear código e documentação |
 | BM-FVG-001 | FVG Atlas | Identificar FVGs, dimensão e ciclo de vida | Inventário externo inicial concluído: FVG-ATLAS `main` tem 249 blobs; roadmap externo aponta V2.1.33 como regressão integrada aprovada | Congelar contrato; validar Manual NTSL 4.4/Profit e testes de contrato antes de integração BRICKMASTER |
 | BM-LIQ-001 | Liquidez | Níveis, varredura e reação | Não localizado por nome de ficheiro na árvore atual; auditoria semântica ainda parcial | Recuperar especificações anteriores e formalizar nível, sweep, confirmação e invalidação |
@@ -170,3 +170,5 @@ Manter este registo como índice de trabalho; atualizar cada módulo somente com
 - 1.0.6 — 2026-10-11 — contrato e plano de testes do risco soberano registados; parâmetros e execução permanecem pendentes.
 
 - 1.0.7 — 2026-10-11 — contratos iniciais de execução conciliada e Watchdog registados; implementação e testes pendentes.
+
+- 1.0.3 — 2026-10-12 — registo atualizado com a política B de abertura oficial; fonte concreta e validação pendentes.

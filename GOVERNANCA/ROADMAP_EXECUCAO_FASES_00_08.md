@@ -6,9 +6,9 @@ fase: "GOVERNANCA_E_INVENTARIO"
 id_documento: "BM-ROADMAP-EXECUCAO-00-08-001"
 titulo: "BRICKMASTER RAIZ — Roadmap de execução e validação (Fases 00–08)"
 status: "EXPERIMENTAL"
-versao: "1.0.9"
+versao: "1.1.0"
 data_criacao: "2026-10-11"
-data_atualizacao: "2026-10-11"
+data_atualizacao: "2026-10-12"
 origem: "Decisões e instruções do projeto BRICKMASTER RAIZ; histórico Git preservado"
 autoridade_documental: "GOVERNANCA"
 cadeia_autoridade: "PROMPT → CARTA → LAYOUT ÚNICO → CÓDIGO"
@@ -30,6 +30,12 @@ dependencias: "GOVERNANCA/NORMA-CABECALHO-PADRAO.md; Manual NTSL 4.4; FVG-ATLAS;
 > **Criação:** 2026-10-11  
 > **Atualização:** 2026-10-11  
 > **Rastreabilidade:** feat/roadmap-execucao-fases-00-08
+
+
+
+## Decisão operacional registada — 2026-10-12
+
+A política de abertura é **B: preço oficial de abertura fornecido pela plataforma ou por uma fonte oficial validada**. O primeiro negócio observado, o primeiro candle visível e o preço atual não são substitutos automáticos. A fonte/campo concreta por instrumento deve ser documentada e validada com timestamp, sessão/fuso, proveniência e evidência. Se a referência estiver ausente, atrasada, inválida ou em conflito não resolvido, o estado fica `UNKNOWN/INVALID` e os consumidores dependentes são bloqueados. Esta decisão não afirma que o campo esteja disponível no Profit/NTSL; a confirmação técnica ainda é necessária.
 
 ## Contexto Histórico
 
@@ -53,7 +59,7 @@ O plano possui nove etapas numeradas de 00 a 08: uma fase 00 de inventário/rast
 |---|---|---|---|---|
 | 00 — Inventário e rastreabilidade | Fontes, versões, módulos, branches, workflows, testes e dívidas técnicas; preservar históricos | Inventário com referências, matriz de evidências e decisões | Fontes críticas identificadas; conflitos registados sem invenção | PARCIAL — snapshot de 212 artefactos; auditoria semântica pendente |
 | 01 — Arquitetura e governança | Contratos de módulos, dependências, versionamento, estados e fluxo de branches | Arquitetura de referência, ADRs, regras de integração e checkpoint mestre | Cobertura documental comparada com a estrutura real e CI | PARCIAL |
-| 02 — Dados, sessão e abertura | Fontes, timestamps, sessão B3, abertura do dia, qualidade, atraso e reconciliação | Contrato de dados/sessão com proveniência e freshness | Dados ausentes, atrasados ou contraditórios reduzem confiança ou bloqueiam consumo; abertura reproduzível | CONTRATO INICIAL DOCUMENTADO; IMPLEMENTAÇÃO PENDENTE |
+| 02 — Dados, sessão e abertura | Fontes, timestamps, sessão, preço oficial de abertura, qualidade, atraso e reconciliação | Contrato com proveniência, freshness e fonte oficial por instrumento | Dados ausentes, atrasados ou contraditórios reduzem confiança ou bloqueiam consumo; abertura reproduzível | POLÍTICA B APROVADA; FONTE CONCRETA E IMPLEMENTAÇÃO PENDENTES |
 | 03 — Estado do gráfico / Giroscópio | Instrumento, tipo de gráfico, ticks incluindo 60K, sessão, localização do preço e confiança | Máquina de estados e contrato de contexto | Estado explica a posição operacional; transições determinísticas; contexto inválido bloqueia sinal | CONTRATO INICIAL DOCUMENTADO; IMPLEMENTAÇÃO/TESTES PENDENTES |
 | 04 — Estrutura e módulos de mercado | Inventariar FVG-ATLAS, liquidez, VWAP/TWAP, delta cumulativo, volume financeiro, VIX, IBOV e Market DNA conforme fontes disponíveis | Catálogo de módulos com contratos, dependências e testes isolados | Definições objetivas, limites e testes próprios; sem dados presumidos | PARCIAL — FVG-ATLAS inventariado; restantes módulos por auditar |
 | 05 — Decisão e risco soberano | Separar inteligência, sinal, decisão, dimensionamento, limites de perda, bloqueios e meta experimental de 1% | Contrato de decisão e camada soberana de risco | Risco pode vetar qualquer sinal; meta de 1% desde a abertura é hipótese, nunca garantia | CONTRATO INICIAL DOCUMENTADO; LIMITES E TESTES PENDENTES |
@@ -196,3 +202,5 @@ Roadmap versionado com nove etapas explícitas (00–08), oito fases de implemen
 - 1.0.7 — 2026-10-11 — contratos iniciais e planos de teste para as fases 02/03 registados; implementação e testes permanecem pendentes.
 - 1.0.8 — 2026-10-11 — contrato inicial de risco soberano documentado; limites numéricos e testes permanecem pendentes.
 - 1.0.9 — 2026-10-11 — contratos iniciais de execução/Watchdog e portões de validação/release 07/08 registados.
+
+- 1.1.0 — 2026-10-12 — política B para abertura oficial aprovada; implementação e fonte concreta pendentes.
