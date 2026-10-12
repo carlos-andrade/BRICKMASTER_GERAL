@@ -5,8 +5,8 @@ tipo_documento: "PLANO_DE_TESTES"
 fase: "FASE_02_DADOS_SESSAO_ABERTURA"
 id_documento: "BM-DATA-001-TESTES"
 titulo: "Plano de testes — Relógio, sessão e abertura"
-status: "48_CASOS; DS-47_DS-48_PASS_COM_LIMITES; DS-45_DS-46_NOT_RUN; COBERTURA_B3_EM_ATUALIZACAO"
-versao: "1.0.2"
+status: "48_CASOS; DS-47_DS-48_PASS_COM_LIMITES; DS-45_NOT_RUN; DS-46_PARTIAL_PASS_2005"
+versao: "1.0.3"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-12"
 origem: "Contrato BM-DATA-001-ESPECIFICACAO"
@@ -92,7 +92,7 @@ Usar somente arquivos já armazenados em `carlos-andrade/B3`. Primeiro verificar
 | DS-43 | Campo oficial de abertura armazenado | Verificar no layout e no arquivo real se existe campo de abertura aplicável ao contrato; se não existir, registrar lacuna | NOT_RUN |
 | DS-44 | Lacuna de dados e bloqueio | Se não houver arquivo/campo/contrato comprovado, manter `UNKNOWN/BLOCKED` e encaminhar pedido de atualização para B3 issue #6 | NOT_RUN |
 | DS-45 | Reconciliação anual B3 | Comparar anos/arquivos RAW, CSVs normalizados e manifests; bloquear anos com artefacto normalizado ausente ou divergente | NOT_RUN |
-| DS-46 | Integridade de objeto Git LFS | Obter o objeto real, recalcular SHA-256 e comparar com o ponteiro LFS e manifest; não aceitar metadados como hash recalculado | NOT_RUN |
+| DS-46 | Integridade de objeto Git LFS | Obter o objeto real, recalcular SHA-256 e comparar com o ponteiro LFS e manifest; não aceitar metadados como hash recalculado | PARTIAL_PASS_2005 |
 | DS-47 | Extração do catálogo BVBG.028.02 | Processar o CSV versionado, confirmar 120.973 registos/32 campos, extrair contratos futuros datados, verificar IDs e campos mínimos; evidência no relatório de mapeamento | PASS |
 | DS-48 | Guardrail de aliases | Procurar correspondência exata de IND, INDFUT, DOL, DOFUT, WIN e WDO em TckrSymb; não inferir alias a partir de família de contrato. Resultado: zero correspondências exatas; aliases permanecem UNKNOWN/BLOCKED | PASS |
 
@@ -123,3 +123,12 @@ DS-45 permanece NOT_RUN porque a reconciliação de todos os anos não está con
 O manifesto `COTAHIST_A2006_quality.json` declara `VALIDADO`, 198.367 linhas, 25 campos e SHA-256 `d9025ebcc01413111c67a0bb573f4ff2676aae2105e8204f19d13f9a313ee69d`, mas o CSV `dados/cotahist/normalized/anual/COTAHIST_A2006.csv` não está listado e o caminho retorna 404. DS-45 continua NOT_RUN; não aceitar manifesto como prova do conteúdo físico. A issue B3 #6 solicita materialização e verificação do objeto ou correção do manifesto.
 
 - 1.0.2 — 2026-10-12 — registada discrepância manifesto/CSV em 2006; cobertura anual mantém-se bloqueada até reconciliação.
+
+
+## Evidência de integridade LFS — 2005 — 2026-10-12
+
+A execução [B3 FASE10 — Validação Independente Integral 2005](https://github.com/carlos-andrade/B3/actions/runs/38253210219) terminou com `success` e o log registou `status=VALIDADO`, SHA-256 do RAW `41eac6d743d9c3e812bb001c4d327582fa7c408dbc99ff4a1734698da8b18f52`, SHA-256 do NORMALIZED `9fe7ee30e135223f5d414d7ed678f2973645c2f8779f7e94b7a148794e6a847c`, 181.408 registos em ambos, 25 campos e zero divergências. O workflow usou checkout com `lfs: true`.
+
+DS-46 passa parcialmente apenas para o objeto NORMALIZED de 2005; os restantes objetos LFS continuam por verificar. DS-45 permanece NOT_RUN. A prova de integridade de COTAHIST 2005 não prova que COTAHIST cubra os contratos futuros-alvo ou o campo de abertura necessário.
+
+- 1.0.3 — 2026-10-12 — DS-46 alterado para PARTIAL_PASS_2005 com evidência CI; restantes objetos LFS pendentes.
