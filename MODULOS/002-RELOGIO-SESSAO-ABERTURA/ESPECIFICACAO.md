@@ -78,7 +78,7 @@ Módulo 001; configuração de sessão/calendário do instrumento; adaptador da 
 
 ## Evidências
 
-Manual NTSL 4.4, secção 16.15 (`Date()`) e 16.55 (`Time()`); especificação atual do Módulo 001 mantém a política de abertura pendente.
+Manual NTSL 4.4, secções 4.2, 4.4, 16.45, 16.55 e 20.90; análise em `GOVERNANCA/AUDITORIA_FONTE_ABERTURA_OFICIAL_NTSL44.md`. O manual fornece candidatos (`OpenD(0)`, `OpenDaily(0)`, séries diárias), mas não certifica universalmente qualquer um como preço oficial em todos os contextos.
 
 ## Validação
 
@@ -90,7 +90,7 @@ Estados explícitos e bloqueios documentados. Módulo ainda não implementado ne
 
 ## Próxima Ação
 
-Inventariar o campo oficial disponibilizado pelo Profit e/ou fonte oficial validada para o instrumento prioritário; registar evidência, sessão e frescura; só depois implementar em branch isolada e executar o plano de testes.
+Usar a auditoria documental `GOVERNANCA/AUDITORIA_FONTE_ABERTURA_OFICIAL_NTSL44.md`; comparar os candidatos com o campo oficial no Profit para um instrumento e sessão definidos, incluindo gráfico de ticks/60K; só depois selecionar a fonte e implementar.
 
 ## Histórico de versões
 

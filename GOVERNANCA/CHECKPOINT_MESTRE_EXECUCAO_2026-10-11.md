@@ -6,7 +6,7 @@ fase: "GOVERNANCA_E_ROADMAP_00_08"
 id_documento: "BM-CKPT-ROADMAP-2026-10-11-001"
 titulo: "Checkpoint mestre — execução do roadmap BRICKMASTER 00–08"
 status: "CHECKPOINT_ATUAL; FASES_TECNICAS_AINDA_NAO_VALIDADAS"
-versao: "1.0.1"
+versao: "1.0.2"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-12"
 origem: "Execução GitHub e auditorias registadas nesta sessão"
@@ -94,6 +94,8 @@ Há contratos iniciais e planos de teste para as principais fronteiras de dados/
 
 ## Decisão nova — 2026-10-12
 
-O utilizador aprovou a política B para o Módulo 002: preço oficial de abertura fornecido pela plataforma ou por fonte oficial validada. O Módulo 001 passa a exigir referência `CONFIRMED` do Módulo 002. A fonte concreta e o campo técnico continuam por validar; não há testes executados nem confirmação de disponibilidade no Profit/NTSL.
+O utilizador aprovou a política B para o Módulo 002: preço oficial de abertura fornecido pela plataforma ou por fonte oficial validada. O Módulo 001 passa a exigir referência `CONFIRMED` do Módulo 002. A fonte concreta e o campo técnico continuam por validar; não há testes executados nem confirmação de disponibilidade no Profit/NTSL. A auditoria documental dos candidatos (`Open`, `OpenD(0)`, `OpenDaily(0)` e séries diárias) foi publicada em `GOVERNANCA/AUDITORIA_FONTE_ABERTURA_OFICIAL_NTSL44.md`; nenhum candidato foi certificado como fonte oficial universal.
 
 - 1.0.1 — 2026-10-12 — checkpoint atualizado com a decisão de abertura oficial.
+
+- 1.0.2 — 2026-10-12 — referência à auditoria documental da fonte de abertura acrescentada; validação Profit continua pendente.

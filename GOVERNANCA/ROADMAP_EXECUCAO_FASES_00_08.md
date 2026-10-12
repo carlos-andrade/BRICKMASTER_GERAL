@@ -35,7 +35,7 @@ dependencias: "GOVERNANCA/NORMA-CABECALHO-PADRAO.md; Manual NTSL 4.4; FVG-ATLAS;
 
 ## Decisão operacional registada — 2026-10-12
 
-A política de abertura é **B: preço oficial de abertura fornecido pela plataforma ou por uma fonte oficial validada**. O primeiro negócio observado, o primeiro candle visível e o preço atual não são substitutos automáticos. A fonte/campo concreta por instrumento deve ser documentada e validada com timestamp, sessão/fuso, proveniência e evidência. Se a referência estiver ausente, atrasada, inválida ou em conflito não resolvido, o estado fica `UNKNOWN/INVALID` e os consumidores dependentes são bloqueados. Esta decisão não afirma que o campo esteja disponível no Profit/NTSL; a confirmação técnica ainda é necessária.
+A política de abertura é **B: preço oficial de abertura fornecido pela plataforma ou por uma fonte oficial validada**. O primeiro negócio observado, o primeiro candle visível e o preço atual não são substitutos automáticos. A fonte/campo concreta por instrumento deve ser documentada e validada com timestamp, sessão/fuso, proveniência e evidência. Se a referência estiver ausente, atrasada, inválida ou em conflito não resolvido, o estado fica `UNKNOWN/INVALID` e os consumidores dependentes são bloqueados. Esta decisão não afirma que o campo esteja disponível no Profit/NTSL; a confirmação técnica ainda é necessária. A auditoria documental dos candidatos NTSL está publicada em `GOVERNANCA/AUDITORIA_FONTE_ABERTURA_OFICIAL_NTSL44.md`; a comparação no Profit ainda não foi executada.
 
 ## Contexto Histórico
 

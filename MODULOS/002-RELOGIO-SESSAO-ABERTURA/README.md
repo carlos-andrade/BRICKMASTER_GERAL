@@ -30,7 +30,7 @@ POLÍTICA B APROVADA em 2026-10-12: utilizar o preço oficial de abertura da pla
 
 ## Evidências
 
-Roadmap BRICKMASTER, Manual NTSL 4.4 secções 16.15 e 16.55, e os documentos desta pasta.
+Roadmap BRICKMASTER, Manual NTSL 4.4 e `GOVERNANCA/AUDITORIA_FONTE_ABERTURA_OFICIAL_NTSL44.md`.
 
 ## Validação
 
@@ -42,7 +42,7 @@ Módulo delimitado como fornecedor de estado temporal e referência de abertura;
 
 ## Próxima Ação
 
-Registar a fonte/campo oficial para o instrumento prioritário, confirmar sessão/horário e evidência de correspondência; implementar e testar isoladamente, incluindo gráficos de ticks/60K.
+Executar a comparação documentada entre candidatos NTSL e campo oficial do Profit/fonte validada; registar instrumento, sessão, timestamp, discrepâncias e evidência antes de implementar.
 
 ## Decisão registada — 2026-10-12
 
