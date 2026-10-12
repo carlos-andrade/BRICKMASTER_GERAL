@@ -5,8 +5,8 @@ tipo_documento: "PLANO_DE_TESTES"
 fase: "FASE_02_DADOS_SESSAO_ABERTURA"
 id_documento: "BM-DATA-001-TESTES"
 titulo: "Plano de testes — Relógio, sessão e abertura"
-status: "PLANEADO; NAO_EXECUTADO"
-versao: "0.2.0"
+status: "PLANEADO; NAO_EXECUTADO; WINFUT_DOLFUT_60K_SELECIONADOS"
+versao: "0.3.0"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-12"
 origem: "Contrato BM-DATA-001-ESPECIFICACAO"
@@ -42,7 +42,7 @@ Matriz de aceitação inicial pronta.
 
 ## Próxima Ação
 
-Primeiro registar e validar a fonte/campo oficial do instrumento; depois implementar o módulo e executar os casos. Todos os casos continuam NOT_RUN.
+Executar primeiro a matriz WINFUT e DOLFUT em gráficos de 60.000 ticks, anexar evidências e só então selecionar fonte/campo por instrumento. Depois implementar o módulo e executar os casos. Todos os casos continuam NOT_RUN.
 
 | ID | Caso | Resultado esperado | Estado |
 |---|---|---|---|
@@ -57,8 +57,20 @@ Primeiro registar e validar a fonte/campo oficial do instrumento; depois impleme
 | DS-09 | Fontes contraditórias | `INVALID`; bloqueio explícito | NOT_RUN |
 | DS-10 | Histórico/replay/tempo real | Diferenças documentadas | NOT_RUN |
 | DS-11 | Reprocessamento do mesmo conjunto | Mesmo estado e referência | NOT_RUN |
-| DS-12 | Efeitos colaterais | Nenhuma ordem/posição alterada | NOT_RUN |\n| DS-13 | Fonte oficial configurada | Fonte/campo, instrumento, sessão e timestamp ficam auditáveis | NOT_RUN |\n| DS-14 | Fonte primária indisponível | Não escolher alternativa não aprovada; manter UNKNOWN/BLOCKED | NOT_RUN |\n| DS-15 | Fontes oficiais divergem | INVALID/BLOCKED até resolução documentada | NOT_RUN |\n| DS-16 | Campo NTSL/Profit não equivale à abertura oficial | Rejeitar como substituto e manter UNKNOWN | NOT_RUN |\n| DS-17 | Correção oficial da abertura | Evento auditável; nenhuma alteração silenciosa dos níveis | NOT_RUN |
+| DS-12 | Efeitos colaterais | Nenhuma ordem/posição alterada | NOT_RUN |
+| DS-13 | Fonte oficial configurada | Fonte/campo, instrumento, sessão e timestamp ficam auditáveis | NOT_RUN |
+| DS-14 | Fonte primária indisponível | Não escolher alternativa não aprovada; manter UNKNOWN/BLOCKED | NOT_RUN |
+| DS-15 | Fontes oficiais divergem | INVALID/BLOCKED até resolução documentada | NOT_RUN |
+| DS-16 | Campo NTSL/Profit não equivale à abertura oficial | Rejeitar como substituto e manter UNKNOWN | NOT_RUN |
+| DS-17 | Correção oficial da abertura | Evento auditável; nenhuma alteração silenciosa dos níveis | NOT_RUN |
+| DS-18 | WINFUT — gráfico 60.000 ticks | Contrato, sessão, campo oficial e candidatos registados com evidência | NOT_RUN |
+| DS-19 | DOLFUT — gráfico 60.000 ticks | Contrato, sessão, campo oficial e candidatos registados com evidência | NOT_RUN |
+| DS-20 | WINFUT — comparar candidatos | Comparar campo oficial com `Open`, `OpenD(0)`, `OpenDaily(0)` e série diária explícita | NOT_RUN |
+| DS-21 | DOLFUT — comparar candidatos | Comparar campo oficial com `Open`, `OpenD(0)`, `OpenDaily(0)` e série diária explícita | NOT_RUN |
+| DS-22 | WINFUT — persistência da referência | Abertura não muda ao recarregar/reprocessar; diferenças ficam auditadas | NOT_RUN |
+| DS-23 | DOLFUT — persistência da referência | Abertura não muda ao recarregar/reprocessar; diferenças ficam auditadas | NOT_RUN |
 
 ## Histórico de versões
 
+- 0.3.0 — 2026-10-12 — matriz explícita WINFUT/DOLFUT em 60.000 ticks e seis casos específicos adicionados; testes continuam não executados.
 - 0.2.0 — 2026-10-12 — casos acrescentados para política B e validação de fontes oficiais; testes não executados.
