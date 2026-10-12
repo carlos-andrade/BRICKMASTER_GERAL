@@ -6,7 +6,7 @@ fase: "FASE_02_DADOS_SESSAO_ABERTURA"
 id_documento: "BM-DATA-001-AUDITORIA-FONTE-NTSl44"
 titulo: "Auditoria documental — candidatos à abertura oficial no Manual NTSL 4.4"
 status: "REVISAO_DOCUMENTAL; VALIDACAO_PROFIT_PENDENTE; DADOS_HISTORICOS_B3_SEIS_SIMBOLOS_SEM_PROFIT_TEMPO_REAL"
-versao: "0.8.0"
+versao: "0.9.0"
 data_criacao: "2026-10-12"
 data_atualizacao: "2026-10-12"
 origem: "Manual NTSL versão 4.4 — 03-08-2026, ficheiro fornecido no projeto"
@@ -138,6 +138,14 @@ A auditoria complementar está documentada em [AUDITORIA_COBERTURA_B3_MERCADOS_E
 - O plano do Módulo 002 foi ampliado para 46 casos com DS-45 e DS-46. Todos permanecem `NOT_RUN`.
 
 A validação continua offline. Nenhum teste NTSL/Profit, replay, backtest ou ordem foi executado nesta adenda.
+
+## Adenda — extração efetiva do catálogo BVBG.028.02 — 2026-10-12
+
+O CSV `ativos/catalogo/INVENTARIO_B3_2026-09-22.csv` foi processado integralmente a partir do Git blob `5d88fa0e319d8398e992537de51bda691dc4a5ab` (Git SHA-1, não SHA-256). Foram contados 120.973 registos e 32 campos; a extração encontrou 70 contratos futuros datados com ID único e campos mínimos completos: IND=12, WIN=11, DOL=24, WDO=23.
+
+Nenhum `TckrSymb` corresponde exatamente a `IND`, `INDFUT`, `DOL`, `DOFUT`, `WIN` ou `WDO`. O resultado comprova famílias de contratos datados, mas não o mapeamento dos aliases da plataforma. Em particular, não autoriza assumir `INDFUT=IND` ou `DOFUT=DOL`; estes aliases permanecem `UNKNOWN/BLOCKED`.
+
+A matriz completa foi guardada em `MODULOS/002-RELOGIO-SESSAO-ABERTURA/data/MATRIZ_CONTRATOS_FUTUROS_BVBG028_2026-09-22.csv`, e a metodologia/limites em `GOVERNANCA/MAPEAMENTO_CATALOGO_B3_ALIASES_E_CONTRATOS_2026-10-12.md`. DS-47 e DS-48 passaram apenas como testes de extração/guardrail. A fonte não contém preços históricos de abertura; DS-45 e DS-46 continuam NOT_RUN.
 
 ## Resultado
 
