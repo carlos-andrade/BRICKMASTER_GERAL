@@ -6,7 +6,7 @@ fase: "GOVERNANCA_E_ROADMAP_00_08"
 id_documento: "BM-CKPT-ROADMAP-2026-10-11-001"
 titulo: "Checkpoint mestre — execução do roadmap BRICKMASTER 00–08"
 status: "CHECKPOINT_ATUAL; FASES_TECNICAS_AINDA_NAO_VALIDADAS"
-versao: "1.0.8"
+versao: "1.0.9"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-12"
 origem: "Execução GitHub e auditorias registadas nesta sessão"
@@ -122,3 +122,32 @@ O utilizador confirmou que utiliza no Profit seis símbolos: INDFUT, DOFUT, IND,
 ## Política operacional — dados históricos armazenados — 2026-10-12
 
 O utilizador determinou que todas as validações devem usar os dados históricos já armazenados em `carlos-andrade/B3`; não é possível consumir dados do Profit em tempo real neste fluxo. A execução deve ser offline e reproduzível, com fonte, caminho, data de referência, SHA-256, granularidade, parser e cobertura registados. Uma auditoria inicial identificou documentação de Market Data e contratos de ingestão, mas não encontrou arquivos brutos BVBG.086.01/BVBG.187.01 nem datasets intraday/negócio a negócio armazenados em `dados/market_data`; a captura está pendente na documentação de ingestão. Foi aberta a issue [B3 #6](https://github.com/carlos-andrade/B3/issues/6) para completar e documentar a cobertura histórica dos seis símbolos. COTAHIST/EOD só pode ser usado para os instrumentos/campos que sua cobertura e semântica realmente comprovarem. O comportamento runtime de `Open`, `OpenD(0)` e `OpenDaily(0)` no Profit não pode ser certificado apenas com documentação ou datasets externos; permanece explicitamente fora da validação offline.
+
+
+## Auditoria complementar de cobertura B3 — 2026-10-12
+
+A inspeção detalhada da árvore B3 identificou uma divergência que deve ser resolvida antes da execução dos testes de cobertura:
+
+- `dados/cotahist/raw/anual/`: 41 ZIPs anuais listados, 1986–2026.
+- `dados/cotahist/normalized/manifests/`: 41 manifests anuais de qualidade listados.
+- `dados/cotahist/normalized/anual/`: apenas 20 CSVs listados — 1986–2004 e 2026. Os CSVs normalizados de 2005–2025 não aparecem nessa pasta apesar de existirem os manifests e os RAW ZIPs.
+- `dados/cotahist/raw/diario/` e `dados/cotahist/normalized/diario/`: 15 datas selecionadas, sem série diária contínua demonstrada.
+- `dados/market_data/`: documentação e inventário; não foram encontrados datasets brutos BVBG.086.01/BVBG.187.01 nem intraday/negócio a negócio nas pastas inspecionadas.
+- Ponteiros de 133/134 bytes podem ser ponteiros Git LFS. Foram confirmados exemplos que declaram objetos reais grandes; não se deve classificar esses ponteiros como ficheiros ausentes. Nesta execução, o conteúdo binário LFS não foi descarregado nem teve o SHA-256 recalculado independentemente.
+- O catálogo BVBG.028.02 está armazenado, mas ainda não foi extraído/analisado integralmente para mapear os seis símbolos a códigos e contratos.
+
+Foi publicada a auditoria `GOVERNANCA/AUDITORIA_COBERTURA_B3_MERCADOS_E_LFS_2026-10-12.md` e acrescentada uma atualização à [B3 issue #6](https://github.com/carlos-andrade/B3/issues/6). A issue passa a solicitar reconciliação dos 41 manifests com os 20 CSVs normalizados, matriz por instrumento/contrato e verificação dos hashes LFS.
+
+**Correção de interpretação:** tamanho 133/134 bytes na resposta da API pode representar apenas o ponteiro LFS; não é evidência de que o conteúdo esteja vazio ou ausente. A lacuna comprovada é a ausência de listagem dos CSVs normalizados anuais de 2005–2025, que precisa ser reconciliada com os manifests.
+
+O plano de testes passa de 44 para 46 casos com DS-45 (reconciliação RAW/normalizado/manifests) e DS-46 (verificação independente do conteúdo LFS). Os 46 permanecem `NOT_RUN`. Nenhuma compilação NTSL, execução Profit, replay, backtest ou ordem foi realizada.
+
+### Próxima decisão bloqueante
+
+1. Aguardar a atualização B3 para a lacuna de normalização anual e a matriz de cobertura dos seis símbolos.
+2. Verificar os objetos LFS por download e SHA-256 independente em ambiente apropriado.
+3. Extrair o cadastro BVBG.028.02 e confirmar código, tipo e vencimento de cada contrato sem equivalências presumidas.
+4. Só depois executar DS-18–DS-46 com evidências reproduzíveis. Manter `UNKNOWN/BLOCKED` enquanto faltar fonte/campo/contrato comprovado.
+5. Não promover para `main` até revisão e validação dos portões.
+
+- 1.0.9 — 2026-10-12 — auditoria complementar B3; identificada divergência entre 41 RAW/manifests anuais e 20 CSVs normalizados listados; esclarecido o tratamento de ponteiros Git LFS; plano ampliado para 46 casos NOT_RUN.
