@@ -5,8 +5,8 @@ tipo_documento: "PLANO_DE_TESTES"
 fase: "FASE_02_DADOS_SESSAO_ABERTURA"
 id_documento: "BM-DATA-001-TESTES"
 titulo: "Plano de testes — Relógio, sessão e abertura"
-status: "49_CASOS; DS-47_DS-48_DS-49_PASS_COM_LIMITES; DS-45_NOT_RUN; DS-46_PARTIAL_PASS_2005"
-versao: "1.0.6"
+status: "49_CASOS; DS-45_PARTIAL_PASS_BLOCKED_2006_2025; DS-46_PARTIAL_PASS_2005; DS-47_DS-48_DS-49_PASS_COM_LIMITES"
+versao: "1.0.7"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-12"
 origem: "Contrato BM-DATA-001-ESPECIFICACAO"
@@ -91,7 +91,7 @@ Usar somente arquivos já armazenados em `carlos-andrade/B3`. Primeiro verificar
 | DS-42 | Ausência de dados de Profit em tempo real | Confirmar que os testes offline não exigem feed/exportação live nem simulam saída de funções NTSL | NOT_RUN |
 | DS-43 | Campo oficial de abertura armazenado | Verificar no layout e no arquivo real se existe campo de abertura aplicável ao contrato; se não existir, registrar lacuna | NOT_RUN |
 | DS-44 | Lacuna de dados e bloqueio | Se não houver arquivo/campo/contrato comprovado, manter `UNKNOWN/BLOCKED` e encaminhar pedido de atualização para B3 issue #6 | NOT_RUN |
-| DS-45 | Reconciliação anual B3 | Comparar anos/arquivos RAW, CSVs normalizados e manifests; bloquear anos com artefacto normalizado ausente ou divergente | NOT_RUN |
+| DS-45 | Reconciliação anual B3 | Inventário estrutural parcial: 41 RAW ZIPs/manifests e 21 CSVs anuais listados; 2006–2025 sem CSV canónico listado, com 2006 manifesto presente mas CSV ausente. Falta reconciliar integralmente conteúdo/hash de todos os anos | PARTIAL_PASS_BLOCKED_2006_2025 |
 | DS-46 | Integridade de objeto Git LFS | Obter o objeto real, recalcular SHA-256 e comparar com o ponteiro LFS e manifest; não aceitar metadados como hash recalculado | PARTIAL_PASS_2005 |
 | DS-47 | Extração do catálogo BVBG.028.02 | Processar o CSV versionado, confirmar 120.973 registos/32 campos, extrair contratos futuros datados, verificar IDs e campos mínimos; evidência no relatório de mapeamento | PASS |
 | DS-48 | Guardrail de aliases | Procurar correspondência exata de IND, INDFUT, DOL, DOFUT, WIN e WDO em TckrSymb; não inferir alias a partir de família de contrato. Resultado: zero correspondências exatas; aliases permanecem UNKNOWN/BLOCKED | PASS |
@@ -155,3 +155,16 @@ Artefactos:
 DS-49 PASS refere-se à execução do probe e à aplicação do guardrail, não a uma afirmação de ausência universal em COTAHIST. DS-45 permanece NOT_RUN; DS-46 PARTIAL_PASS_2005.
 
 - 1.0.5 — 2026-10-12 — escopo DS-49 ampliado e falso positivo DOLX11 corrigido.
+
+
+## Atualização da recuperação COTAHIST 2006 — 2026-10-12
+
+A auditoria da árvore B3 permanece: 41 RAW ZIPs anuais e 41 manifests listados; 21 CSVs normalizados anuais (1986–2005 e 2026); os CSVs canónicos de 2006–2025 não estão listados. Em 2006, o manifesto e sidecar declaram hash normalizado, mas o CSV canónico não existe no caminho esperado.
+
+Foi preparada a branch B3 `feat/cotahist-2006-offline-recovery` com workflows FASE01–FASE11, Gate 06–08 e plano documental. A cadeia usa somente o RAW já armazenado, com validação independente de hash/contagem/campos/datas, e é sequenciada por evidência da fase anterior. **A branch não foi integrada nem executada.** A tentativa de criar PR via integração GitHub devolveu 403; a `main` B3 não foi alterada. Comparação: https://github.com/carlos-andrade/B3/compare/main...feat/cotahist-2006-offline-recovery.
+
+DS-45 passa a `PARTIAL_PASS_BLOCKED_2006_2025`: o inventário estrutural confirmou a lacuna, mas a reconciliação integral dos conteúdos continua pendente. DS-46 permanece `PARTIAL_PASS_2005`, porque a evidência CI de 2005 existe, mas não se generaliza aos restantes objetos LFS.
+
+Foram também registadas falhas dos workflows anuais: a certificação anual e o gerador de dataset oficial falharam por incompatibilidade de parser em 1998 (`1.1.1` no manifesto contra requisito `1.1.0`). Em 1998, o SHA-256 do sidecar diverge do hash declarado pelo manifesto/ponteiro LFS; é necessário reconciliar os bytes reais, sem corrigir hashes por suposição. A abertura dos seis símbolos continua `UNKNOWN/BLOCKED`.
+
+- 1.0.7 — 2026-10-12 — DS-45 atualizado para aprovação parcial com bloqueio após inventário de 41 RAW/manifests versus 21 CSVs; registada proposta não integrada de recuperação offline de 2006 e bloqueios de certificação 1998.
