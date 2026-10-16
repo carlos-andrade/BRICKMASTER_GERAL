@@ -8,7 +8,7 @@
 | **Tipo documental** | ESPECIFICACAO_TECNICA |
 | **Fase** | FEATURE |
 | **Estado** | EXPERIMENTAL |
-| **Versão** | 0.3.0 |
+| **Versão** | 0.4.0 |
 | **SHA-256 (conteúdo canónico)** | PENDENTE — calcular conforme GOV-CAB-NORMA-001 v1.0.3 |
 | **Commit de referência (versão anterior)** | [876f2017ae8ae5fe83d77605ea80dbf737d5a6f9](https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/876f2017ae8ae5fe83d77605ea80dbf737d5a6f9) |
 | **Data de criação** | 2026-10-17 |
@@ -81,3 +81,12 @@ A versão 0.2.0 foi gravada na branch de feature. **A alteração da regra diár
 Após relato de compilação sem plot visível, os seis plots foram configurados explicitamente como histogramas por `SetPlotType` e receberam cores distintas por `SetPlotColor`. Como os valores dos contadores são pequenos em comparação com os preços do ativo, o indicador deve ser adicionado num painel separado para usar uma escala própria, não sobre a escala de preços principal.
 
 Esta alteração foi gravada na branch `feature/bm-force-break-001`, commit `835817c6addbc606e574a28afc063f869ac270b3`. A compilação anterior relatada pelo utilizador não valida esta alteração de visualização. Aguardar nova compilação e confirmar que os histogramas aparecem e incrementam quando as condições B1–B3/A1–A3 ocorrem.
+
+
+## 10. Correção da saída gráfica — versão 0.4.0
+
+Após relato do utilizador de compilação sem exibição, a versão 0.4.0 foi simplificada para utilizar as funções `Plot`, `Plot2`, `Plot3` e `Plot4`, documentadas na secção 19.19 do Manual NTSL 4.4. A implementação anterior com seis `PlotN` e configurações de histograma/cor foi retirada desta versão para reduzir variáveis na investigação.
+
+**Limitação funcional temporária:** esta versão plota somente quatro das seis métricas (abaixo1, abaixo2, abaixo3 e acima1). Os contadores acima2 e acima3 continuam calculados, mas não são plotados nesta etapa. Não declarar como solução final até confirmar visualização no Profit. Após confirmação, criar uma abordagem final para disponibilizar todas as seis métricas sem depender de uma escala invisível ou de recursos de plot incompatíveis.
+
+Commit do código v0.4.0: `c99c9e445ed9f68f85ad3eef895ecfbd6b16699c`. Estado: experimental, aguarda recompilação e evidência visual.
