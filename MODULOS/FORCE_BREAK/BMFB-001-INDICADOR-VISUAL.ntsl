@@ -11,7 +11,7 @@
 // Histórico: primeira implementação experimental.
 
 begin
-  if CurrentBar >= 1 then
+  if CurrentBar() >= 1 then
   begin
     if Close < Low[1] then
       PlotText("B1", clRed, 0, 8);
@@ -20,7 +20,7 @@ begin
       PlotText("A1", clLime, 2, 8);
   end;
 
-  if CurrentBar >= 2 then
+  if CurrentBar() >= 2 then
   begin
     if Close < Low[2] then
       PlotText("B2", clMaroon, 0, 8);
@@ -29,7 +29,7 @@ begin
       PlotText("A2", clGreen, 2, 8);
   end;
 
-  if CurrentBar >= 3 then
+  if CurrentBar() >= 3 then
   begin
     if Close < Low[3] then
       PlotText("B3", clFuchsia, 0, 8);
