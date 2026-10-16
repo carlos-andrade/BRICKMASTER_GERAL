@@ -1,4 +1,4 @@
-# BM_FORCE_BREAK — Primeiro código NTSL
+# BM_FORCE_BREAK — Regra de contabilização diária
 
 | Campo | Valor |
 |---|---|
@@ -8,70 +8,69 @@
 | **Tipo documental** | ESPECIFICACAO_TECNICA |
 | **Fase** | FEATURE |
 | **Estado** | EXPERIMENTAL |
-| **Versão** | 0.1.0 |
+| **Versão** | 0.2.0 |
 | **SHA-256 (conteúdo canónico)** | PENDENTE — calcular conforme GOV-CAB-NORMA-001 v1.0.3 |
-| **Commit de referência (versão anterior)** | [76af18f16fd592809727b79890cdca800ba0aa35](https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/76af18f16fd592809727b79890cdca800ba0aa35) |
+| **Commit de referência (versão anterior)** | [91c11a835d8533feb06998d2145529a2b445aca3](https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/91c11a835d8533feb06998d2145529a2b445aca3) |
 | **Data de criação** | 2026-10-17 |
 | **Data de atualização** | 2026-10-17 |
 | **Responsável** | Responsável técnico do BRICKMASTER RAIZ |
 | **Aprovador** | Pendente |
-| **Origem** | Requisito aprovado nesta conversa: alvo NTSL/Profit; indicador visual e contadores; módulo isolado e sem ordens |
+| **Origem** | Requisito do utilizador após observar contagens a incluir candles do dia anterior |
 | **Autoridade superior** | [GOV-CAB-NORMA-001 v1.0.3](https://github.com/carlos-andrade/GOVERNANCA/blob/main/CABE%C3%87ALHO/NORMA-CABECALHO-PADRAO.md) |
 | **Cadeia de autoridade** | PROMPTS → CARTAS → LAYOUT ÚNICO → CÓDIGO |
-| **Dependências** | Profit/NTSL; gráfico com candles OHLC; especificação BMFB-001 |
-| **Rastreabilidade** | [Estudo BMFB-001](BMFB-001-FECHAMENTOS-MINIMAS-MAXIMAS.md) |
+| **Dependências** | Profit/NTSL; séries Date, Close, Low, High; especificação BMFB-001 |
+| **Rastreabilidade** | [Estudo BMFB-001](BMFB-001-FECHAMENTOS-MINIMAS-MAXIMAS.md); branch `feature/bm-force-break-001` |
 
 ## 1. Objetivo
 
-Entregar a primeira implementação experimental do BM_FORCE_BREAK para NTSL/Profit com dois indicadores independentes: marcação visual no gráfico e contadores cumulativos numa janela de indicador. Permanecem separados para evitar que os valores dos contadores alterem a escala de preços do gráfico principal.
+Impedir que a visualização e os contadores do BM_FORCE_BREAK utilizem candles de uma data anterior à do candle avaliado.
 
-## 2. Contrato funcional
+## 2. Regra oficial de sessão diária
 
-Para candle atual i e distância N:
+Para a barra atual, uma condição com distância N só pode ser avaliada se `Date = Date[N]`. Assim, o fechamento atual é comparado à máxima/mínima do candle N posições atrás somente quando ambos pertencem à mesma data de negociação apresentada pela série `Date` do Profit.
 
-- Abaixo N: `Close[i] < Low[i-N]`.
-- Acima N: `Close[i] > High[i-N]`.
-- N ∈ {1, 2, 3}.
-- Comparações estritas: igualdade não conta.
-- A contagem começa apenas quando existe histórico suficiente para a distância comparada.
-- Os contadores são cumulativos sobre as barras carregadas/recalculadas pelo Profit; não são contadores exclusivos do dia.
-- O indicador visual usa etiquetas: B1/B2/B3 para fechamento abaixo da mínima e A1/A2/A3 para fechamento acima da máxima.
+- N=1: exigir `Date = Date[1]`.
+- N=2: exigir `Date = Date[2]`.
+- N=3: exigir `Date = Date[3]`.
+
+Na primeira barra em que `Date <> Date[1]`, todos os seis contadores são inicializados a zero. As condições N=1, 2 e 3 ficam bloqueadas quando a barra de referência pertence a outra data. A regra não pressupõe que exista uma barra exatamente na abertura; usa a data fornecida pelo Profit.
 
 ## 3. Artefactos
 
-- `BMFB-001-INDICADOR-VISUAL.ntsl`: marcações B1–B3/A1–A3.
-- `BMFB-002-CONTADORES.ntsl`: seis séries cumulativas, plots 0–5.
-- `BMFB-IMPL-001-README.md`: este contrato e registo de validação.
+- `BMFB-001-INDICADOR-VISUAL.ntsl`: marcações B1–B3/A1–A3 apenas quando a barra de referência tem a mesma data.
+- `BMFB-002-CONTADORES.ntsl`: seis contadores cumulativos reiniciados quando muda `Date`.
 
 ## 4. Isolamento e segurança
 
-- Não contém chamadas de compra, venda, cancelamento ou alteração de ordens.
-- Não altera a estratégia central BRICKMASTER, AVGPRICE, stops ou gestão de posição.
-- Não integra automaticamente no BRICKMASTER nem em automações.
-- Deve ser importado como indicador, não como estratégia de execução.
-- Não representa recomendação de entrada; apenas classifica relações entre OHLC.
+- Sem chamadas de compra, venda, cancelamento ou alteração de ordens.
+- Sem integração automática com a estratégia operacional BRICKMASTER.
+- Indicadores experimentais independentes.
+- Os contadores representam somente as ocorrências do dia da barra, dentro do histórico que o Profit calcula.
 
-## 5. Plano de validação
+## 5. Evidência e validação
 
-1. Importar cada ficheiro no editor NTSL do Profit como indicador separado.
-2. Compilar e guardar o resultado da compilação (não presumir sucesso).
-3. Conferir manualmente barras de teste para as seis desigualdades, incluindo igualdade exata e histórico insuficiente.
-4. Verificar os seis contadores contra uma apuração independente sobre OHLC exportado.
-5. Testar em gráfico de ticks, incluindo 60K, e em outro tipo de gráfico; registar plataforma, ativo, período, quantidade de barras e evidências.
-6. Só após evidências, atualizar estado para VALIDADO; produção exige revisão e aprovação separadas.
+O utilizador informou que a versão anterior compilou no Profit e forneceu uma captura de gráfico onde aparecem etiquetas em sequência. A captura motiva a correção, mas não demonstra por si só os valores OHLC nem valida a nova regra diária.
 
-## 6. Limitações conhecidas
+A versão 0.2.0 foi gravada na branch de feature. **A alteração da regra diária ainda precisa de ser compilada e conferida no Profit.** Não declarar esta versão compilada ou validada antes dessa verificação.
 
-- Ainda não compilado nem executado nesta sessão.
-- A disponibilidade de nomes de cores, índice inicial de `CurrentBar`, persistência de variáveis e semântica de recálculo devem ser confirmadas no Profit.
-- Os contadores podem variar conforme a quantidade de barras carregadas e o comportamento de recálculo da plataforma.
-- As etiquetas de várias condições na mesma barra podem sobrepor-se visualmente; ajustar apenas após teste documentado.
-- O SHA-256 canónico permanece pendente até cálculo determinístico.
+## 6. Testes de aceitação
 
-## 7. Estado e próxima ação
+1. No primeiro candle de uma nova data, todos os contadores devem ficar em zero antes de contar ocorrências válidas desse candle.
+2. Nenhum B1/A1 deve surgir se `Date <> Date[1]`.
+3. Nenhum B2/A2 deve surgir se `Date <> Date[2]`.
+4. Nenhum B3/A3 deve surgir se `Date <> Date[3]`.
+5. Na mesma data, as seis desigualdades originais permanecem inalteradas.
+6. Confirmar contagens após recarregar o gráfico e em gráficos de ticks, incluindo 60K.
+7. Guardar evidência de compilação e comparação manual com OHLC.
 
-Estado técnico: EXPERIMENTAL. Estado de validação: PENDENTE_COMPILACAO_PROFIT. Não declarar testado, validado ou pronto para produção até recolher evidência. Próxima ação: compilar os dois indicadores no Profit e registar os resultados, erros e capturas relevantes.
+## 7. Limitações
 
-## 8. Histórico
+- A semântica depende da série `Date` disponibilizada pelo Profit para o gráfico utilizado.
+- Ainda não foi verificado se a configuração de sessão do ativo define a data de negociação esperada para o utilizador.
+- SHA-256 canónico pendente de cálculo determinístico.
+- Nenhuma ordem é emitida e nenhuma integração em produção foi autorizada.
 
-- 2026-10-17 — versão inicial experimental criada para NTSL/Profit, com visualização e contadores separados; sem ordens e sem integração operacional.
+## 8. Histórico de alterações
+
+- **0.1.0 — 2026-10-17:** primeira versão experimental, sem filtro diário.
+- **0.2.0 — 2026-10-17:** filtro `Date = Date[N]` para cada distância e reinício dos seis contadores quando muda a data; aguarda recompilação no Profit.
