@@ -1,14 +1,14 @@
 // BMFB-002 — Contadores cumulativos de rompimentos (reinício diário)
 // Projeto: BRICKMASTER RAIZ / BM_FORCE_BREAK
 // Estado: EXPERIMENTAL — não aprovado para produção
-// Versão: 0.2.0 | Data: 2026-10-17
+// Versão: 0.2.1 | Data: 2026-10-17
 // Norma: GOV-CAB-NORMA-001 v1.0.3
 // Repositório: https://github.com/carlos-andrade/BRICKMASTER_GERAL
 // Especificação: MODULOS/FORCE_BREAK/BMFB-001-FECHAMENTOS-MINIMAS-MAXIMAS.md
 // Regra diária: zerar contadores quando Date <> Date[1]; comparar apenas barras da mesma data.
 // Segurança: indicador sem funções de ordens; contagens limitadas ao dia da barra.
 // Validação: versão anterior compilada conforme relato do utilizador; esta alteração diária aguarda nova compilação.
-// Histórico: v0.2.0 reseta os seis contadores na primeira barra de uma nova data.
+// Histórico: v0.2.1 corrige os índices PlotN para a faixa válida 1–99; v0.2.0 implementou reinício diário.
 
 var
   abaixo1 : Integer;
@@ -68,10 +68,10 @@ begin
     end;
   end;
 
-  PlotN(0, abaixo1);
-  PlotN(1, abaixo2);
-  PlotN(2, abaixo3);
-  PlotN(3, acima1);
-  PlotN(4, acima2);
-  PlotN(5, acima3);
+  PlotN(1, abaixo1);
+  PlotN(2, abaixo2);
+  PlotN(3, abaixo3);
+  PlotN(4, acima1);
+  PlotN(5, acima2);
+  PlotN(6, acima3);
 end;
