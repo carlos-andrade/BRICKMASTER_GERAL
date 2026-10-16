@@ -1,14 +1,14 @@
-// BMFB-002 — Contadores cumulativos de rompimentos
+// BMFB-002 — Contadores cumulativos de rompimentos (reinício diário)
 // Projeto: BRICKMASTER RAIZ / BM_FORCE_BREAK
 // Estado: EXPERIMENTAL — não aprovado para produção
-// Versão: 0.1.0 | Data: 2026-10-17
+// Versão: 0.2.0 | Data: 2026-10-17
 // Norma: GOV-CAB-NORMA-001 v1.0.3
 // Repositório: https://github.com/carlos-andrade/BRICKMASTER_GERAL
 // Especificação: MODULOS/FORCE_BREAK/BMFB-001-FECHAMENTOS-MINIMAS-MAXIMAS.md
-// Escopo: seis contadores cumulativos para Close[i] < Low[i-N] e Close[i] > High[i-N], N=1..3.
-// Segurança: indicador sem funções de ordens; contagens referem-se ao histórico carregado no gráfico.
-// Validação: código ainda não compilado nem executado no Profit nesta sessão.
-// Histórico: primeira implementação experimental.
+// Regra diária: zerar contadores quando Date <> Date[1]; comparar apenas barras da mesma data.
+// Segurança: indicador sem funções de ordens; contagens limitadas ao dia da barra.
+// Validação: versão anterior compilada conforme relato do utilizador; esta alteração diária aguarda nova compilação.
+// Histórico: v0.2.0 reseta os seis contadores na primeira barra de uma nova data.
 
 var
   abaixo1 : Integer;
@@ -30,26 +30,38 @@ begin
   end
   else
   begin
-    abaixo1 := abaixo1[1];
-    abaixo2 := abaixo2[1];
-    abaixo3 := abaixo3[1];
-    acima1 := acima1[1];
-    acima2 := acima2[1];
-    acima3 := acima3[1];
+    if Date <> Date[1] then
+    begin
+      abaixo1 := 0;
+      abaixo2 := 0;
+      abaixo3 := 0;
+      acima1 := 0;
+      acima2 := 0;
+      acima3 := 0;
+    end
+    else
+    begin
+      abaixo1 := abaixo1[1];
+      abaixo2 := abaixo2[1];
+      abaixo3 := abaixo3[1];
+      acima1 := acima1[1];
+      acima2 := acima2[1];
+      acima3 := acima3[1];
+    end;
 
-    if CurrentBar() >= 1 then
+    if (CurrentBar() >= 1) and (Date = Date[1]) then
     begin
       if Close < Low[1] then abaixo1 := abaixo1 + 1;
       if Close > High[1] then acima1 := acima1 + 1;
     end;
 
-    if CurrentBar() >= 2 then
+    if (CurrentBar() >= 2) and (Date = Date[2]) then
     begin
       if Close < Low[2] then abaixo2 := abaixo2 + 1;
       if Close > High[2] then acima2 := acima2 + 1;
     end;
 
-    if CurrentBar() >= 3 then
+    if (CurrentBar() >= 3) and (Date = Date[3]) then
     begin
       if Close < Low[3] then abaixo3 := abaixo3 + 1;
       if Close > High[3] then acima3 := acima3 + 1;
