@@ -19,7 +19,7 @@ var
   acima3 : Integer;
 
 begin
-  if CurrentBar = 0 then
+  if CurrentBar() = 0 then
   begin
     abaixo1 := 0;
     abaixo2 := 0;
@@ -37,19 +37,19 @@ begin
     acima2 := acima2[1];
     acima3 := acima3[1];
 
-    if CurrentBar >= 1 then
+    if CurrentBar() >= 1 then
     begin
       if Close < Low[1] then abaixo1 := abaixo1 + 1;
       if Close > High[1] then acima1 := acima1 + 1;
     end;
 
-    if CurrentBar >= 2 then
+    if CurrentBar() >= 2 then
     begin
       if Close < Low[2] then abaixo2 := abaixo2 + 1;
       if Close > High[2] then acima2 := acima2 + 1;
     end;
 
-    if CurrentBar >= 3 then
+    if CurrentBar() >= 3 then
     begin
       if Close < Low[3] then abaixo3 := abaixo3 + 1;
       if Close > High[3] then acima3 := acima3 + 1;
