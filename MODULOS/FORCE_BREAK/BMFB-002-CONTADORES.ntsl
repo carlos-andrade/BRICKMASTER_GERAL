@@ -1,14 +1,16 @@
-// BMFB-002 — Contadores cumulativos de rompimentos (reinício diário)
+// BMFB-002 — Contadores diários de rompimentos (plots explícitos)
 // Projeto: BRICKMASTER RAIZ / BM_FORCE_BREAK
 // Estado: EXPERIMENTAL — não aprovado para produção
-// Versão: 0.2.1 | Data: 2026-10-17
+// Versão: 0.3.0 | Data: 2026-10-17
 // Norma: GOV-CAB-NORMA-001 v1.0.3
 // Repositório: https://github.com/carlos-andrade/BRICKMASTER_GERAL
 // Especificação: MODULOS/FORCE_BREAK/BMFB-001-FECHAMENTOS-MINIMAS-MAXIMAS.md
-// Regra diária: zerar contadores quando Date <> Date[1]; comparar apenas barras da mesma data.
-// Segurança: indicador sem funções de ordens; contagens limitadas ao dia da barra.
-// Validação: versão anterior compilada conforme relato do utilizador; esta alteração diária aguarda nova compilação.
-// Histórico: v0.2.1 corrige os índices PlotN para a faixa válida 1–99; v0.2.0 implementou reinício diário.
+// Regra diária: contadores reiniciam quando Date muda; comparar apenas barras da mesma data.
+// Visualização: seis plots configurados como histogramas e cores explícitas.
+// IMPORTANTE: adicionar como indicador em painel separado, não sobre a escala de preços.
+// Segurança: não contém funções de envio de ordens.
+// Validação: alteração de visualização ainda precisa de confirmação no Profit.
+// Histórico: v0.3.0 configura explicitamente tipo e cores dos seis plots.
 
 var
   abaixo1 : Integer;
@@ -74,4 +76,18 @@ begin
   PlotN(4, acima1);
   PlotN(5, acima2);
   PlotN(6, acima3);
+
+  SetPlotType(1, 1);
+  SetPlotType(2, 1);
+  SetPlotType(3, 1);
+  SetPlotType(4, 1);
+  SetPlotType(5, 1);
+  SetPlotType(6, 1);
+
+  SetPlotColor(1, clRed);
+  SetPlotColor(2, clMaroon);
+  SetPlotColor(3, clFuchsia);
+  SetPlotColor(4, clLime);
+  SetPlotColor(5, clGreen);
+  SetPlotColor(6, clAqua);
 end;
