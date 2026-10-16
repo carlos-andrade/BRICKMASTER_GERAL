@@ -9,7 +9,7 @@
 | **Fase** | DESCOBERTA_E_ESPECIFICACAO |
 | **Estado** | EM_REVISAO |
 | **Versão** | 1.0.1 |
-| **SHA-256 (conteúdo canónico)** | CALCULAR_APÓS_PREENCHER |
+| **SHA-256 (conteúdo canónico)** | PENDENTE — cálculo determinístico ainda não executado nesta sessão |
 | **Commit de referência (versão anterior)** | [83090e784663cdc1ff2313e628c986e83c066493](https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/83090e784663cdc1ff2313e628c986e83c066493) |
 | **Data de criação** | 2026-10-16 |
 | **Data de atualização** | 2026-10-17 |
