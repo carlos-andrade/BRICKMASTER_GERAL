@@ -8,9 +8,9 @@
 | **Tipo documental** | ESPECIFICACAO_TECNICA |
 | **Fase** | FEATURE |
 | **Estado** | EXPERIMENTAL |
-| **Versão** | 0.2.0 |
+| **Versão** | 0.3.0 |
 | **SHA-256 (conteúdo canónico)** | PENDENTE — calcular conforme GOV-CAB-NORMA-001 v1.0.3 |
-| **Commit de referência (versão anterior)** | [91c11a835d8533feb06998d2145529a2b445aca3](https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/91c11a835d8533feb06998d2145529a2b445aca3) |
+| **Commit de referência (versão anterior)** | [876f2017ae8ae5fe83d77605ea80dbf737d5a6f9](https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/876f2017ae8ae5fe83d77605ea80dbf737d5a6f9) |
 | **Data de criação** | 2026-10-17 |
 | **Data de atualização** | 2026-10-17 |
 | **Responsável** | Responsável técnico do BRICKMASTER RAIZ |
@@ -74,3 +74,10 @@ A versão 0.2.0 foi gravada na branch de feature. **A alteração da regra diár
 
 - **0.1.0 — 2026-10-17:** primeira versão experimental, sem filtro diário.
 - **0.2.0 — 2026-10-17:** filtro `Date = Date[N]` para cada distância e reinício dos seis contadores quando muda a data; aguarda recompilação no Profit.
+
+
+## 9. Correção de visualização — versão 0.3.0
+
+Após relato de compilação sem plot visível, os seis plots foram configurados explicitamente como histogramas por `SetPlotType` e receberam cores distintas por `SetPlotColor`. Como os valores dos contadores são pequenos em comparação com os preços do ativo, o indicador deve ser adicionado num painel separado para usar uma escala própria, não sobre a escala de preços principal.
+
+Esta alteração foi gravada na branch `feature/bm-force-break-001`, commit `835817c6addbc606e574a28afc063f869ac270b3`. A compilação anterior relatada pelo utilizador não valida esta alteração de visualização. Aguardar nova compilação e confirmar que os histogramas aparecem e incrementam quando as condições B1–B3/A1–A3 ocorrem.
