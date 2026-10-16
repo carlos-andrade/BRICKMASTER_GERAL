@@ -1,12 +1,39 @@
 # BMFB-001 — Fechamentos além da mínima/máxima de candles anteriores
 
-- **Módulo:** BRICKMASTER FORCE BREAK (`BM_FORCE_BREAK`)
-- **Estado:** EXPERIMENTAL — regra de contagem definida; apuração numérica pendente
-- **Documento migrado de:** `MODULOS/DESCOBERTA/DESC-001-FECHAMENTOS-RELATIVOS-CANDLES.md`
-- **Fontes:** duas imagens de gráfico fornecidas na conversa
-- **Amostra A:** candles numerados de 1 a 96
-- **Amostra B:** candles numerados de 1 a 72
-- **Validação OHLC:** pendente; os dados numéricos exportados não foram fornecidos
+| Campo | Valor |
+|---|---|
+| **ID** | BMFB-001 |
+| **Projeto** | BRICKMASTER RAIZ — módulo FORCE BREAK |
+| **Repositório** | [carlos-andrade/BRICKMASTER_GERAL](https://github.com/carlos-andrade/BRICKMASTER_GERAL) |
+| **Tipo documental** | RELATORIO |
+| **Fase** | DESCOBERTA_E_ESPECIFICACAO |
+| **Estado** | EXPERIMENTAL |
+| **Versão** | 1.0.1 |
+| **SHA-256 (conteúdo canónico)** | CALCULAR_APÓS_PREENCHER |
+| **Commit de referência (versão anterior)** | [83090e784663cdc1ff2313e628c986e83c066493](https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/83090e784663cdc1ff2313e628c986e83c066493) |
+| **Data de criação** | 2026-10-16 |
+| **Data de atualização** | 2026-10-17 |
+| **Responsável** | Responsável técnico do BRICKMASTER RAIZ |
+| **Aprovador** | Pendente — aprovação do estudo não registada |
+| **Origem** | Instruções do utilizador e duas imagens de gráfico fornecidas nesta conversa; documento migrado de `MODULOS/DESCOBERTA/DESC-001-FECHAMENTOS-RELATIVOS-CANDLES.md` |
+| **Autoridade superior** | [Norma de cabeçalho documental GOV-CAB-NORMA-001 v1.0.3](https://github.com/carlos-andrade/GOVERNANCA/blob/main/CABE%C3%87ALHO/NORMA-CABECALHO-PADRAO.md); [Governança técnica BRICKMASTER](https://github.com/carlos-andrade/BRICKMASTER_GERAL/blob/main/BRICKMASTER_ARQUITETURA/GOVERNANCA.md) |
+| **Cadeia de autoridade** | PROMPTS → CARTAS → LAYOUT ÚNICO → CÓDIGO |
+| **Rastreabilidade** | [Commit de correção da regra original](https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/aeee3925a4cae60ca1823ead5ccc536cf1398bbf); [commit de migração](https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/a76a7d453ccddbbdf5126160ee46d1b2658fe279) |
+| **Escopo** | Contagem experimental das seis condições matemáticas sobre duas amostras visuais; não inclui execução operacional |
+| **Objetivo** | Definir e apurar quantas vezes o fechamento do candle atual ultrapassa mínima ou máxima do candle exatamente N posições atrás |
+| **Dependências** | Exportações OHLC correspondentes às imagens; preservação da ordem das observações; revisão reproduzível das ocorrências |
+
+## Contexto Histórico
+
+O estudo foi iniciado a partir de duas imagens com candles numerados de 1 a 96 e de 1 a 72. A regra foi esclarecida pelo utilizador e corrigida em commit anterior à migração. Em 2026-10-16, o estudo foi movido de `MODULOS/DESCOBERTA/` para `MODULOS/FORCE_BREAK/`. O conteúdo e a regra matemática são preservados nesta atualização; a alteração atual normaliza o cabeçalho documental e explicita rastreabilidade e governança.
+
+## Estado
+
+- **Estado técnico:** EXPERIMENTAL.
+- **Estado da apuração:** PENDENTE_OHLC.
+- **Validação numérica:** não realizada; os preços OHLC correspondentes não foram fornecidos.
+- **Testes NTSL/Profit, replay, backtest e ordens:** não realizados nem declarados.
+- **Produção:** não aprovado.
 
 ## 1. Objetivo
 
@@ -36,7 +63,7 @@ Igualdade não conta como abaixo nem acima: as condições são estritas (`<` e 
 
 Nas imagens fornecidas, verde indica candle que fechou acima da própria abertura e vermelho indica candle que fechou abaixo da própria abertura. A cor, isoladamente, não determina se o fechamento atual ficou abaixo da mínima ou acima da máxima de um candle anterior; para isso, é necessário comparar os níveis de preço definidos na seção 2.
 
-## 4. Estado da apuração
+## 4. Estado da apuração e resultados
 
 As imagens mostram a sequência numerada, mas não fornecem uma tabela OHLC exportável. Uma leitura aproximada de pixels pode produzir erros nos níveis de máxima, mínima e fechamento, sobretudo em candles pequenos, sobrepostos ou com escala comprimida. Portanto, não declarar contagens exatas com base apenas nas cores.
 
@@ -106,12 +133,42 @@ Critérios de controle:
 - A amostra A e a amostra B são apuradas separadamente.
 - Para cada N, existem n-N observações elegíveis, se os candles forem consecutivos e completos.
 - Abaixo e acima são contagens independentes; não se deve assumir que sejam complementares.
-- Validar o resultado por revisão dos casos sinalizados e guardar a origem dos dados.
+- Revisar cada ocorrência sinalizada e guardar a origem dos dados e o procedimento da apuração.
+- Não combinar amostras nem extrapolar resultados para outros períodos ou ativos sem declarar e validar essa mudança de escopo.
 
-## 7. Limitações e conclusão
+## 7. Dependências, riscos e limitações
 
 - Os números de candles visíveis nas imagens não provam que as séries sejam contínuas ou que não haja candles ocultos.
 - A contagem numérica continua pendente até obter os preços OHLC correspondentes.
 - O critério foi definido conforme a instrução explícita do utilizador.
-- Estado atual: **EXPERIMENTAL — definição confirmada, contagem pendente de dados OHLC**.
-- Não utilizar como estatística validada, backtest ou regra de produção antes da validação.
+- As contagens elegíveis (n-N) pressupõem uma série consecutiva e completa; isso ainda depende de verificação.
+- Uma contagem correta, isoladamente, não prova força preditiva nem garante resultado operacional.
+
+## Evidências
+
+- [Norma de cabeçalho GOV-CAB-NORMA-001 v1.0.3](https://github.com/carlos-andrade/GOVERNANCA/blob/main/CABE%C3%87ALHO/NORMA-CABECALHO-PADRAO.md)
+- [Governança técnica do BRICKMASTER](https://github.com/carlos-andrade/BRICKMASTER_GERAL/blob/main/BRICKMASTER_ARQUITETURA/GOVERNANCA.md)
+- [Commit de correção da regra original](https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/aeee3925a4cae60ca1823ead5ccc536cf1398bbf)
+- [Commit de migração para FORCE_BREAK](https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/a76a7d453ccddbbdf5126160ee46d1b2658fe279)
+
+## Validação
+
+Revisão documental preliminar em 2026-10-17: o conjunto de condições e as tabelas foram preservados; foi acrescentada a governança documental e o estado de validação. O resultado estatístico permanece desconhecido por ausência de OHLC. O cabeçalho de integridade será concluído com SHA-256 canónico após a normalização, sem confundir esse valor com o SHA do blob Git.
+
+## Resultado
+
+Regra matemática documentada; nenhuma contagem numérica validada. Não utilizar como estatística comprovada, backtest, recomendação financeira ou regra de produção antes da validação apropriada.
+
+## Próxima Ação
+
+1. Obter as exportações OHLC idênticas às duas amostras.
+2. Executar a contagem reproduzível e revisar os eventos.
+3. Calcular e conferir o SHA-256 canónico de cada documento segundo a norma GOV.
+4. Rever a aceitação e atualizar o estado apenas com evidência.
+
+## Histórico de alterações
+
+| Versão | Data | Alteração | Responsável | Evidência |
+|---|---|---|---|---|
+| 1.0.0 | 2026-10-16 | Documento original migrado para FORCE_BREAK | Responsável técnico do projeto | [Commit a76a7d4](https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/a76a7d453ccddbbdf5126160ee46d1b2658fe279) |
+| 1.0.1 | 2026-10-17 | Cabeçalho normalizado e metadados/rastreabilidade GOV acrescentados; regra e amostras preservadas | Responsável técnico do projeto | Commit desta atualização |
