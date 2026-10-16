@@ -1,17 +1,17 @@
-// BMFB-001 — Indicador visual de rompimentos
+// BMFB-001 — Indicador visual de rompimentos (somente dia atual)
 // Projeto: BRICKMASTER RAIZ / BM_FORCE_BREAK
 // Estado: EXPERIMENTAL — não aprovado para produção
-// Versão: 0.1.0 | Data: 2026-10-17
+// Versão: 0.2.0 | Data: 2026-10-17
 // Norma: GOV-CAB-NORMA-001 v1.0.3
 // Repositório: https://github.com/carlos-andrade/BRICKMASTER_GERAL
 // Especificação: MODULOS/FORCE_BREAK/BMFB-001-FECHAMENTOS-MINIMAS-MAXIMAS.md
-// Escopo: marcação visual de Close[i] < Low[i-N] e Close[i] > High[i-N], N=1..3.
+// Regra diária: só comparar candles cuja Date seja igual à Date do candle atual.
 // Segurança: indicador sem funções de ordens; não acoplar ao BRICKMASTER operacional.
-// Validação: código ainda não compilado nem executado no Profit nesta sessão.
-// Histórico: primeira implementação experimental.
+// Validação: versão anterior compilada conforme relato do utilizador; esta alteração diária aguarda nova compilação.
+// Histórico: v0.2.0 bloqueia sinais que comparem candles de dias diferentes.
 
 begin
-  if CurrentBar() >= 1 then
+  if (CurrentBar() >= 1) and (Date = Date[1]) then
   begin
     if Close < Low[1] then
       PlotText("B1", clRed, 0, 8);
@@ -20,7 +20,7 @@ begin
       PlotText("A1", clLime, 2, 8);
   end;
 
-  if CurrentBar() >= 2 then
+  if (CurrentBar() >= 2) and (Date = Date[2]) then
   begin
     if Close < Low[2] then
       PlotText("B2", clMaroon, 0, 8);
@@ -29,7 +29,7 @@ begin
       PlotText("A2", clGreen, 2, 8);
   end;
 
-  if CurrentBar() >= 3 then
+  if (CurrentBar() >= 3) and (Date = Date[3]) then
   begin
     if Close < Low[3] then
       PlotText("B3", clFuchsia, 0, 8);
