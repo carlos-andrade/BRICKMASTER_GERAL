@@ -1,17 +1,16 @@
-// BMFB-002 — Contadores diários com marcação visual no candle
+// BMFB-002 — Contadores diários com marcação visual por N candles anteriores
 // Projeto: BRICKMASTER RAIZ / BM_FORCE_BREAK
 // Estado: EXPERIMENTAL — não aprovado para produção
-// Versão: 0.5.0 | Data: 2026-10-17
+// Versão: 0.6.0 | Data: 2026-10-17
 // Norma: GOV-CAB-NORMA-001 v1.0.3
 // Repositório: https://github.com/carlos-andrade/BRICKMASTER_GERAL
 // Especificação: MODULOS/FORCE_BREAK/BMFB-001-FECHAMENTOS-MINIMAS-MAXIMAS.md
-// Regra diária: contadores reiniciam quando Date muda; comparar apenas candles da mesma data.
-// Visualização: etiquetas B1/B2/B3 abaixo e A1/A2/A3 acima dos candles, usando PlotText como BMFB-001.
-// Contadores: seis séries cumulativas mantidas para cálculo interno; não desenhar linhas de contagem.
-// Segurança: não contém funções de envio de ordens.
-// Validação: requer compilação e verificação visual no Profit.
-// Histórico: v0.5.0 substitui plots de linhas pela marcação PlotText igual ao primeiro indicador visual.
-
+// Regra diária: contadores reiniciam quando Date muda; todas as barras de referência devem ser da mesma data.
+// A_N exige Close acima de TODAS as máximas dos N candles anteriores; B_N abaixo de TODAS as mínimas.
+// Visualização: etiquetas B1/B2/B3 abaixo e A1/A2/A3 acima dos candles via PlotText.
+// Segurança: sem funções de envio de ordens; módulo isolado.
+// Validação: requer compilação e conferência visual no Profit.
+// Histórico: v0.6.0 corrige condições N=2 e N=3 para verificar todos os N candles anteriores.
 var
   abaixo1 : Integer;
   abaixo2 : Integer;
@@ -19,81 +18,38 @@ var
   acima1 : Integer;
   acima2 : Integer;
   acima3 : Integer;
-
 begin
   if CurrentBar() = 0 then
   begin
-    abaixo1 := 0;
-    abaixo2 := 0;
-    abaixo3 := 0;
-    acima1 := 0;
-    acima2 := 0;
-    acima3 := 0;
+    abaixo1 := 0; abaixo2 := 0; abaixo3 := 0;
+    acima1 := 0; acima2 := 0; acima3 := 0;
   end
   else
   begin
     if Date <> Date[1] then
     begin
-      abaixo1 := 0;
-      abaixo2 := 0;
-      abaixo3 := 0;
-      acima1 := 0;
-      acima2 := 0;
-      acima3 := 0;
+      abaixo1 := 0; abaixo2 := 0; abaixo3 := 0;
+      acima1 := 0; acima2 := 0; acima3 := 0;
     end
     else
     begin
-      abaixo1 := abaixo1[1];
-      abaixo2 := abaixo2[1];
-      abaixo3 := abaixo3[1];
-      acima1 := acima1[1];
-      acima2 := acima2[1];
-      acima3 := acima3[1];
+      abaixo1 := abaixo1[1]; abaixo2 := abaixo2[1]; abaixo3 := abaixo3[1];
+      acima1 := acima1[1]; acima2 := acima2[1]; acima3 := acima3[1];
     end;
-
     if (CurrentBar() >= 1) and (Date = Date[1]) then
     begin
-      if Close < Low[1] then
-      begin
-        abaixo1 := abaixo1 + 1;
-        PlotText("B1", clRed, 0, 8);
-      end;
-
-      if Close > High[1] then
-      begin
-        acima1 := acima1 + 1;
-        PlotText("A1", clLime, 2, 8);
-      end;
+      if Close < Low[1] then begin abaixo1 := abaixo1 + 1; PlotText("B1", clRed, 0, 8); end;
+      if Close > High[1] then begin acima1 := acima1 + 1; PlotText("A1", clLime, 2, 8); end;
     end;
-
-    if (CurrentBar() >= 2) and (Date = Date[2]) then
+    if (CurrentBar() >= 2) and (Date = Date[1]) and (Date = Date[2]) then
     begin
-      if Close < Low[2] then
-      begin
-        abaixo2 := abaixo2 + 1;
-        PlotText("B2", clMaroon, 0, 8);
-      end;
-
-      if Close > High[2] then
-      begin
-        acima2 := acima2 + 1;
-        PlotText("A2", clGreen, 2, 8);
-      end;
+      if (Close < Low[1]) and (Close < Low[2]) then begin abaixo2 := abaixo2 + 1; PlotText("B2", clMaroon, 0, 8); end;
+      if (Close > High[1]) and (Close > High[2]) then begin acima2 := acima2 + 1; PlotText("A2", clGreen, 2, 8); end;
     end;
-
-    if (CurrentBar() >= 3) and (Date = Date[3]) then
+    if (CurrentBar() >= 3) and (Date = Date[1]) and (Date = Date[2]) and (Date = Date[3]) then
     begin
-      if Close < Low[3] then
-      begin
-        abaixo3 := abaixo3 + 1;
-        PlotText("B3", clFuchsia, 0, 8);
-      end;
-
-      if Close > High[3] then
-      begin
-        acima3 := acima3 + 1;
-        PlotText("A3", clAqua, 2, 8);
-      end;
+      if (Close < Low[1]) and (Close < Low[2]) and (Close < Low[3]) then begin abaixo3 := abaixo3 + 1; PlotText("B3", clFuchsia, 0, 8); end;
+      if (Close > High[1]) and (Close > High[2]) and (Close > High[3]) then begin acima3 := acima3 + 1; PlotText("A3", clAqua, 2, 8); end;
     end;
   end;
 end;
