@@ -97,3 +97,14 @@ Commit do código v0.4.0: `c99c9e445ed9f68f85ad3eef895ecfbd6b16699c`. Estado: ex
 A pedido do utilizador, o `BMFB-002-CONTADORES.ntsl` deixou de desenhar linhas de contagem. Passa a desenhar as etiquetas `B1`, `B2`, `B3`, `A1`, `A2` e `A3` diretamente nos candles, com `PlotText`, seguindo a mesma forma visual do primeiro código `BMFB-001-INDICADOR-VISUAL.ntsl`. Os seis contadores cumulativos continuam calculados internamente e reiniciam na mudança de data.
 
 Código v0.5.0 gravado na branch `feature/bm-force-break-001`, commit `27bf0fee7405f08a995eb048d93c8462a506ac7c`. A alteração requer nova compilação e confirmação visual no Profit; não declarar validada até receber essa evidência.
+
+
+## 12. Correção semântica dos rompimentos — v0.3.0 / v0.6.0
+
+A imagem reportada pelo utilizador demonstrou que a regra anterior para A3/B3 era insuficiente para a interpretação operacional pretendida: comparar somente com a máxima/mínima do candle exatamente N posições atrás. A regra foi clarificada para comparar o fechamento atual com **todos os N candles anteriores**:
+- A1: Close > High[1]; B1: Close < Low[1].
+- A2: Close > High[1] e High[2]; B2: Close < Low[1] e Low[2].
+- A3: Close > High[1], High[2] e High[3]; B3: Close < Low[1], Low[2] e Low[3].
+Todas as barras de referência também precisam pertencer à mesma data do candle atual. Assim, um candle que feche abaixo de qualquer uma das três mínimas anteriores não pode receber A3; A3 exige fechamento acima das três máximas anteriores.
+
+Atualizados os dois códigos na branch `feature/bm-force-break-001`. Commits: indicador visual `b0d84a4c951cbc82c8f8da92e138edf83bfacba9`; contadores `5df2514293665f9ca36c9cc8b548a3424c05afc0`. Estado experimental; requer recompilação e validação no Profit.
