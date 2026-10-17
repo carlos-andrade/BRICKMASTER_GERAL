@@ -1,40 +1,30 @@
-// BMFB-001 — Indicador visual de rompimentos (somente dia atual)
+// BMFB-001 — Indicador visual de rompimentos por N candles anteriores
 // Projeto: BRICKMASTER RAIZ / BM_FORCE_BREAK
 // Estado: EXPERIMENTAL — não aprovado para produção
-// Versão: 0.2.0 | Data: 2026-10-17
+// Versão: 0.3.0 | Data: 2026-10-17
 // Norma: GOV-CAB-NORMA-001 v1.0.3
 // Repositório: https://github.com/carlos-andrade/BRICKMASTER_GERAL
 // Especificação: MODULOS/FORCE_BREAK/BMFB-001-FECHAMENTOS-MINIMAS-MAXIMAS.md
-// Regra diária: só comparar candles cuja Date seja igual à Date do candle atual.
-// Segurança: indicador sem funções de ordens; não acoplar ao BRICKMASTER operacional.
-// Validação: versão anterior compilada conforme relato do utilizador; esta alteração diária aguarda nova compilação.
-// Histórico: v0.2.0 bloqueia sinais que comparem candles de dias diferentes.
-
+// Regra diária: todas as N barras de referência devem pertencer à mesma data da barra atual.
+// Regra N: A_N exige Close acima de TODAS as máximas dos N candles anteriores;
+// B_N exige Close abaixo de TODAS as mínimas dos N candles anteriores.
+// Segurança: indicador sem funções de ordens; módulo isolado.
+// Validação: aguarda compilação e conferência no Profit.
+// Histórico: v0.3.0 corrige A2/A3 e B2/B3 para exigir rompimento do conjunto dos últimos N candles.
 begin
   if (CurrentBar() >= 1) and (Date = Date[1]) then
   begin
-    if Close < Low[1] then
-      PlotText("B1", clRed, 0, 8);
-
-    if Close > High[1] then
-      PlotText("A1", clLime, 2, 8);
+    if Close < Low[1] then PlotText("B1", clRed, 0, 8);
+    if Close > High[1] then PlotText("A1", clLime, 2, 8);
   end;
-
-  if (CurrentBar() >= 2) and (Date = Date[2]) then
+  if (CurrentBar() >= 2) and (Date = Date[1]) and (Date = Date[2]) then
   begin
-    if Close < Low[2] then
-      PlotText("B2", clMaroon, 0, 8);
-
-    if Close > High[2] then
-      PlotText("A2", clGreen, 2, 8);
+    if (Close < Low[1]) and (Close < Low[2]) then PlotText("B2", clMaroon, 0, 8);
+    if (Close > High[1]) and (Close > High[2]) then PlotText("A2", clGreen, 2, 8);
   end;
-
-  if (CurrentBar() >= 3) and (Date = Date[3]) then
+  if (CurrentBar() >= 3) and (Date = Date[1]) and (Date = Date[2]) and (Date = Date[3]) then
   begin
-    if Close < Low[3] then
-      PlotText("B3", clFuchsia, 0, 8);
-
-    if Close > High[3] then
-      PlotText("A3", clAqua, 2, 8);
+    if (Close < Low[1]) and (Close < Low[2]) and (Close < Low[3]) then PlotText("B3", clFuchsia, 0, 8);
+    if (Close > High[1]) and (Close > High[2]) and (Close > High[3]) then PlotText("A3", clAqua, 2, 8);
   end;
 end;
