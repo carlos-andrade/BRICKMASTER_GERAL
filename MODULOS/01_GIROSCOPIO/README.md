@@ -2,7 +2,7 @@
 PROJETO: BRICKMASTER GERAL
 DOCUMENTO: Giroscópio — Núcleo de Estado do Mercado
 IDENTIFICADOR: BM-001
-VERSÃO: 1.1.0
+VERSÃO: 1.2.0
 ESTADO: DOCUMENTADO — PROPOSTA EM EVOLUÇÃO; NÃO VALIDADA EM PRODUÇÃO
 CRIADO EM: 2026-10-11
 ÚLTIMA REVISÃO: 2026-10-17
@@ -11,14 +11,15 @@ REPOSITÓRIO: https://github.com/carlos-andrade/BRICKMASTER_GERAL
 DIRETÓRIO: MODULOS/01_GIROSCOPIO
 HISTÓRICO:
 - 2026-10-11 | v1.0.0 | Estrutura inicial modular e regras de governança.
-- 2026-10-17 | v1.1.0 | Adicionadas referência de abertura e bandas percentuais, analogia de monotrilho, artefatos associados, regra de persistência e estado de validação.
+- 2026-10-17 | v1.1.0 | Referência de abertura e bandas percentuais, analogia do monotrilho e regra de persistência.
+- 2026-10-17 | v1.2.0 | Modelo formal de inclinação, níveis discretos, métricas dinâmicas e Índice de Resposta Corretiva (IRC) como proposta.
 FONTE DA VERDADE: documentação e código versionados neste repositório.
 -->
 
 # Giroscópio — Núcleo de Estado do Mercado
 
 **Identificador:** BM-001  
-**Versão:** 1.1.0  
+**Versão:** 1.2.0  
 **Estado:** DOCUMENTADO — proposta em evolução; não validada em produção.  
 **Última revisão:** 2026-10-17
 
@@ -34,29 +35,25 @@ O nome “Giroscópio” inspira-se no princípio de controle ativo de estabilid
 
 No mercado, isso é uma **analogia de arquitetura**, não uma equivalência física. O preço não obedece às leis de um giroscópio. O módulo deve observar localização, deslocamento, continuidade, resposta do preço e evidências independentes de fluxo; nenhuma dessas variáveis, isoladamente, prova absorção ou garante uma reversão.
 
-## 3. Referência de abertura e bandas percentuais
+## 3. Referência central e níveis de inclinação
 
-Um dos contextos visuais propostos é a abertura da sessão. Definindo A como o preço de abertura validado para o ativo e para a sessão pretendida, o mapa contém nove linhas:
+A abertura da sessão é tratada como o trilho central. As quatro bandas superiores (+0,5%, +1%, +2%, +3%) representam níveis de inclinação de um lado; as quatro inferiores (−0,5%, −1%, −2%, −3%) representam o lado oposto. O mapa possui nove linhas no total, incluindo a abertura.
 
-| Referência | Fórmula |
-|---|---:|
-| +3% | A × 1,030 |
-| +2% | A × 1,020 |
-| +1% | A × 1,010 |
-| +0,5% | A × 1,005 |
-| Abertura | A |
-| −0,5% | A × 0,995 |
-| −1% | A × 0,990 |
-| −2% | A × 0,980 |
-| −3% | A × 0,970 |
+Definindo A como o preço de abertura validado para o ativo e para a sessão, e P como o preço observado:
 
-Essas linhas definem localização e afastamento; não são sinais de compra ou venda por si só. Antes de uso operacional, é necessário confirmar a semântica da abertura diária na versão do Profit, o horário da sessão, o comportamento em gráficos Renko e a correção visual das nove linhas.
+- Desvio absoluto: D = P − A.
+- Desvio percentual assinado: Dpct = 100 × (P − A) / A.
+- Escala normalizada candidata: Z = (P − A) / ATR, se a série e o ATR estiverem adequados ao gráfico.
+- Nível discreto: maior banda positiva ou negativa alcançada.
 
-### Artefato detalhado
+O desvio percentual descreve o afastamento em relação à abertura; a normalização por volatilidade descreve o afastamento relativo ao movimento típico. São medidas diferentes.
 
-- [Especificação, protótipo NTSL e prompt visual do monotrilho com bandas](./BRICKMASTER_GIROSCOPE_MONOTRILHO_BANDAS_ABERTURA.md)
+### Artefatos detalhados
 
-O documento detalhado identifica explicitamente o código NTSL como protótipo não compilado nem validado nesta etapa.
+- [Especificação do monotrilho, bandas percentuais, protótipo NTSL e prompt visual](./BRICKMASTER_GIROSCOPE_MONOTRILHO_BANDAS_ABERTURA.md)
+- [Modelo de inclinação, dinâmica e força corretiva](./MODELO_INCLINACAO_FORCA_RETORNO_ABERTURA.md)
+
+O segundo documento propõe medir velocidade, aceleração e um **Índice de Resposta Corretiva (IRC)**. O IRC será uma pontuação de evidências observáveis de retorno, não uma força física nem uma medida direta de intenção institucional.
 
 ## 4. Entradas candidatas
 
@@ -76,10 +73,11 @@ Cada entrada deve ter origem, temporalidade, momento de atualização e estado d
 
 - **Regime:** tendência, rotação, compressão, expansão, transição ou indeterminado.
 - **Localização:** posição relativa à abertura, bandas, VWAP, zonas estruturais e extremos da sessão.
+- **Inclinação:** desvio absoluto, desvio percentual assinado, nível discreto e extremos de sessão.
+- **Dinâmica:** variação do desvio e, quando o tipo de gráfico permitir, velocidade e aceleração estimadas.
+- **Resposta corretiva:** IRC com componentes explícitos, normalizados e testados; não equivale a torque físico.
 - **Evidências:** fatores favoráveis, contrários, ausentes e potencialmente correlacionados.
-- **Confiança:** calibrável somente após definição de baseline e validação empírica.
-- **Invalidação:** condições que contradizem a classificação atual.
-- **Qualidade:** dados stale/ausentes, módulo indisponível ou fonte não validada.
+- **Invalidação e qualidade:** condições que contradizem a classificação, dados stale/ausentes e módulos indisponíveis.
 - **Estado de execução:** separado da leitura analítica; um estado do mercado não envia ordem automaticamente.
 
 ## 6. Regras de decisão e segurança
@@ -89,25 +87,28 @@ Cada entrada deve ter origem, temporalidade, momento de atualização e estado d
 3. Correlação entre módulos não pode ser contabilizada como evidência independente sem ajuste.
 4. Volume agregado não comprova, sozinho, absorção institucional.
 5. Rompimento, toque de banda e retorno à abertura são observações, não garantias de continuidade ou reversão.
-6. A estratégia de execução exige regras próprias de risco, limites de exposição, stops, custos, tratamento de falhas e validação em replay/backtest antes de qualquer uso real.
-7. O núcleo existente do BRICKMASTER não deve ser alterado implicitamente por este módulo de contexto.
+6. Em gráficos Renko, as barras não têm duração constante: não tratar variação por tijolo como velocidade por unidade de tempo sem timestamps e intervalo temporal real.
+7. A estratégia de execução exige regras próprias de risco, limites de exposição, stops, custos, tratamento de falhas e validação em replay/backtest antes de qualquer uso real.
+8. O núcleo existente do BRICKMASTER não deve ser alterado implicitamente por este módulo de contexto.
 
 ## 7. Roadmap
 
 | Fase | Objetivo | Estado |
 |---|---|---|
-| G1 — Referência visual | Especificar abertura e oito bandas percentuais | Documentado; protótipo pendente de compilação e teste visual |
-| G2 — Estado de preço | Medir distância, velocidade, permanência, expansão e retorno | Planejado |
-| G3 — Fluxo | Integrar agressão/delta confiável e volume com semântica verificada | Planejado |
-| G4 — Contexto | Integrar VWAP/TWAP, volatilidade, calendário, intermercado e qualidade de dados | Planejado |
-| G5 — Validação | Testes de sessão, replay, custos, risco e fora da amostra | Pendente |
+| G1 — Referência visual | Abertura e oito bandas percentuais | Documentado; protótipo pendente de compilação e teste visual |
+| G2 — Inclinação dinâmica | Desvio assinado, níveis, extremos e variação do afastamento | Especificado; implementação pendente |
+| G3 — Resposta corretiva | Definir e testar componentes do IRC sem dupla contagem | Especificado conceitualmente; implementação pendente |
+| G4 — Fluxo e contexto | Agressão/delta confiável, VWAP/TWAP, volatilidade, calendário, intermercado e qualidade | Planejado |
+| G5 — Validação | Compilação, replay, custos, risco e teste fora da amostra | Pendente |
 
-### Critérios mínimos para declarar G1 validada
+### Critérios mínimos de aceitação
 
 - Compilar no Editor de Estratégias da versão de Profit em uso.
 - Confirmar a referência de abertura correta para o ativo e sessão.
 - Confirmar a geometria e os valores das nove linhas.
 - Testar histórico, sessões consecutivas, replay e gráfico Renko relevante.
+- Validar extremos, estados e reinicialização por sessão.
+- Definir rótulos, métricas e baseline antes de afirmar capacidade preditiva.
 - Registrar versão, instrumento, configuração, resultados e evidências verificáveis.
 
 ## 8. Persistência e governança
@@ -121,10 +122,11 @@ Procedimento obrigatório: consultar os arquivos existentes, respeitar a nomencl
 
 ## 9. Inventário do módulo
 
-- README.md — índice, missão, arquitetura, roadmap e estado do módulo.
-- BRICKMASTER_GIROSCOPE_MONOTRILHO_BANDAS_ABERTURA.md — conceito, fórmulas das bandas, protótipo NTSL, prompt visual, critérios de aceitação e fases futuras.
-- REGRA_PERSISTENCIA_ARTEFATOS.md — procedimento obrigatório de persistência/versionamento.
+- README.md — índice, arquitetura, roadmap e estado.
+- BRICKMASTER_GIROSCOPE_MONOTRILHO_BANDAS_ABERTURA.md — conceito, bandas, protótipo NTSL e prompt visual.
+- MODELO_INCLINACAO_FORCA_RETORNO_ABERTURA.md — variáveis de inclinação, estados, IRC e requisitos de implementação.
+- REGRA_PERSISTENCIA_ARTEFATOS.md — persistência, versionamento e verificação.
 
 ## 10. Próxima etapa
 
-Validar o protótipo de abertura no Profit instalado. Corrigir eventuais incompatibilidades da NTSL e anexar evidências reproduzíveis antes de atualizar o estado de G1. Só depois avançar para a classificação dinâmica do preço e a integração de fluxo.
+Implementar primeiro o indicador NTSL de geometria e dinâmica, sem ordens: desvio percentual, nível de inclinação, extremos da sessão e variação do afastamento. Compilar e validar no Profit. Só depois implementar o IRC e integrar dados de fluxo com semântica confirmada.
