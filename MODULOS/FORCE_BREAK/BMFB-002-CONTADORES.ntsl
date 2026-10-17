@@ -1,16 +1,16 @@
-// BMFB-002 — Contadores diários de rompimentos (plots explícitos)
+// BMFB-002 — Contadores diários com marcação visual no candle
 // Projeto: BRICKMASTER RAIZ / BM_FORCE_BREAK
 // Estado: EXPERIMENTAL — não aprovado para produção
-// Versão: 0.4.0 | Data: 2026-10-17
+// Versão: 0.5.0 | Data: 2026-10-17
 // Norma: GOV-CAB-NORMA-001 v1.0.3
 // Repositório: https://github.com/carlos-andrade/BRICKMASTER_GERAL
 // Especificação: MODULOS/FORCE_BREAK/BMFB-001-FECHAMENTOS-MINIMAS-MAXIMAS.md
-// Regra diária: contadores reiniciam quando Date muda; comparar apenas barras da mesma data.
-// Visualização: usar apenas Plot/Plot2/Plot3/Plot4 suportados como linhas; simplificado para quatro séries por indicador.
-// IMPORTANTE: adicionar como indicador em painel separado, não sobre a escala de preços.
+// Regra diária: contadores reiniciam quando Date muda; comparar apenas candles da mesma data.
+// Visualização: etiquetas B1/B2/B3 abaixo e A1/A2/A3 acima dos candles, usando PlotText como BMFB-001.
+// Contadores: seis séries cumulativas mantidas para cálculo interno; não desenhar linhas de contagem.
 // Segurança: não contém funções de envio de ordens.
-// Validação: alteração de visualização ainda precisa de confirmação no Profit.
-// Histórico: v0.4.0 remove PlotN/SetPlotType/SetPlotColor após visualização ausente; aplica quatro plots base documentados.
+// Validação: requer compilação e verificação visual no Profit.
+// Histórico: v0.5.0 substitui plots de linhas pela marcação PlotText igual ao primeiro indicador visual.
 
 var
   abaixo1 : Integer;
@@ -53,25 +53,47 @@ begin
 
     if (CurrentBar() >= 1) and (Date = Date[1]) then
     begin
-      if Close < Low[1] then abaixo1 := abaixo1 + 1;
-      if Close > High[1] then acima1 := acima1 + 1;
+      if Close < Low[1] then
+      begin
+        abaixo1 := abaixo1 + 1;
+        PlotText("B1", clRed, 0, 8);
+      end;
+
+      if Close > High[1] then
+      begin
+        acima1 := acima1 + 1;
+        PlotText("A1", clLime, 2, 8);
+      end;
     end;
 
     if (CurrentBar() >= 2) and (Date = Date[2]) then
     begin
-      if Close < Low[2] then abaixo2 := abaixo2 + 1;
-      if Close > High[2] then acima2 := acima2 + 1;
+      if Close < Low[2] then
+      begin
+        abaixo2 := abaixo2 + 1;
+        PlotText("B2", clMaroon, 0, 8);
+      end;
+
+      if Close > High[2] then
+      begin
+        acima2 := acima2 + 1;
+        PlotText("A2", clGreen, 2, 8);
+      end;
     end;
 
     if (CurrentBar() >= 3) and (Date = Date[3]) then
     begin
-      if Close < Low[3] then abaixo3 := abaixo3 + 1;
-      if Close > High[3] then acima3 := acima3 + 1;
+      if Close < Low[3] then
+      begin
+        abaixo3 := abaixo3 + 1;
+        PlotText("B3", clFuchsia, 0, 8);
+      end;
+
+      if Close > High[3] then
+      begin
+        acima3 := acima3 + 1;
+        PlotText("A3", clAqua, 2, 8);
+      end;
     end;
   end;
-
-  Plot(abaixo1);
-  Plot2(abaixo2);
-  Plot3(abaixo3);
-  Plot4(acima1);
 end;
