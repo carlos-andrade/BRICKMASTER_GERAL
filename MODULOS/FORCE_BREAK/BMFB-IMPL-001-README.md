@@ -90,3 +90,10 @@ Após relato do utilizador de compilação sem exibição, a versão 0.4.0 foi s
 **Limitação funcional temporária:** esta versão plota somente quatro das seis métricas (abaixo1, abaixo2, abaixo3 e acima1). Os contadores acima2 e acima3 continuam calculados, mas não são plotados nesta etapa. Não declarar como solução final até confirmar visualização no Profit. Após confirmação, criar uma abordagem final para disponibilizar todas as seis métricas sem depender de uma escala invisível ou de recursos de plot incompatíveis.
 
 Commit do código v0.4.0: `c99c9e445ed9f68f85ad3eef895ecfbd6b16699c`. Estado: experimental, aguarda recompilação e evidência visual.
+
+
+## 11. Alteração da visualização — versão 0.5.0
+
+A pedido do utilizador, o `BMFB-002-CONTADORES.ntsl` deixou de desenhar linhas de contagem. Passa a desenhar as etiquetas `B1`, `B2`, `B3`, `A1`, `A2` e `A3` diretamente nos candles, com `PlotText`, seguindo a mesma forma visual do primeiro código `BMFB-001-INDICADOR-VISUAL.ntsl`. Os seis contadores cumulativos continuam calculados internamente e reiniciam na mudança de data.
+
+Código v0.5.0 gravado na branch `feature/bm-force-break-001`, commit `27bf0fee7405f08a995eb048d93c8462a506ac7c`. A alteração requer nova compilação e confirmação visual no Profit; não declarar validada até receber essa evidência.
