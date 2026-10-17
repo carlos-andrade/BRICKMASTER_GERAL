@@ -1,21 +1,20 @@
 // ============================================================================
 // BRICKMASTER RAIZ | COLORAÇÃO
 // ID: BM-COL-RULE-001
-// Versão: 1.0.0
-// Estado: EXPERIMENTAL — compilação no Profit ainda não comprovada
+// Versão: 1.0.1
+// Estado: EXPERIMENTAL — compilação e execução no Profit não comprovadas
 // Objetivo: prova visual simples, sem ordens ou gestão de posição.
-// Referência documental prioritária: Manual NTSL 4.4 (03-08-2026).
-// ATENÇÃO: confirmar a sintaxe exata no editor NTSL/Manual 4.4 antes de usar.
+// Referência: Manual NTSL 4.4 (03-08-2026), seção 5.1, exemplo de PaintBar.
 // ============================================================================
 
 begin
   if (CurrentBar() > 0) then
   begin
-    if (Close > Close[1]) then
+    if (Close = Close[1]) then
+      PaintBar(clYellow)
+    else if (Close > Close[1]) then
       PaintBar(clGreen)
-    else if (Close < Close[1]) then
-      PaintBar(clRed)
     else
-      PaintBar(clGray);
+      PaintBar(clRed);
   end;
 end;
