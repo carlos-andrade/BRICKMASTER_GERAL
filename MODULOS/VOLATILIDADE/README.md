@@ -8,7 +8,7 @@
 | **Tipo documental** | README_MODULO |
 | **Fase** | F1 — Levantamento e adoção documental |
 | **Estado** | EM_REVISAO |
-| **Versão** | 1.1.0 |
+| **Versão** | 1.2.0 |
 | **SHA-256 (conteúdo canónico)** | A_CALCULAR |
 | **Commit de referência (versão anterior)** | [d85d15142a6968e363194a23f702e343699cc176](https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/d85d15142a6968e363194a23f702e343699cc176) |
 | **Data de criação** | 2026-10-18 |
