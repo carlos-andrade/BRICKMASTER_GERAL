@@ -1,8 +1,31 @@
 # BASE PARA PROMPT — VOLATILIDADE
 
-**Projeto:** BRICKMASTER RAIZ  
-**Módulo:** `MODULOS/VOLATILIDADE`  
-**Estado:** Material de referência inicial; não constitui especificação quantitativa validada.
+| Campo | Valor |
+|---|---|
+| **ID** | BM-VOL-BASE-001 |
+| **Projeto** | BRICKMASTER RAIZ |
+| **Repositório** | [carlos-andrade/BRICKMASTER_GERAL](https://github.com/carlos-andrade/BRICKMASTER_GERAL) |
+| **Tipo documental** | BASE_CONCEITUAL |
+| **Fase** | F1 — Levantamento e adoção documental |
+| **Estado** | EM_REVISAO |
+| **Versão** | 1.1.0 |
+| **SHA-256 (conteúdo canónico)** | A_CALCULAR |
+| **Commit de referência (versão anterior)** | [676c41f6c5af894d1e5d3c8a86c87ed53c8e6564](https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/676c41f6c5af894d1e5d3c8a86c87ed53c8e6564) |
+| **Data de criação** | 2026-10-18 |
+| **Data de atualização** | 2026-10-18 |
+| **Responsável** | Responsável técnico do BRICKMASTER RAIZ |
+| **Aprovador** | Pendente de aprovação formal |
+| **Origem** | Texto conceitual fornecido pelo utilizador nesta conversa; conteúdo substantivo preservado |
+| **Autoridade superior** | [CONSTITUICAO.md](https://github.com/carlos-andrade/GOVERNANCA/blob/main/CONSTITUICAO.md) e [Norma de cabeçalho](https://github.com/carlos-andrade/GOVERNANCA/blob/main/CABE%C3%87ALHO/NORMA-CABECALHO-PADRAO.md) |
+| **Cadeia de autoridade** | PROMPTS → CARTAS → LAYOUT ÚNICO → CÓDIGO |
+| **Rastreabilidade** | Atualização documental após consulta à GOVERNANCA; commit desta alteração a registar no histórico Git |
+| **Escopo** | Base conceitual para prompts e requisitos do módulo VOLATILIDADE |
+| **Objetivo** | Preservar as definições iniciais sem as confundir com metodologia operacional validada |
+| **Dependências** | Especificação, contratos de dados, critérios de teste e validação futura do módulo |
+
+## Contexto Histórico
+
+Este texto foi fornecido pelo utilizador para servir como ponto de partida para o desenvolvimento do módulo VOLATILIDADE. Nesta revisão, foi adicionado o cabeçalho documental e a rastreabilidade conforme a norma consultada no repositório GOVERNANCA. O conteúdo conceitual abaixo foi preservado.
 
 ## Conceito
 
@@ -20,10 +43,30 @@ A volatilidade é uma medida que indica a frequência e a intensidade com que o 
 - **Índice VIX:** Conhecido como o "índice do medo", mede a expectativa de volatilidade para o mercado de ações dos EUA (S&P 500).
 - **Volatilidade histórica vs. implícita:** A primeira analisa dados do passado, enquanto a segunda baseia-se nas expectativas futuras do mercado.
 
-## Orientação de uso no BRICKMASTER RAIZ
+## Limites de interpretação
 
-Este texto é uma base conceitual para desenvolver prompts e requisitos do módulo VOLATILIDADE. Não define, por si só, fórmulas operacionais, janelas estatísticas, limiares de classificação, fontes de dados aprovadas ou regras de bloqueio. Esses elementos devem ser especificados e testados separadamente antes de qualquer integração operacional.
+Este material é uma base conceitual, não uma especificação quantitativa validada. Não define fórmulas operacionais, janelas estatísticas, limiares de classificação, fontes de dados aprovadas, critérios de atualidade ou regras de bloqueio. As referências a exemplos e instrumentos representam a formulação original do texto e não substituem a análise de risco específica de cada ativo. Estes elementos deverão ser especificados e testados separadamente antes de qualquer integração operacional.
 
-## Origem
+## Evidências
 
-Texto fornecido pelo utilizador nesta conversa.
+- [README do módulo VOLATILIDADE](README.md)
+- [Norma de cabeçalho documental da GOVERNANCA](https://github.com/carlos-andrade/GOVERNANCA/blob/main/CABE%C3%87ALHO/NORMA-CABECALHO-PADRAO.md)
+
+## Validação
+
+Foi verificado que o conteúdo conceitual fornecido continua presente. Esta atualização não executou validação técnica de métricas nem testes quantitativos de mercado.
+
+## Resultado
+
+Documento conceptual padronizado para revisão, preservando as definições fornecidas e identificando explicitamente as limitações.
+
+## Próxima Ação
+
+Usar o texto como insumo de F2 — Requisitos e desenho. Critério de conclusão: cada conceito operacional pretendido deve ligar-se a uma definição mensurável, fonte aprovada e critério de teste.
+
+## Histórico de alterações
+
+| Versão | Data | Alteração | Responsável | Evidência |
+|---|---|---|---|---|
+| 1.0.0 | 2026-10-18 | Registo inicial do texto conceptual fornecido | Responsável técnico do projeto | Histórico Git do repositório |
+| 1.1.0 | 2026-10-18 | Cabeçalho de governança, rastreabilidade, limites de interpretação e validação documental | Responsável técnico do projeto | Commit a confirmar após publicação |
