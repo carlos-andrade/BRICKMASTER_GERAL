@@ -102,7 +102,7 @@ def atr_wilder(bars: Sequence[OHLC], period: int) -> list[float]:
     return result
 
 def synthetic_gbm_ohlc(count: int = 500, seed: int = 20261018, start: float = 100.0,
-                       annual_drift: float = 0.0, volatility_per_bar: float = 0.01,
+                       drift_per_bar: float = 0.0, volatility_per_bar: float = 0.01,
                        intrabar_range_scale: float = 1.0) -> list[OHLC]:
     """GBM aproximado para testes determinísticos; extremos intrabar são sintéticos."""
     if count < 2 or start <= 0 or volatility_per_bar < 0 or intrabar_range_scale < 0:
@@ -111,7 +111,7 @@ def synthetic_gbm_ohlc(count: int = 500, seed: int = 20261018, start: float = 10
     bars, prev = [], start
     for _ in range(count):
         opening = prev
-        close = opening * exp(annual_drift + volatility_per_bar * rng.gauss(0.0, 1.0))
+        close = opening * exp(drift_per_bar + volatility_per_bar * rng.gauss(0.0, 1.0))
         high_noise = abs(rng.gauss(0.0, volatility_per_bar * intrabar_range_scale))
         low_noise = abs(rng.gauss(0.0, volatility_per_bar * intrabar_range_scale))
         high = max(opening, close) * exp(high_noise)
