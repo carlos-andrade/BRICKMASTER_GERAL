@@ -2,18 +2,28 @@
 PROJETO: BRICKMASTER RAIZ
 DOCUMENTO: README PRINCIPAL — PORTAL DO PROJETO
 IDENTIFICADOR: BM-ROOT-001
-VERSÃO: 2.0.0
-ESTADO: DOCUMENTAÇÃO DE ENTRADA — INVENTÁRIO TÉCNICO PENDENTE
+TIPO DOCUMENTAL: README / PORTAL DE ENTRADA
+FASE DO ROADMAP: FASE 00 — INVENTÁRIO E GOVERNANÇA
+VERSÃO: 2.0.1
+ESTADO: DOCUMENTAÇÃO EM REVISÃO — INVENTÁRIO TÉCNICO PENDENTE
 CRIADO EM: 2026-10-11
 ÚLTIMA REVISÃO: 2026-10-19
 RESPONSÁVEL: Carlos Andrade
-REPOSITÓRIO: https://github.com/carlos-andrade/BRICKMASTER_GERAL
-HISTÓRICO:
+REPOSITÓRIO OFICIAL: https://github.com/carlos-andrade/BRICKMASTER_GERAL
+BRANCH: feature/governanca-fundacao
+PULL REQUEST: https://github.com/carlos-andrade/BRICKMASTER_GERAL/pull/3
+OBJETIVO: Servir de portal para missão, arquitetura, módulos, roadmap, governança e validação do BRICKMASTER RAIZ.
+ESCOPO: Resumo arquitetural e navegação documental; não certifica implementação nem operação.
+REFERÊNCIAS: BRICKMASTER_ARQUITETURA; Roadmap Mestre em revisão; Manual NTSL 4.4 (03/08/2026); FVG-ATLAS.
+DEPENDÊNCIAS DOCUMENTAIS: BRICKMASTER_ARQUITETURA/README.md; BRICKMASTER_ARQUITETURA/ROADMAP.md; BRICKMASTER_ARQUITETURA/MAPA_MODULOS.md; PR #3.
+HISTÓRICO DE VERSÕES:
 - 2026-10-11 | v1.0.0 | Estrutura inicial e ligações básicas.
-- 2026-10-19 | v2.0.0 | Portal ampliado: missão, arquitetura, módulos, roadmap, governança, validação e referências.
-SHA-256: ccd31845296a500e14b1d06eba151ed8fa731c87e35d02ee5c7034793d034d21 (conteúdo UTF-8 com as linhas SHA-256 e COMMIT DE REFERÊNCIA excluídas)
-COMMIT DE REFERÊNCIA: 60fb8bea17144468ac0283606e0f734130d8693d (HEAD de base da proposta; a atualização está no commit subsequente)
-FONTE DA VERDADE: documentos e código versionados no repositório.
+- 2026-10-19 | v2.0.0 | Portal ampliado com arquitetura, catálogo, roadmap, governança e referências.
+- 2026-10-19 | v2.0.1 | Aplicação do cabeçalho documental padrão e revisão de integridade.
+SHA-256 CANÓNICO: c2eb3a3b2db1e0a09ea20936fd37cb2f7a75f90e192c218de7aff0780120b557 (UTF-8; excluídas as linhas SHA-256 CANÓNICO e COMMIT DE REFERÊNCIA).
+COMMIT DE REFERÊNCIA: e9656d3c7ce227048ed17b352fba25306526563c (commit anterior à correção do cabeçalho).
+LIMITAÇÕES: Inventário integral, compilação NTSL, backtests e validação no Profit não são comprovados por esta alteração documental.
+FONTE DA VERDADE: artefatos versionados neste repositório; preservar histórico e não declarar validação sem evidência.
 -->
 
 # BRICKMASTER RAIZ
