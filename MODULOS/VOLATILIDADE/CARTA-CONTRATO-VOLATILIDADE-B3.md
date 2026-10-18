@@ -10,7 +10,7 @@
 | **Fase** | F2 — Requisitos e desenho |
 | **Estado** | PROPOSTA_PARA_APROVACAO |
 | **Versão** | 1.0.0 |
-| **SHA-256 (conteúdo canónico)** | 39376f7c7c7fb635fccc9edf50b2c18adf92c730c52e4e300b86b79e5de010ec|
+| **SHA-256 (conteúdo canónico)** | 39376f7c7c7fb635fccc9edf50b2c18adf92c730c52e4e300b86b79e5de010ec |
 | **Commit de referência (versão anterior)** | [9e452d000992630c54fa0ca274cb4fd433aff9a0](https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/9e452d000992630c54fa0ca274cb4fd433aff9a0) |
 | **Data de criação** | 2026-10-18 |
 | **Responsável técnico** | Responsável técnico do BRICKMASTER RAIZ |
