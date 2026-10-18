@@ -11,8 +11,8 @@ REPOSITÓRIO: https://github.com/carlos-andrade/BRICKMASTER_GERAL
 HISTÓRICO:
 - 2026-10-11 | v1.0.0 | Estrutura inicial e ligações básicas.
 - 2026-10-19 | v2.0.0 | Portal ampliado: missão, arquitetura, módulos, roadmap, governança, validação e referências.
-SHA-256: A CALCULAR SOBRE O CONTEÚDO FINAL
-COMMIT DE REFERÊNCIA: A PREENCHER APÓS O COMMIT
+SHA-256: ccd31845296a500e14b1d06eba151ed8fa731c87e35d02ee5c7034793d034d21 (conteúdo UTF-8 com as linhas SHA-256 e COMMIT DE REFERÊNCIA excluídas)
+COMMIT DE REFERÊNCIA: 60fb8bea17144468ac0283606e0f734130d8693d (HEAD de base da proposta; a atualização está no commit subsequente)
 FONTE DA VERDADE: documentos e código versionados no repositório.
 -->
 
