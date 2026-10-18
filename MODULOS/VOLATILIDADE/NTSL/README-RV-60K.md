@@ -17,7 +17,7 @@ data_atualizacao: "2026-10-19"
 | ID | BM-VOL-RV-60K-README-001 |
 | Estado | EXPERIMENTAL — não validado no Profit |
 | Versão | 1.0.0 |
-| SHA-256 (conteúdo canónico) | d592193ef7551b84bbdcb13c4bc3b575ba16de708e284f30191a6faf281819cf |
+| SHA-256 (conteúdo canónico) | ff48f5b70d3485a2b511315b2d46d5a805154d6addb3d3ef7397f45525085da6 |
 | Commit de referência | 4224a4a848a6ae7fe3da8e864c1f0876a66ba04a |
 | Código | [RV_60K_V1.0.src](RV_60K_V1.0.src) |
 | Referência NTSL | Manual NTSL 4.4, funções `Log`, `Sqrt`, `Date` e `Plot` |
