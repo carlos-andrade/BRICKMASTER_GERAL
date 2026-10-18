@@ -10,7 +10,7 @@
 | **Fase** | F2 — Requisitos e desenho |
 | **Estado** | PROPOSTA_PARA_APROVACAO |
 | **Versão** | 1.0.0 |
-| **SHA-256 (conteúdo canónico)** | b1997c63ad54d6cfc396e79cb359998a0475b909d5c3febcd78b9d548e3ada08 |
+| **SHA-256 (conteúdo canónico)** | 39376f7c7c7fb635fccc9edf50b2c18adf92c730c52e4e300b86b79e5de010ec|
 | **Commit de referência (versão anterior)** | [9e452d000992630c54fa0ca274cb4fd433aff9a0](https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/9e452d000992630c54fa0ca274cb4fd433aff9a0) |
 | **Data de criação** | 2026-10-18 |
 | **Responsável técnico** | Responsável técnico do BRICKMASTER RAIZ |
@@ -50,7 +50,7 @@ A Carta é o contrato de governação do módulo. Não representa, por si só, e
 - Métricas intradiárias, históricas/realizadas, relativas, de cauda, expansão/compressão e transição de regime.
 - Volatilidade implícita somente quando existirem dados de opções e metodologia apropriada.
 - Contexto intermercado, incluindo VIX, apenas como variável externa a testar; não como substituto direto da volatilidade de um ativo brasileiro.
-- Gráficos temporais, de ticks — incluindo a referência de 60K ticks — e Renko, respeitando as diferenças de amostragem.
+- Gráficos temporais e gráfico de 60K trades, respeitando as diferenças de amostragem. O BRICKMASTER não usa gráficos de ticks nem Renko.
 - Qualidade e reconciliação de dados, especificação de contratos, testes isolados, evidências e monitorização de falhas.
 
 ### Excluído
@@ -80,7 +80,7 @@ A hipótese de **1% desde a abertura do dia** é apenas uma hipótese de investi
 Não apagar silenciosamente resultados desfavoráveis, versões, hipóteses rejeitadas, exceções ou decisões anteriores. Correções devem ser registadas no histórico Git e no changelog pertinente.
 
 ### 4.6 Comparabilidade
-Não equiparar diretamente métricas por barra em gráficos temporais, de ticks e Renko. Registar instrumento, contrato, unidade, sessão, método de amostragem e normalização aplicada.
+Não equiparar diretamente métricas por barra temporal e por barra do gráfico de 60K trades: a duração de uma barra de 60K trades não é fixa. Registar instrumento, contrato, unidade, sessão, método de amostragem e normalização aplicada.
 
 ### 4.7 VIX e fontes externas
 Não apresentar VIX como medição direta da volatilidade realizada do WIN, WDO, IBOV ou de ações brasileiras. Qualquer utilidade preditiva ou contextual deve ser testada com sincronização temporal e ganho incremental demonstrável.
@@ -124,7 +124,7 @@ Os rótulos de regime são uma taxonomia inicial, não limiares aprovados. O esq
 | Cálculo/Estimadores | Calcular métricas especificadas e reproduzíveis | Não inventar parâmetros nem mudar método silenciosamente |
 | Classificação | Produzir regime e confiança segundo regras aprovadas | Não forçar rótulo quando a evidência divergir |
 | Giroscópio | Receber contexto resumido e rastreável | Interface real pendente de confirmação |
-| Estado Gráfico | Considerar tipo/granularidade, incluindo ticks/60K | Não presumir equivalência entre tipos de gráfico |
+| Estado Gráfico | Considerar tipo/granularidade, incluindo o gráfico de 60K trades | Não presumir equivalência entre tipos de gráfico |
 | FVG, Fluxo/Volume, VWAP/TWAP, Market DNA | Possíveis consumidores/fontes contextuais | Integração apenas após contratos explícitos |
 | Risco soberano | Receber informação de contexto quando aplicável | Mantém autoridade sobre bloqueios e exposição |
 | Execução conciliada | Sem execução por este módulo | Nenhuma ordem pode ser emitida por esta Carta |
