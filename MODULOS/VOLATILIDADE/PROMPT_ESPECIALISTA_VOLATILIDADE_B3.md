@@ -9,6 +9,8 @@
 | **Fase** | F2 — Requisitos e desenho |
 | **Estado** | PROPOSTA_EXPERIMENTAL — requer revisão |
 | **Versão** | 1.0.0 |
+| **SHA-256 (conteúdo canónico)** | 4838a659bb8f50e592494e98ece9b9a1e7086489a2f9695d870d88a37e039db0 |
+| **Commit de referência (versão anterior)** | [4af9742003a5780f8a6e00408c2ea1894140c2b1](https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/4af9742003a5780f8a6e00408c2ea1894140c2b1) |
 | **Data** | 2026-10-18 |
 | **Documento de origem** | [BASE PARA PROMPT.md](https://github.com/carlos-andrade/BRICKMASTER_GERAL/blob/main/MODULOS/VOLATILIDADE/BASE%20PARA%20PROMPT.md) |
 | **Governança** | [GOVERNANCA](https://github.com/carlos-andrade/GOVERNANCA) |
