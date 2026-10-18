@@ -4,15 +4,13 @@
 // Grafico-alvo: 60K trades. Nao usar como indicacao de grafico de ticks ou Renko.
 // Sem ordens; sem integracao com Giroscopio; sem thresholds operacionais.
 // SHA-256 canonico: 5e7e128e5ad44ff769c5a9abd639faecb622f738a8582581eba76e815cac0c63
-// Commit de referencia: PENDENTE — preencher apos o commit inicial
+// Commit de referencia: 75ad01c8b7d50ee9d8b4244ec4d8bf769d43f975
 
 var
   retornoLog : Float;
   rvAcumulada : Float;
 
 begin
-  // Reinicia ao mudar a data das barras; o alinhamento com a sessao B3
-  // (incluindo horario noturno) ainda requer validacao no Profit.
   if (Date <> Date[1]) then
   begin
     retornoLog := 0;
