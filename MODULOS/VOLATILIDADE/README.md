@@ -8,9 +8,9 @@
 | **Tipo documental** | README_MODULO |
 | **Fase** | F1 — Levantamento e adoção documental |
 | **Estado** | EM_REVISAO |
-| **Versão** | 1.2.0 |
+| **Versão** | 1.3.0 |
 | **SHA-256 (conteúdo canónico)** | A_CALCULAR |
-| **Commit de referência (versão anterior)** | [d85d15142a6968e363194a23f702e343699cc176](https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/d85d15142a6968e363194a23f702e343699cc176) |
+| **Commit de referência (versão anterior)** | [ee15091a742f1b83f74c6ee6016541238f04af53](https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/ee15091a742f1b83f74c6ee6016541238f04af53) |
 | **Data de criação** | 2026-10-18 |
 | **Data de atualização** | 2026-10-18 |
 | **Responsável** | Responsável técnico do BRICKMASTER RAIZ |
@@ -82,6 +82,7 @@ Esta interface é preliminar. O contrato não será considerado estável até se
 - `README.md` — contexto, estado, contrato preliminar, regras e roadmap.
 - `CARTA-CONTRATO-VOLATILIDADE-B3.md` — mandato, limites, responsabilidades, gates, riscos e critérios de aceitação do módulo.
 - `PROMPT_ESPECIALISTA_VOLATILIDADE_B3.md` — prompt especializado para investigação quantitativa, sujeito a revisão.
+- `LAYOUT-UNICO-VOLATILIDADE-B3.md` — desenho lógico proposto, componentes, pipeline, contratos preliminares, falhas e gates; ainda sujeito a aprovação.
 - `BASE PARA PROMPT.md` — base conceitual fornecida, preservada com a identificação documental.
 - `ESPECIFICACAO.md` — métricas, fórmulas, unidades, janelas, regimes e decisões de desenho.
 - `CONTRATOS.md` — interfaces, dependências e semântica dos campos.
@@ -169,6 +170,7 @@ Inspecionar `MODULOS/10_VOLATILIDADE_VIX/`, registar a análise de sobreposiçã
 
 - [Carta/Contrato — Módulo VOLATILIDADE B3](CARTA-CONTRATO-VOLATILIDADE-B3.md) — proposta para aprovação formal.
 - [Prompt Especialista — Inteligência de Volatilidade B3](PROMPT_ESPECIALISTA_VOLATILIDADE_B3.md) — investigação e desenho; estado experimental.
+- [Layout Único — Módulo VOLATILIDADE B3](LAYOUT-UNICO-VOLATILIDADE-B3.md) — arquitetura lógica em revisão, sem implementação presumida.
 - [Base conceptual](BASE%20PARA%20PROMPT.md) — origem conceptual e limites de interpretação.
 
 ## Histórico de alterações
@@ -177,4 +179,5 @@ Inspecionar `MODULOS/10_VOLATILIDADE_VIX/`, registar a análise de sobreposiçã
 |---|---|---|---|---|
 | 1.0.0 | 2026-10-18 | Criação inicial do README do módulo | Responsável técnico do projeto | Histórico Git do repositório |
 | 1.1.0 | 2026-10-18 | Adoção documental de regras de governança, roadmap por gates, riscos, dependências e evidências | Responsável técnico do projeto | Histórico Git |
-| 1.2.0 | 2026-10-18 | Ligação à Carta/Contrato VOLATILIDADE B3 e ao prompt especializado | Responsável técnico do projeto | Commit a confirmar após publicação |
+| 1.2.0 | 2026-10-18 | Ligação à Carta/Contrato VOLATILIDADE B3 e ao prompt especializado | Responsável técnico do projeto | Histórico Git |
+| 1.3.0 | 2026-10-18 | Ligação ao Layout Único e atualização do índice documental do módulo | Responsável técnico do projeto | Commit a confirmar após publicação |
