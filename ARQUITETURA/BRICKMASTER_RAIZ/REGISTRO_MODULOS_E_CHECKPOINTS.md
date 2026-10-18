@@ -16,6 +16,8 @@ rastreabilidade: "PR de padronização documental; commit a registar após cria�
 escopo: "Documento existente em ARQUITETURA/BRICKMASTER_RAIZ/REGISTRO_MODULOS_E_CHECKPOINTS.md"
 objetivo: "Preservar o conteúdo original com identificação, estado e rastreabilidade padronizados"
 dependencias: "N/A"
+sha256_conteudo_canonico: "60b8f55116565b6ec7180d67afebdfa4616cd6a6f98769550932f4198e4b76e5"
+commit_referencia_versao_anterior: "https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/057065d4f742f4a329f5bfbe99188b2ddad0db00"
 ---
 # BRICKMASTER RAIZ — Registo de módulos e checkpoints
 
@@ -99,7 +101,7 @@ Um módulo só muda para INTEGRATED quando:
 2. As dependências e incompatibilidades estão registadas.
 3. Os testes unitários passam.
 4. Os casos de dados ausentes e de fronteira são tratados.
-5. O comportamento em gráficos de ticks, incluindo 60K quando aplicável, foi observado.
+5. O comportamento no gráfico de 60K trades foi observado e registado.
 6. A comparação histórico/replay/tempo real está documentada, quando suportada.
 7. Existe evidência do teste no repositório.
 8. A integração pode ser revertida sem apagar o módulo isolado.
