@@ -18,7 +18,7 @@ data_atualizacao: "2026-10-19"
 | Estado | EXPERIMENTAL — não validado no Profit |
 | Versão | 1.0.0 |
 | SHA-256 (conteúdo canónico) | d592193ef7551b84bbdcb13c4bc3b575ba16de708e284f30191a6faf281819cf |
-| Commit de referência | 75ad01c8b7d50ee9d8b4244ec4d8bf769d43f975 |
+| Commit de referência | 4224a4a848a6ae7fe3da8e864c1f0876a66ba04a |
 | Código | [RV_60K_V1.0.src](RV_60K_V1.0.src) |
 | Referência NTSL | Manual NTSL 4.4, funções `Log`, `Sqrt`, `Date` e `Plot` |
 
