@@ -80,6 +80,8 @@ Esta interface é preliminar. O contrato não será considerado estável até se
 ## Estrutura documental do módulo
 
 - `README.md` — contexto, estado, contrato preliminar, regras e roadmap.
+- `CARTA-CONTRATO-VOLATILIDADE-B3.md` — mandato, limites, responsabilidades, gates, riscos e critérios de aceitação do módulo.
+- `PROMPT_ESPECIALISTA_VOLATILIDADE_B3.md` — prompt especializado para investigação quantitativa, sujeito a revisão.
 - `BASE PARA PROMPT.md` — base conceitual fornecida, preservada com a identificação documental.
 - `ESPECIFICACAO.md` — métricas, fórmulas, unidades, janelas, regimes e decisões de desenho.
 - `CONTRATOS.md` — interfaces, dependências e semântica dos campos.
@@ -140,6 +142,8 @@ Sem resolver dependências críticas e cumprir os critérios de saída, as fases
 - [Roadmap padrão](https://github.com/carlos-andrade/GOVERNANCA/blob/main/ROADMAP-PADRAO-GOVERNANCA.md)
 - [Norma de estado e percentual](https://github.com/carlos-andrade/GOVERNANCA/blob/main/standards/status-e-percentual-de-conclusao.md)
 - [Índice modular do BRICKMASTER](https://github.com/carlos-andrade/BRICKMASTER_GERAL/blob/main/MODULOS/README.md)
+- [Carta/Contrato do módulo VOLATILIDADE B3](CARTA-CONTRATO-VOLATILIDADE-B3.md)
+- [Prompt especializado de volatilidade B3](PROMPT_ESPECIALISTA_VOLATILIDADE_B3.md)
 - [Base conceptual para prompt](BASE%20PARA%20PROMPT.md)
 
 ## Validação
@@ -161,9 +165,16 @@ O módulo passa a documentar os controlos de governança aplicáveis, o estado r
 
 Inspecionar `MODULOS/10_VOLATILIDADE_VIX/`, registar a análise de sobreposição e fechar os requisitos de F2. Critério de conclusão: comparação documentada, fronteiras do módulo decididas e evidência verificável ligada ao checkpoint.
 
+## Documentos operacionais principais
+
+- [Carta/Contrato — Módulo VOLATILIDADE B3](CARTA-CONTRATO-VOLATILIDADE-B3.md) — proposta para aprovação formal.
+- [Prompt Especialista — Inteligência de Volatilidade B3](PROMPT_ESPECIALISTA_VOLATILIDADE_B3.md) — investigação e desenho; estado experimental.
+- [Base conceptual](BASE%20PARA%20PROMPT.md) — origem conceptual e limites de interpretação.
+
 ## Histórico de alterações
 
 | Versão | Data | Alteração | Responsável | Evidência |
 |---|---|---|---|---|
 | 1.0.0 | 2026-10-18 | Criação inicial do README do módulo | Responsável técnico do projeto | Histórico Git do repositório |
-| 1.1.0 | 2026-10-18 | Adoção documental de regras de governança, roadmap por gates, riscos, dependências e evidências | Responsável técnico do projeto | Commit corrente no histórico Git |
+| 1.1.0 | 2026-10-18 | Adoção documental de regras de governança, roadmap por gates, riscos, dependências e evidências | Responsável técnico do projeto | Histórico Git |
+| 1.2.0 | 2026-10-18 | Ligação à Carta/Contrato VOLATILIDADE B3 e ao prompt especializado | Responsável técnico do projeto | Commit a confirmar após publicação |
