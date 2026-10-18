@@ -10,7 +10,7 @@
 | **Fase** | F2 — Requisitos e desenho |
 | **Estado** | PROPOSTA_EM_REVISAO |
 | **Versão** | 1.0.0 |
-| **SHA-256 (conteúdo canónico)** | e6b1dccf8a0409e77d52cf09a6be6aa7073cf1c477a29b4f6234cf4b40b6a949 |
+| **SHA-256 (conteúdo canónico)** | 7be4a549f30ea06e36d2db369299a6d3d615ac8b1016fbacacc789038a5eb58b |
 | **Commit de referência (versão anterior)** | [437bb05811e7a860e7a53a9bbdec88795ef294c3](https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/437bb05811e7a860e7a53a9bbdec88795ef294c3) |
 | **Data de criação** | 2026-10-18 |
 | **Data de atualização** | 2026-10-18 |
@@ -45,7 +45,7 @@ Volatilidade mede magnitude/dispersão, não direção, probabilidade de lucro o
 4. Dados críticos ausentes, atrasados, inválidos, fora de ordem, contraditórios ou dessincronizados produzem DESCONHECIDO/DEGRADED e bloqueiam decisões dependentes.
 5. Preservar RAW autorizado, proveniência, timestamps, lacunas, correções, versões, resultados negativos e histórico.
 6. Não tratar maior frequência como automaticamente melhor: ruído de microestrutura, bid-ask bounce, baixa liquidez e timestamps imprecisos podem distorcer a estimativa.
-7. Não assumir equivalência entre barras temporais, barras de ticks e Renko.
+7. Não assumir equivalência entre barras temporais e barras do gráfico de 60K trades.
 8. Não definir limiares de regimes sem calibração cronológica e teste fora da amostra.
 9. Não promover resultados experimentais para VALIDADO/PRODUÇÃO sem evidência reproduzível e aprovação.
 10. Não alegar testes, disponibilidade de feeds, rentabilidade ou vantagem operacional sem artefactos verificáveis.
@@ -98,7 +98,7 @@ A RV é uma medida ex post da variação acumulada na janela. Durante a sessão,
 \widehat{\sigma}_{P}^{2}=\frac{1}{4N\ln 2}\sum_{i=1}^{N}\left[\ln(H_i/L_i)\right]^2
 \]
 
-Usa máxima e mínima e pressupõe uma dinâmica específica de preços. Não incorpora diretamente todos os efeitos de gaps/saltos e exige OHLC corretos. Não aplicar automaticamente a barras de ticks/Renko.
+Usa máxima e mínima e pressupõe uma dinâmica específica de preços. Não incorpora diretamente todos os efeitos de gaps/saltos e exige OHLC corretos. Não assumir automaticamente que o estimador é adequado às barras do gráfico de 60K trades.
 
 ### 4.4 Garman–Klass
 
@@ -127,7 +127,7 @@ k=\frac{0.34}{1.34+\frac{N+1}{N-1}}
 \]
 \(\sigma_o^2\) representa a componente open-to-open/overnight definida pelo método; \(\sigma_c^2\), a componente open-to-close; \(\sigma_{RS}^2\), Rogers–Satchell. Esta forma é apenas uma descrição da família. Antes de codificar, fixar definição completa de retornos, amostra, sessão, inicialização e tratamento de gaps e comparar com uma implementação de referência.
 
-**Regra comum aos estimadores OHLC:** não presumir que as suas propriedades permanecem válidas em gráficos de ticks ou Renko. Adaptações são hipóteses experimentais separadas.
+**Regra comum aos estimadores OHLC:** não presumir que as suas propriedades permanecem válidas no gráfico de 60K trades. A adequação do método a esse tipo de barra deve ser testada separadamente.
 
 ### 4.7 True Range e ATR
 
@@ -255,11 +255,11 @@ Estados candidatos:
 
 Histerese (limites distintos de entrada/saída ou persistência por \(k\) observações) pode reduzir alternância excessiva. \(k\) e limites exigem validação; histerese nunca pode atrasar um bloqueio por dados inválidos.
 
-## 9. Tempo, ticks de 60K e Renko
+## 9. Tempo e gráfico de 60K trades
 
-Manter três eixos separados: tempo de evento/receção; quantidade de negócios ou ticks; transformação gráfica. Uma barra de 60K ticks pode cobrir tempos de relógio muito diferentes. Renko depende do percurso de preço e dos parâmetros do construtor. Não anualizar nem comparar diretamente volatilidade por barra de ticks/Renko com volatilidade temporal.
+Manter separados o tempo de evento/receção e a contagem de negócios por barra. O gráfico utilizado é de 60K trades: cada barra é definida pela contagem de negócios segundo a configuração da plataforma e pode cobrir durações temporais muito diferentes. Não o designar como gráfico de ticks nem como Renko. Não anualizar nem comparar diretamente volatilidade por barra de 60K trades com volatilidade temporal sem método de amostragem e normalização definidos.
 
-Para cada barra de tick/Renko registar: definição e número de eventos, duração real, preços de referência, amplitude em pontos/ticks, negócio/volume se disponível e confiável, spread quando disponível, timestamps, lacunas, tipo de gráfico e versão do construtor. Testar cada granularidade separadamente e manter uma referência temporal paralela.
+Para o gráfico de 60K trades registar: configuração do gráfico na plataforma, número de negócios por barra, duração real de cada barra, preços de referência, amplitude em pontos, volume se disponível e confiável, spread quando disponível, timestamps e lacunas. Testar essa granularidade separadamente e manter uma referência temporal paralela.
 
 Dados de alta frequência podem sofrer ruído de microestrutura, amostragem irregular, saltos e dessincronização; realized kernel, two-scale/multi-scale e pre-averaging são famílias candidatas para determinados cenários, não soluções universais. A seleção de frequência deve ser empírica. citeturn715356search0turn715356search3turn715356search14
 
@@ -346,7 +346,7 @@ Esta lista especifica testes a executar; não afirma que já foram executados.
 | Confundir magnitude com direção | Separar volatilidade, direção, liquidez e sinal de estratégia |
 | Confundir VIX com B3 | Variável explicativa externa, testada contra baseline |
 
-Vantagens a investigar, não presumidas: detetar expansão/compressão; identificar sessões anormais; distinguir amplitude de ruído; adequar o contexto de risco; melhorar leitura de ticks/60K; detetar dados degradados antes de contaminarem o Giroscópio; medir se VIX acrescenta informação incremental.
+Vantagens a investigar, não presumidas: detetar expansão/compressão; identificar sessões anormais; distinguir amplitude de ruído; adequar o contexto de risco; melhorar leitura do gráfico de 60K trades; detetar dados degradados antes de contaminarem o Giroscópio; medir se VIX acrescenta informação incremental.
 
 ## 15. Critério de escolha
 
@@ -357,7 +357,7 @@ Vantagens a investigar, não presumidas: detetar expansão/compressão; identifi
 - Previsão: EWMA/GARCH/HAR-RV contra baselines.
 - Caudas: quantis, MAD e diagnósticos de salto.
 - Opções/VIX: domínio separado com metodologia própria.
-- Tick/60K/Renko: perfil próprio, sem equivalência presumida.
+- Gráfico de 60K trades: perfil próprio, sem equivalência presumida.
 
 A seleção final deve considerar estabilidade, qualidade, atraso, custo computacional, calibração e utilidade incremental demonstrada — não complexidade matemática por si só.
 

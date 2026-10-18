@@ -12,6 +12,8 @@ FONTES RELACIONADAS: https://github.com/carlos-andrade/FVG-ATLAS
 HISTÓRICO:
 - 2026-10-11 | v1.0.0 | Consolidação das regras de projeto, arquitetura, legado, validação NTSL/Profit, governança e continuidade.
 FONTE DA VERDADE: conversas acessíveis do projeto, arquivos versionados e documentação técnica citada; divergências devem ser registadas e resolvidas com evidência.
+SHA-256 (conteúdo canónico): 1af94b62debadf4e65da080804146041afec3d8abfea5d7c87fb421756143ddf
+Commit de referência (versão anterior): https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/057065d4f742f4a329f5bfbe99188b2ddad0db00
 -->
 
 # PROMPT MESTRE AVANÇADO — BRICKMASTER RAIZ
@@ -94,7 +96,7 @@ O PR #1, “BRICKMASTER RAIZ — arquitetura modular inicial v1.0”, foi identi
 
 1. **Monitorização total do pregão:** eventos relevantes devem ser identificados por regras claras, medidos quando aplicável, assinalados na origem temporal correta e tornados auditáveis. Não silenciar eventos apenas por parecerem redundantes.
 2. **Orientação do operador:** o sistema deve explicar a localização atual do preço, contexto, evidências, incerteza e invalidação.
-3. **Gráficos de ticks:** o BRICKMASTER foi concebido para gráficos atemporais baseados em ticks; a referência operacional de **60.000 ticks** faz parte da arquitetura e não é uma adaptação posterior. Registar diferenças por ativo, feed, configuração e ambiente.
+3. **Gráfico de 60K trades:** o BRICKMASTER utiliza gráfico baseado em contagem de negócios, com referência operacional de **60.000 trades por barra**. Não descrever este gráfico como gráfico de ticks nem Renko. Registar diferenças por ativo, feed, configuração e ambiente.
 4. **Abertura diária como referência:** a referência de **1% a partir da abertura do dia** é um eixo de pesquisa e leitura contextual. As bandas percentuais documentadas incluem ±0,5%, ±1%, ±2% e ±3%, mas a definição exata da abertura deve ser confirmada para o ativo e plataforma usados.
 5. **Meta não é promessa:** +1% desde a abertura é uma hipótese/objetivo de projeto, nunca uma garantia de lucro, obrigação de operar ou substituto da gestão de risco.
 6. **Sem look-ahead:** uma decisão só pode usar informação que estava disponível naquele instante. Evitar repaint silencioso, leakage temporal e uso indevido de candles futuros.
@@ -226,7 +228,7 @@ A especificação deve declarar:
 4. regras determinísticas ou pseudocódigo;
 5. saídas e semântica de cada estado;
 6. tratamento de dados ausentes, históricos insuficientes e mudança de sessão;
-7. suporte a gráficos de ticks, incluindo 60K quando aplicável;
+7. suporte ao gráfico de 60K trades, quando aplicável;
 8. riscos de repaint, look-ahead e dependência de candle em formação;
 9. testes positivos, negativos, limites e falhas;
 10. diferenças entre histórico, replay, backtest e tempo real;

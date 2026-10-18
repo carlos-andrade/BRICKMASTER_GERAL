@@ -14,6 +14,8 @@ HISTÓRICO:
 - 2026-10-17 | v1.1.0 | Referência de abertura e bandas percentuais, analogia do monotrilho e regra de persistência.
 - 2026-10-17 | v1.2.0 | Modelo formal de inclinação, níveis discretos, métricas dinâmicas e Índice de Resposta Corretiva (IRC) como proposta.
 FONTE DA VERDADE: documentação e código versionados neste repositório.
+SHA-256 (conteúdo canónico): 7e609c0cb892546fe652dc3956c1cb4992b2573067a44f34aba22c4d1ceb6688
+Commit de referência (versão anterior): https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/057065d4f742f4a329f5bfbe99188b2ddad0db00
 -->
 
 # Giroscópio — Núcleo de Estado do Mercado
@@ -27,7 +29,7 @@ FONTE DA VERDADE: documentação e código versionados neste repositório.
 
 Produzir uma representação explícita do estado do mercado e da posição do operador no gráfico. O Giroscópio não deve ser um “voto da maioria” de indicadores: deve preservar conflitos entre evidências, expor incerteza, listar condições de invalidação e degradar a confiança quando existirem dados ausentes ou desatualizados.
 
-O módulo atua como camada de contexto e leitura de estado. Não substitui automaticamente a lógica central já definida para o BRICKMASTER — incluindo a utilização de AVGPRICE e as regras dos tijolos Renko — sem decisão formal, teste comparativo e validação.
+O módulo atua como camada de contexto e leitura de estado. Não substitui automaticamente a lógica central já definida para o BRICKMASTER — incluindo a utilização de AVGPRICE e a configuração do gráfico de 60K trades — sem decisão formal, teste comparativo e validação.
 
 ## 2. Conceito de engenharia
 
@@ -87,7 +89,7 @@ Cada entrada deve ter origem, temporalidade, momento de atualização e estado d
 3. Correlação entre módulos não pode ser contabilizada como evidência independente sem ajuste.
 4. Volume agregado não comprova, sozinho, absorção institucional.
 5. Rompimento, toque de banda e retorno à abertura são observações, não garantias de continuidade ou reversão.
-6. Em gráficos Renko, as barras não têm duração constante: não tratar variação por tijolo como velocidade por unidade de tempo sem timestamps e intervalo temporal real.
+6. No gráfico de 60K trades, a duração de cada barra pode variar conforme a atividade de mercado: não tratar variação por barra como velocidade por unidade de tempo sem timestamps e duração temporal real.
 7. A estratégia de execução exige regras próprias de risco, limites de exposição, stops, custos, tratamento de falhas e validação em replay/backtest antes de qualquer uso real.
 8. O núcleo existente do BRICKMASTER não deve ser alterado implicitamente por este módulo de contexto.
 
@@ -106,7 +108,7 @@ Cada entrada deve ter origem, temporalidade, momento de atualização e estado d
 - Compilar no Editor de Estratégias da versão de Profit em uso.
 - Confirmar a referência de abertura correta para o ativo e sessão.
 - Confirmar a geometria e os valores das nove linhas.
-- Testar histórico, sessões consecutivas, replay e gráfico Renko relevante.
+- Testar histórico, sessões consecutivas, replay e gráfico de 60K trades.
 - Validar extremos, estados e reinicialização por sessão.
 - Definir rótulos, métricas e baseline antes de afirmar capacidade preditiva.
 - Registrar versão, instrumento, configuração, resultados e evidências verificáveis.

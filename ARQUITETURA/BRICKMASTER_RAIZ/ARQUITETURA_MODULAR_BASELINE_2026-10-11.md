@@ -16,6 +16,8 @@ rastreabilidade: "PR de padronização documental; commit a registar após cria�
 escopo: "Documento existente em ARQUITETURA/BRICKMASTER_RAIZ/ARQUITETURA_MODULAR_BASELINE_2026-10-11.md"
 objetivo: "Preservar o conteúdo original com identificação, estado e rastreabilidade padronizados"
 dependencias: "N/A"
+sha256_conteudo_canonico: "30d574f28628c2d24782e9d504755d694b2806edbb592a1333bf102414ea0251"
+commit_referencia_versao_anterior: "https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/057065d4f742f4a329f5bfbe99188b2ddad0db00"
 ---
 # BRICKMASTER RAIZ — Estrutura Arquitetural e Plano de Evolução
 
@@ -46,7 +48,7 @@ O BRICKMASTER é concebido como um sistema operacional modular para reduzir o pr
 
 A meta de referência de 1% a partir da abertura diária é um objetivo de projeto a testar, não uma promessa de rentabilidade nem uma obrigação de operar. A arquitetura deve permitir ausência de operação quando não houver condições verificáveis.
 
-O sistema foi idealizado para gráficos atemporais baseados em ticks, incluindo a referência operacional de 60K ticks. Cada módulo deve declarar os tipos de gráfico suportados e as diferenças entre histórico, replay, backtest e tempo real.
+O sistema utiliza gráficos de 60K trades como referência operacional. Não utiliza gráficos de ticks nem Renko. Cada módulo deve declarar os tipos de gráfico efetivamente suportados e as diferenças entre histórico, replay, backtest e tempo real.
 
 ## 2. Princípios arquiteturais
 
@@ -144,7 +146,7 @@ Todo módulo novo deve incluir:
 4. Regras matemáticas ou pseudocódigo determinístico.
 5. Saídas e significado de cada estado.
 6. Tratamento de dados inválidos, início de sessão e histórico insuficiente.
-7. Dependências e compatibilidade de gráfico, incluindo ticks/60K quando aplicável.
+7. Dependências e compatibilidade com o gráfico de 60K trades.
 8. Testes unitários com casos positivos, negativos, limítrofes e dados ausentes.
 9. Comparação entre histórico, replay, backtest e tempo real.
 10. Critérios de aceitação e evidência anexada.

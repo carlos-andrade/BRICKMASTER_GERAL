@@ -9,7 +9,7 @@
 | **Fase** | F1 — Levantamento e adoção documental |
 | **Estado** | EM_REVISAO |
 | **Versão** | 1.3.0 |
-| **SHA-256 (conteúdo canónico)** | 257f0d83d3ae339fa0e60d87b23024613b97ee6b6bfa9512256d89883bcae9e3 |
+| **SHA-256 (conteúdo canónico)** | 12fabcce4887af38230028ec0a6fc8efe715003eb6ecf6a548936c355c2fb781 |
 | **Commit de referência (versão anterior)** | [70f09f95cfbfdc2df8a0dfffaa6a4b157e367b86](https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/70f09f95cfbfdc2df8a0dfffaa6a4b157e367b86) |
 | **Data de criação** | 2026-10-18 |
 | **Data de atualização** | 2026-10-18 |
@@ -96,7 +96,7 @@ Ficheiros previstos não são considerados entregáveis concluídos até serem e
 ## Dependências previstas
 
 - **Giroscópio:** consolidar contexto, qualidade e confiança; interface pendente de confirmação.
-- **Estado Gráfico:** declarar tipo e granularidade, incluindo gráficos de ticks e referência de 60K quando usados; compatibilidade a validar.
+- **Estado Gráfico:** declarar o gráfico de 60K trades e a granularidade utilizada; a duração temporal de cada barra pode variar e a compatibilidade deve ser validada.
 - **Dados/Qualidade:** garantir proveniência, sincronização, integridade e tratamento de dados ausentes/atrasados.
 - **Fluxo/Volume e VWAP/TWAP:** possíveis fontes auxiliares para contexto, não pré-requisitos assumidos sem contrato.
 - **Intermercado/VIX:** contexto externo sujeito à validação de origem e sincronização.
