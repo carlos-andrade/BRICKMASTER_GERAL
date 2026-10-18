@@ -9,7 +9,7 @@
 | **Fase** | F2 — Requisitos e desenho |
 | **Estado** | PROPOSTA_EXPERIMENTAL — requer revisão |
 | **Versão** | 1.0.0 |
-| **SHA-256 (conteúdo canónico)** | 4838a659bb8f50e592494e98ece9b9a1e7086489a2f9695d870d88a37e039db0 |
+| **SHA-256 (conteúdo canónico)** | e8408302b83cfeea336fcb60712936b6fca686a4d45c4000ec736664fbc3d4ce|
 | **Commit de referência (versão anterior)** | [4af9742003a5780f8a6e00408c2ea1894140c2b1](https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/4af9742003a5780f8a6e00408c2ea1894140c2b1) |
 | **Data** | 2026-10-18 |
 | **Documento de origem** | [BASE PARA PROMPT.md](https://github.com/carlos-andrade/BRICKMASTER_GERAL/blob/main/MODULOS/VOLATILIDADE/BASE%20PARA%20PROMPT.md) |
@@ -69,9 +69,9 @@ Não misturar diretamente escalas, sessões ou propriedades de instrumentos dife
 
 ### 3.2 Particularidade de gráficos
 
-Considera os gráficos baseados em ticks uma dimensão fundamental do BRICKMASTER, incluindo o gráfico de **60K ticks**. Não assumes, porém, que “60K” equivale a um intervalo temporal fixo. Regista a unidade e a definição exata do gráfico na plataforma, juntamente com a granularidade, reconstrução histórica e disponibilidade dos dados.
+Considera o gráfico de **60K trades** a referência gráfica do BRICKMASTER para esta análise. Não o designes como gráfico de ticks nem Renko. A barra é baseada numa contagem de negócios e não equivale a um intervalo temporal fixo. Regista a configuração exata do gráfico na plataforma, granularidade, reconstrução histórica e disponibilidade dos dados.
 
-Quando comparares gráficos temporais e gráficos de ticks/Renko, explicita que as barras representam processos de amostragem diferentes. Não compares a volatilidade por barra como se a duração e o conteúdo informacional fossem iguais. Compara métricas compatíveis e normalizadas; documenta o que não pode ser comparado.
+Quando comparares gráficos temporais e o gráfico de 60K trades, explicita que as barras representam processos de amostragem diferentes. Não compares a volatilidade por barra como se a duração fosse igual. Compara métricas compatíveis e normalizadas; documenta o que não pode ser comparado.
 
 ## 4. Taxonomia de volatilidade a investigar
 
@@ -188,7 +188,7 @@ Avalia além da rentabilidade bruta: drawdown, exposição, risco de cauda, perd
 O módulo VOLATILIDADE deve fornecer **contexto e qualidade**, não executar nem assumir a autoridade de outros módulos.
 
 - **Giroscópio:** recebe um resumo consolidado, com origem, timestamp, idade, confiança e divergências.
-- **Estado Gráfico:** recebe a identificação exata do tipo e granularidade do gráfico, incluindo ticks/60K quando aplicável.
+- **Estado Gráfico:** recebe a identificação exata do gráfico de 60K trades e da respetiva granularidade.
 - **Dados/Qualidade:** valida proveniência, integridade, sincronização e atualidade.
 - **Fluxo/Volume, FVG, VWAP/TWAP e Market DNA:** podem fornecer contexto adicional somente através de contratos explícitos e versões compatíveis.
 - **Risco soberano:** decide bloqueios/limites de risco; nenhum score de volatilidade pode anulá-lo.
@@ -239,7 +239,7 @@ Inclui, no mínimo:
 - comparação com baseline simples;
 - ausência de look-ahead e vazamento entre treino/validação/teste;
 - reprodutibilidade da transformação e dos resultados;
-- testes específicos para gráficos temporais vs ticks/Renko sem equiparar barras não comparáveis;
+- testes específicos para gráficos temporais e de 60K trades, sem equiparar barras não comparáveis;
 - falha de qualquer dependência crítica e comportamento fail-closed;
 - reconciliação dos resultados com a fonte original.
 
