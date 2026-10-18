@@ -1,0 +1,36 @@
+// BRICKMASTER RAIZ
+// ID: BM-VOL-RV-60K-001
+// Indicador experimental de volatilidade realizada intradiaria para WIN/WDO.
+// Grafico-alvo: 60K trades. Nao usar como indicacao de grafico de ticks ou Renko.
+// Sem ordens; sem integracao com Giroscopio; sem thresholds operacionais.
+// SHA-256 canonico: 5e7e128e5ad44ff769c5a9abd639faecb622f738a8582581eba76e815cac0c63
+// Commit de referencia: PENDENTE — preencher apos o commit inicial
+
+var
+  retornoLog : Float;
+  rvAcumulada : Float;
+
+begin
+  // Reinicia ao mudar a data das barras; o alinhamento com a sessao B3
+  // (incluindo horario noturno) ainda requer validacao no Profit.
+  if (Date <> Date[1]) then
+  begin
+    retornoLog := 0;
+    rvAcumulada := 0;
+  end
+  else
+  begin
+    if (Close > 0) and (Close[1] > 0) then
+    begin
+      retornoLog := Log(Close / Close[1]);
+      rvAcumulada := rvAcumulada[1] + (retornoLog * retornoLog);
+    end
+    else
+    begin
+      retornoLog := 0;
+      rvAcumulada := rvAcumulada[1];
+    end;
+  end;
+
+  Plot(Sqrt(rvAcumulada) * 100);
+end;
