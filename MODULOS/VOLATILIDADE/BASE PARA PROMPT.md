@@ -9,8 +9,8 @@
 | **Fase** | F1 — Levantamento e adoção documental |
 | **Estado** | EM_REVISAO |
 | **Versão** | 1.1.0 |
-| **SHA-256 (conteúdo canónico)** | A_CALCULAR |
-| **Commit de referência (versão anterior)** | [676c41f6c5af894d1e5d3c8a86c87ed53c8e6564](https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/676c41f6c5af894d1e5d3c8a86c87ed53c8e6564) |
+| **SHA-256 (conteúdo canónico)** | bae0431e743d6369adfd591af13c08bd13fbe7fe58bbed9fc6426581dae2d64a |
+| **Commit de referência (versão anterior)** | [fcaa7464d8eb6610667caf803485e98d1519f9ef](https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/fcaa7464d8eb6610667caf803485e98d1519f9ef) |
 | **Data de criação** | 2026-10-18 |
 | **Data de atualização** | 2026-10-18 |
 | **Responsável** | Responsável técnico do BRICKMASTER RAIZ |
