@@ -1,10 +1,10 @@
 // BRICKMASTER RAIZ
-// ID: BM-VOL-RV-60K-001
+// ID: BM_VOL_RV_60K_001
 // Indicador experimental de volatilidade realizada intradiaria para WIN/WDO.
 // Grafico-alvo: 60K trades. Nao usar como indicacao de grafico de ticks ou Renko.
 // Sem ordens; sem integracao com Giroscopio; sem thresholds operacionais.
-// SHA-256 canonico: 2ab6488f2b5e79a9eee22d602800395e1b69083864719a5f239e99b9cb69612a
-// Commit de referencia: 200d665130f2432b144310ddfec378a4e6c3b6a2
+// SHA-256 canonico: adc09d82d80a5d052bd4a483748c78cb9f61d0c95770ca9e94753f92ce054688
+// Commit de referencia: 74c506da5569eb4cd9de93cf7c51732e03c12d76
 
 var
   retornoLog : Float;
