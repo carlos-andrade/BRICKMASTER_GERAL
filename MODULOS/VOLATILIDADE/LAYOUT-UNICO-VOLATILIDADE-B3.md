@@ -10,7 +10,7 @@
 | **Fase** | F2 — Requisitos e desenho |
 | **Estado** | PROPOSTA_EM_REVISAO |
 | **Versão** | 1.0.0 |
-| **SHA-256 (conteúdo canónico)** | 21dfe898da5f2262a33cb09c950419f64aabe2d26f23c2da26d978a5a5d39ded |
+| **SHA-256 (conteúdo canónico)** | 6ad7a9d7fd04e259a10feeb848c61b1575cc67bb0e4bb3a43070ae233989a555|
 | **Commit de referência (versão anterior)** | [9958fede2156e4b035ee1a6a4aceb738b85ae814](https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/9958fede2156e4b035ee1a6a4aceb738b85ae814) |
 | **Data de criação** | 2026-10-18 |
 | **Responsável** | Responsável técnico do BRICKMASTER RAIZ |
@@ -179,16 +179,16 @@ O motor deve suportar múltiplas famílias de métricas, desde que cada uma tenh
 
 Não selecionar agora um estimador, janela ou limiar único. F2 deve comparar candidatos, unidades, baselines, sensibilidade e limitações antes de aprovar o método.
 
-### 9.1 Gráficos de ticks e Renko
+### 9.1 Gráfico de 60K trades e referência temporal
 
-Registar a definição real da plataforma, instrumento e granularidade. Incluir gráficos de ticks, com referência explícita a 60K, no plano de validação quando os dados estiverem disponíveis. Não assumir que a contagem de ticks corresponde a tempo fixo nem comparar diretamente métricas por barra de gráficos com esquemas de amostragem diferentes.
+Registar a definição real do gráfico de 60K trades na plataforma, instrumento e granularidade. O BRICKMASTER utiliza gráfico de 60K trades, não gráficos de ticks nem Renko. Uma barra baseada em 60K trades representa uma contagem de negócios, não um intervalo de tempo fixo; a duração varia com a atividade de mercado. Não comparar diretamente métricas por barra temporal e por barra de 60K trades sem método de normalização e validação explícitos.
 
 ## 10. Fronteiras com outros módulos
 
 | Dependência | Relação proposta | Gate necessário |
 |---|---|---|
 | Giroscópio | Consumir contexto de volatilidade com timestamps, qualidade, confiança e divergências | Inspecionar e aprovar contrato real |
-| Estado Gráfico | Fornecer tipo/granularidade do gráfico e contexto de ticks/60K | Confirmar representação e fonte |
+| Estado Gráfico | Fornecer tipo/granularidade do gráfico de 60K trades | Confirmar representação e fonte |
 | Dados/Qualidade | Validar proveniência, integridade e atualidade | Definir critérios e integração |
 | Fluxo/Volume, FVG, VWAP/TWAP, Market DNA | Possíveis inputs contextuais | Não ligar sem necessidade demonstrada e contrato explícito |
 | Risco soberano | Receber contexto se aprovado; mantém decisão de limites/bloqueios | Revisão de segurança e autoridade |
@@ -217,7 +217,7 @@ Os testes devem ser planeados antes da implementação e executados isoladamente
 5. Robustez a janelas, frequências e estimadores candidatos.
 6. Comparação contra baselines simples e teste final cronológico isolado.
 7. Controlo de look-ahead, leakage, seleção de parâmetros e survivorship bias.
-8. Comparabilidade entre gráficos temporais, ticks/60K e Renko.
+8. Comparabilidade entre gráficos temporais e gráfico de 60K trades.
 9. Falha de fonte, cálculo, schema, publicação e watchdog.
 10. Reprodutibilidade, reconciliação e preservação dos resultados negativos.
 
