@@ -9,7 +9,7 @@
 | **Fase** | F2 — Requisitos e desenho |
 | **Estado** | PROPOSTA_EXPERIMENTAL — requer revisão |
 | **Versão** | 1.0.0 |
-| **SHA-256 (conteúdo canónico)** | e8408302b83cfeea336fcb60712936b6fca686a4d45c4000ec736664fbc3d4ce|
+| **SHA-256 (conteúdo canónico)** | e8408302b83cfeea336fcb60712936b6fca686a4d45c4000ec736664fbc3d4ce |
 | **Commit de referência (versão anterior)** | [4af9742003a5780f8a6e00408c2ea1894140c2b1](https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/4af9742003a5780f8a6e00408c2ea1894140c2b1) |
 | **Data** | 2026-10-18 |
 | **Documento de origem** | [BASE PARA PROMPT.md](https://github.com/carlos-andrade/BRICKMASTER_GERAL/blob/main/MODULOS/VOLATILIDADE/BASE%20PARA%20PROMPT.md) |
