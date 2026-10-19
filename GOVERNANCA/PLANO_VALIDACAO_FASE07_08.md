@@ -69,6 +69,6 @@ Desenvolvimento: feature → develop. Validação: workflows/testes e revisão s
 
 - 0.1.0 — 2026-10-11 — plano inicial de testes e portões de release.
 
-<!-- RECONCILIACAO_SHA256: 8da10189c489ebff38bf981421c0be48c33151eff892804611955d1c37718e85
+<!-- RECONCILIACAO_SHA256: b922010b8157d9ab3602f87dfd1ffc19a16e0c691df250982c2bdddc8da67871
 COMMIT_DE_REFERENCIA: c0740f9fd4d1485b3c3a1b8568053b8cd077e688
 -->
