@@ -16,7 +16,7 @@ RASTREABILIDADE: pasta criada por PR #37; commit de referência da estrutura: 8f
 ESCOPO: Organizar a documentação deste método/indicador de volatilidade
 OBJETIVO: Definir requisitos e evidências sem presumir implementação
 DEPENDENCIAS: Dados OHLC/retornos adequados ao método; disponibilidade e qualidade por confirmar
-SHA-256-CANONICO: PENDENTE_DE_CALCULO_APOS_CONGELAMENTO
+SHA-256-CANONICO: ca9bf22d168a45c7f00fe1123a46c2bf4091fdf99fa8485128ce3b98f644f26c
 COMMIT-DE-REFERENCIA: 8f69fba6e8abf8fb5db748755705552d92f5d0b9
 -->
 # Estimador de Parkinson (high-low)
