@@ -16,8 +16,8 @@ RASTREABILIDADE: commit de criacao e historico Git
 ESCOPO: Volatilidade realizada intradiaria em barras 60K trades
 OBJETIVO: Registrar formula, comportamento e limites do indicador
 DEPENDENCIAS: Close, Close[1], Date, Date[1] no ambiente NTSL documentado
-SHA-256-CANONICO: PENDENTE_DE_CALCULO_APOS_CONGELAMENTO
-COMMIT-DE-REFERENCIA: PENDENTE_DE_COMMIT_FINAL
+SHA-256-CANONICO: 0fadc4e260e188a833caf12de74a7c94662dd0d6dcbbffde956ff30b8e621733
+COMMIT-DE-REFERENCIA: 8f69fba6e8abf8fb5db748755705552d92f5d0b9
 -->
 # Especificação — RV-60K
 
