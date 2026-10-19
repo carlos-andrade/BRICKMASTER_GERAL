@@ -8,6 +8,15 @@ titulo: "Convenção de identificadores para código NTSL no Profit"
 estado: "REGRA_OPERACIONAL"
 versao: "1.0.0"
 data_atualizacao: "2026-10-19"
+status: "EM REVISAO DOCUMENTAL"
+data_criacao: "2026-10-19"
+origem: "Documentação Profit fornecida pelo utilizador e repositório BRICKMASTER_GERAL"
+autoridade_documental: "Manual NTSL 4.4, documentação Profit fornecida e governação do repositório"
+cadeia_autoridade: "Documentação de referência > evidência Profit > auditoria independente > documentação do módulo"
+rastreabilidade: "PR #32; commits e SHA-256 registados neste documento"
+escopo: "Módulo RV-60K e governação documental associada"
+objetivo: "Preservar contexto, estado, evidências, validação e próxima ação"
+dependencias: "Profit/NTSL 4.4; exportações WIN/WDO; scripts de validação documental"
 ---
 
 # Convenção de identificadores para código NTSL no Profit
@@ -67,6 +76,32 @@ A convenção underscore é uma regra operacional confirmada pelo utilizador a p
 |---|---|---|---|
 | 1.0.0 | 2026-10-19 | Formalizada regra geral: IDs para Profit usam underscore, sem hífens | REGRA OPERACIONAL |
 
+## Contexto Histórico
+
+Este documento pertence ao trabalho RV-60K desenvolvido na branch feature e preserva o histórico do protótipo, das evidências fornecidas e das decisões registadas. O gráfico-alvo do sistema é 60K trades.
+
+## Estado
+
+O módulo permanece experimental e isolado. A validação numérica documentada não equivale a aprovação para produção; a validação documental do PR #32 tem de passar antes da integração.
+
+## Evidências
+
+As exportações OHLC/RV e capturas referidas neste conjunto foram extraídas do Profit, conforme confirmação do utilizador. Os resultados quantitativos aplicáveis constam do relatório de validação funcional.
+
+## Validação
+
+A validação distingue consistência numérica das exportações, compilação evidenciada no Profit e validação automática documental. Não declarar testes além dos que têm evidência registada.
+
+## Resultado
+
+O conteúdo técnico e o histórico são preservados. A correção documental não altera a lógica NTSL nem amplia o escopo funcional.
+
+## Próxima Ação
+
+Executar novamente o workflow de validação de cabeçalhos no PR #32. Só após resultado PASS e revisão do diff poderá avançar a integração em develop.
+
 ## Integridade documental
+
+- SHA-256 canónico do conteúdo anterior a esta secção: `4b4f2e8f8e70844e39151612134e686abfa8f7a949220657b20ffe10261f53f0`
 
 O SHA-256 canónico é calculado em UTF-8 com finais de linha LF, excluindo as linhas `SHA-256 (conteúdo canónico)` e `Commit de referência`.
