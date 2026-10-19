@@ -78,6 +78,15 @@ Esta interface é preliminar. O contrato não será considerado estável até se
 9. **Revisão humana:** mudanças de alto impacto, alteração de limiares e promoção de estado exigem revisão e aprovação explícitas.
 10. **Conformidade individual:** inserir cabeçalho ou citar GOVERNANCA não significa que o módulo esteja totalmente conforme, validado ou aprovado.
 
+## Organização por indicador
+
+A estrutura canónica em construção é `INDICADORES/`, com uma pasta para cada indicador ou família formalmente identificada. O inventário inicial separa:
+- `INDICADORES/RV-60K/`: volatilidade realizada no gráfico de 60K trades.
+- `INDICADORES/IV-WIN/`: investigação experimental de volatilidade implícita para contexto do WIN.
+- `INDICADORES/README.md`: catálogo e convenção de criação de pastas.
+
+Os diretórios originais `NTSL/` e `VALIDACAO/` são mantidos como fontes históricas durante a migração. Não apagar até a reconciliação das referências internas e da integridade dos conteúdos estar concluída.
+
 ## Estrutura documental do módulo
 
 - `README.md` — contexto, estado, contrato preliminar, regras e roadmap.
