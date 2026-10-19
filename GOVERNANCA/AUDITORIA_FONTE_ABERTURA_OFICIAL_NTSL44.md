@@ -186,3 +186,7 @@ A B3 issue #6 foi atualizada para solicitar materialização/verificação do ar
 A execução [B3 FASE10 2005](https://github.com/carlos-andrade/B3/actions/runs/38253210219) usou checkout com Git LFS ativo, calculou SHA-256 dos bytes de RAW e NORMALIZED e comparou todos os 25 campos. O log registou `VALIDADO`, hashes coincidentes com manifesto/sidecar, 181.408 registos de cada lado e zero divergências.
 
 Esta evidência valida a integridade do dataset COTAHIST 2005 dentro do escopo da FASE10. Não demonstra que COTAHIST contenha a abertura aplicável a IND/DOL/WIN/WDO ou aos aliases INDFUT/DOFUT. O mapeamento e a fonte de abertura continuam UNKNOWN/BLOCKED. DS-46 é apenas PARTIAL_PASS_2005; DS-45 continua NOT_RUN e o ano 2006 permanece bloqueado por manifesto sem CSV canónico.
+
+<!-- RECONCILIACAO_SHA256: e711bc39cfcecad66e448a5e6eba216f0b29e320441ce5d620a3b1c3b7bca00a
+COMMIT_DE_REFERENCIA: c0740f9fd4d1485b3c3a1b8568053b8cd077e688
+-->
