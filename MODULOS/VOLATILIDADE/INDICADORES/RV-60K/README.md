@@ -16,8 +16,8 @@ RASTREABILIDADE: commit de criacao e historico Git
 ESCOPO: Indicador intradiario de volatilidade realizada para grafico de 60K trades
 OBJETIVO: Concentrar especificacao, codigo e evidencias do RV-60K
 DEPENDENCIAS: Precos Close validos e sequencia de barras do grafico 60K trades
-SHA-256-CANONICO: PREENCHER_APOS_HASH_CANONICO
-COMMIT-DE-REFERENCIA: PREENCHER_APOS_COMMIT
+SHA-256-CANONICO: PENDENTE_DE_CALCULO_APOS_CONGELAMENTO
+COMMIT-DE-REFERENCIA: PENDENTE_DE_COMMIT_FINAL
 -->
 # RV-60K — Volatilidade Realizada
 
