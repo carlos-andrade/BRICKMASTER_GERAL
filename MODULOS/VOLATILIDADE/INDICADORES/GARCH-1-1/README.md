@@ -16,7 +16,7 @@ RASTREABILIDADE: pasta criada por PR #37; commit de referência da estrutura: 8f
 ESCOPO: Organizar a documentação deste método/indicador de volatilidade
 OBJETIVO: Definir requisitos e evidências sem presumir implementação
 DEPENDENCIAS: Dados OHLC/retornos adequados ao método; disponibilidade e qualidade por confirmar
-SHA-256-CANONICO: PENDENTE_DE_CALCULO_APOS_CONGELAMENTO
+SHA-256-CANONICO: e203eb1ff9cc2962585ede3a6273794ff553ffb3002a3d9d4b454f65bb92239e
 COMMIT-DE-REFERENCIA: 8f69fba6e8abf8fb5db748755705552d92f5d0b9
 -->
 # Modelo de volatilidade condicional GARCH(1,1)
