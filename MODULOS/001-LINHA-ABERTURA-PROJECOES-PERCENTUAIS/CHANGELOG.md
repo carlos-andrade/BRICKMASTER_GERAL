@@ -6,9 +6,11 @@ fase: "GOVERNANCA_DOCUMENTAL"
 id_documento: "BM-DOC-MODULOS-001-LINHA-ABERTURA-PROJECOES-PERCENTUAIS-CHANGELOG"
 titulo: "Changelog — Módulo 001"
 status: "PLANEJADO"
-versao: "0.1.0"
+versao: "0.1.1"
 data_criacao: "2026-10-11"
-data_atualizacao: "2026-10-11"
+data_atualizacao: "2026-10-19"
+sha256_canonico: "18bd013ad5e701fbf98b706697525d96153d1a03427beb065382dcf4d41434cd"
+commit_referencia: "c0740f9fd4d1485b3c3a1b8568053b8cd077e688"
 origem: "Conteúdo preexistente; ver histórico Git e referências internas"
 autoridade_documental: "GOVERNANCA"
 cadeia_autoridade: "PROMPT → CARTA → LAYOUT ÚNICO → CÓDIGO"
@@ -27,7 +29,7 @@ dependencias: "N/A"
 > **Status:** PLANEJADO  
 > **Versão:** 0.1.0  
 > **Criação:** 2026-10-11  
-> **Atualização:** 2026-10-11  
+> **Atualização:** 2026-10-19  
 > **Origem:** Conteúdo preexistente; ver histórico Git e referências internas  
 > **Autoridade:** GOVERNANÇA  
 > **Rastreabilidade:** PR de padronização documental; commit a registar após criação
@@ -67,3 +69,14 @@ Cabeçalho documental padronizado sem intenção de alterar as regras ou o conte
 ## Próxima Ação
 
 Rever os metadados, preencher datas/versões desconhecidas com evidência verificável e executar os testes específicos quando aplicável.
+
+
+## 0.1.1 — 2026-10-11
+- Clarificada a notação dos oito níveis percentuais na especificação, substituindo uma lista ambígua por uma tabela explícita.
+- Nenhuma implementação NTSL foi alterada; a correção é documental.
+- Testes funcionais: NÃO EXECUTADOS.
+
+
+## Checkpoint de reconciliação — 2026-10-19
+
+Versão documental preservada durante a reconciliação de `develop` com `main`. O histórico de versões anterior foi mantido. A integração de conteúdo não constitui teste funcional nem aprovação de produção.
