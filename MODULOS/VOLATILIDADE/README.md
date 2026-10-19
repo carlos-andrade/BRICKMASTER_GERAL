@@ -8,9 +8,10 @@
 | **Tipo documental** | README_MODULO |
 | **Fase** | F1 — Levantamento e adoção documental |
 | **Estado** | EM_REVISAO |
-| **Versão** | 1.4.0 |
+| **Versão** | 1.5.0 |
 | **SHA-256 (conteúdo canónico)** | 0f06c548e75c228c2d1b1caa86970d314023b72b5df1152f1bb655df0aa7b93f |
 | **Commit de referência (retirada da pasta VIX)** | [d1f91fdcae5d92ac56449b570022011ae7857e6b](https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/d1f91fdcae5d92ac56449b570022011ae7857e6b) |
+| **Commit de referência (organização por indicador — checkpoint da branch)** | [8f69fba6e8abf8fb5db748755705552d92f5d0b9](https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/8f69fba6e8abf8fb5db748755705552d92f5d0b9) |
 | **Commit de referência (versão anterior)** | [70f09f95cfbfdc2df8a0dfffaa6a4b157e367b86](https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/70f09f95cfbfdc2df8a0dfffaa6a4b157e367b86) |
 | **Data de criação** | 2026-10-18 |
 | **Data de atualização** | 2026-10-19 |
@@ -198,4 +199,5 @@ Próxima fase: concluir F2 — requisitos e desenho, com fórmulas, janelas, uni
 | 1.0.0 | 2026-10-18 | Criação inicial do README do módulo | Responsável técnico do projeto | Histórico Git do repositório |
 | 1.1.0 | 2026-10-18 | Adoção documental de regras de governança, roadmap por gates, riscos, dependências e evidências | Responsável técnico do projeto | Histórico Git |
 | 1.2.0 | 2026-10-18 | Ligação à Carta/Contrato VOLATILIDADE B3 e ao prompt especializado | Responsável técnico do projeto | Histórico Git |
-| 1.3.0 | 2026-10-18 | Ligação ao Layout Único e atualização do índice documental do módulo | Responsável técnico do projeto | Commit a confirmar após publicação |
+| 1.3.0 | 2026-10-18 | Ligação ao Layout Único e atualização do índice documental do módulo | Responsável técnico do projeto | Histórico Git |
+| 1.5.0 | 2026-10-19 | Catálogo de indicadores individualizados, pastas RV-60K/IV-WIN e candidatos metodológicos; preservação dos caminhos de origem durante a transição | Responsável técnico do projeto | PR #37 — draft |
