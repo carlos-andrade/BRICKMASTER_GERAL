@@ -16,8 +16,8 @@ RASTREABILIDADE: historico Git e commits referenciados
 ESCOPO: Catalogar cada família de indicador de volatilidade em pasta própria
 OBJETIVO: Separar ciclo de vida, código, especificação e evidências por indicador
 DEPENDENCIAS: MODULOS/VOLATILIDADE/README.md
-SHA-256-CANONICO: PENDENTE_DE_CALCULO_APOS_CONGELAMENTO
-COMMIT-DE-REFERENCIA: PENDENTE_DE_COMMIT_FINAL
+SHA-256-CANONICO: b65e026dbbe471161739fd0a44b9d742500f88737cb0ad169f92ad1a9094ff1f
+COMMIT-DE-REFERENCIA: 8f69fba6e8abf8fb5db748755705552d92f5d0b9
 -->
 # Catálogo de indicadores de volatilidade
 
