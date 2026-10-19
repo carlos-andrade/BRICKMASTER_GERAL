@@ -128,7 +128,7 @@ A compilação isolada não satisfaz, por si só, estes critérios.
 
 ## Contexto Histórico
 
-Contexto histórico preservado no conteúdo preexistente e no histórico Git. Em 2026-10-19, foi tomada a decisão explícita de retirar `MODULOS/10_VOLATILIDADE_VIX/`, que continha apenas um README de proposta inicial. A remoção será submetida por branch/PR porque a pasta existe em `main` e não na linha atual de `develop`; não se faz alteração direta em `main`.
+Contexto histórico preservado no conteúdo preexistente e no histórico Git. Em 2026-10-19, foi tomada a decisão explícita de retirar `MODULOS/10_VOLATILIDADE_VIX/`, que continha apenas um README de proposta inicial. A remoção foi preparada por branch/PR porque a pasta existia em `main` e não na linha atual de `develop`; a alteração só passa a vigorar em `main` após integração do PR #33.
 
 
 ## Estado
@@ -153,4 +153,4 @@ Cabeçalho documental padronizado sem intenção de alterar as regras ou o conte
 
 ## Próxima Ação
 
-Validar o PR de retirada da pasta VIX e, depois, reconciliar a linha de desenvolvimento com `main` conforme a governança.
+Confirmar o estado final do PR #33 e, depois, reconciliar a linha de desenvolvimento com `main` conforme a governança.
