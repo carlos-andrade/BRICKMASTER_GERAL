@@ -50,7 +50,7 @@
 
 ## Integridade documental
 
-- SHA-256 canónico do conteúdo (excluindo esta secção de integridade): `88c694bfa591f5384611d881241f87001ab3ceea3c1768542155003809942ee5`
+- SHA-256 canónico do conteúdo (excluindo esta secção de integridade): `95e7f92591a236aa687087159283522a98cf71bc1e3a29cabc336bdfaea88400`
 - Commit de referência do protótipo/código: `2b04df92c2785e4adacf921f7379d9b0ed49da56`
 - PR de referência: https://github.com/carlos-andrade/BRICKMASTER_GERAL/pull/32
-- Estado de integração: documento preparado para integração na branch feature; não representa promoção a `develop` ou `main`.
+- Estado de integração: commit documental gravado na branch feature; não representa promoção a `develop` ou `main`.
