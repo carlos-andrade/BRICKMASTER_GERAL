@@ -274,3 +274,7 @@ Foi criada a branch B3 `feat/cotahist-2006-offline-recovery`, com FASE01–FASE1
 5. Manter os seis símbolos bloqueados até existir fonte histórica armazenada que prove código/contrato, campo de abertura e semântica aplicável.
 
 - 1.8.0 — 2026-10-12 — checkpoint atualizado com evidências DS-47–DS-49, proposta de recuperação 2006 não integrada e falhas anuais de 1998/1987.
+
+<!-- RECONCILIACAO_SHA256: ef1412e8eaa9b58c45602e9f145fb816249fca630fc43b3decc6741597c707a7
+COMMIT_DE_REFERENCIA: c0740f9fd4d1485b3c3a1b8568053b8cd077e688
+-->
