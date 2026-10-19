@@ -105,3 +105,7 @@ Executar novamente o workflow de validação de cabeçalhos no PR #32. Só após
 - SHA-256 canónico do conteúdo anterior a esta secção: `4b4f2e8f8e70844e39151612134e686abfa8f7a949220657b20ffe10261f53f0`
 
 O SHA-256 canónico é calculado em UTF-8 com finais de linha LF, excluindo as linhas `SHA-256 (conteúdo canónico)` e `Commit de referência`.
+
+<!-- RECONCILIACAO_SHA256: fe725ca916a05d0ee95b9ab213f980d5b90b9abb7173ed467cd0c679fb65f38b
+COMMIT_DE_REFERENCIA: c0740f9fd4d1485b3c3a1b8568053b8cd077e688
+-->
