@@ -100,3 +100,7 @@ A referência NTSL 4.4 confirma que `Volume` é volume financeiro por candle e d
 ## Histórico de versões
 
 - 1.0.0 — 2026-10-11 — primeira revisão estática focalizada do candidato com referência ao Manual NTSL 4.4.
+
+<!-- RECONCILIACAO_SHA256: 23a97e3bf93286f87026a50b1b266212a7cd625e28b837e816a399521a03191e
+COMMIT_DE_REFERENCIA: c0740f9fd4d1485b3c3a1b8568053b8cd077e688
+-->
