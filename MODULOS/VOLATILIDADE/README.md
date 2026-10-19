@@ -9,7 +9,7 @@
 | **Fase** | F1 — Levantamento e adoção documental |
 | **Estado** | EM_REVISAO |
 | **Versão** | 1.4.0 |
-| **SHA-256 (conteúdo canónico)** | PENDENTE DE RECÁLCULO — não reutilizar o hash da versão anterior |
+| **SHA-256 (conteúdo canónico)** | 0f06c548e75c228c2d1b1caa86970d314023b72b5df1152f1bb655df0aa7b93f |
 | **Commit de referência (retirada da pasta VIX)** | [d1f91fdcae5d92ac56449b570022011ae7857e6b](https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/d1f91fdcae5d92ac56449b570022011ae7857e6b) |
 | **Commit de referência (versão anterior)** | [70f09f95cfbfdc2df8a0dfffaa6a4b157e367b86](https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/70f09f95cfbfdc2df8a0dfffaa6a4b157e367b86) |
 | **Data de criação** | 2026-10-18 |
