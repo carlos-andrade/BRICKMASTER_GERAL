@@ -247,3 +247,7 @@ A B3 issue #6 foi atualizada com estes achados e com a branch proposta de recupe
 Os estados PASS de DS-47–DS-49 têm o escopo limitado registado no plano de testes; não certificam a abertura oficial dos seis símbolos. Todos os seis continuam `UNKNOWN/BLOCKED`. Não houve execução NTSL/Profit, replay, backtest ou envio de ordens.
 
 - 1.7.0 — 2026-10-12 — registada proposta de cadeia offline de recuperação de 2006, falhas de certificação anual de 1998, divergência de sidecar e estados parciais DS-45/DS-46.
+
+<!-- RECONCILIACAO_SHA256: 45ea0f2572ad3e83026178467569428a693296c0851265063e2485dfadee4e47
+COMMIT_DE_REFERENCIA: c0740f9fd4d1485b3c3a1b8568053b8cd077e688
+-->
