@@ -106,6 +106,6 @@ Estas páginas são referências de consulta, não um calendário histórico com
 
 ## 10. Integridade documental
 
-- SHA-256 canónico: PENDENTE DE CÁLCULO SOBRE O CONTEÚDO FINAL.
-- Commit de referência: `2b04df92c2785e4adacf921f7379d9b0ed49da56` (protótipo RV-60K; referência de origem, não commit deste documento).
+- SHA-256 canónico (excluindo os campos SHA-256, commit e estado desta secção): 347c75eb6763ab70c3213bd21e0600bc0569ba4ca0ab3773f07d6cacd22714b9
+- Commit de referência: `df99fb3388a911279b8972e51ed6527489312a7d` (commit que criou este documento).
 - Estado: proposta documental; não modifica o código NTSL nem promove o módulo a produção.
