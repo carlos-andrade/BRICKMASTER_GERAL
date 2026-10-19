@@ -5,8 +5,8 @@ tipo_documento: "INDICADOR_NTSL_EXPERIMENTAL"
 fase: "F3 — Construção isolada"
 id_documento: "BM-VOL-RV-60K-README-001"
 titulo: "RV-60K — Volatilidade Realizada Intradiária"
-estado: "EXPERIMENTAL"
-versao: "1.0.0"
+estado: "VALIDAÇÃO FUNCIONAL COM EVIDÊNCIAS PROFIT — REVISÃO DO PR PENDENTE"
+versao: "1.0.1"
 data_atualizacao: "2026-10-19"
 ---
 
@@ -15,7 +15,7 @@ data_atualizacao: "2026-10-19"
 | Campo | Valor |
 |---|---|
 | ID | BM-VOL-RV-60K-README-001 |
-| Estado | EXPERIMENTAL — não validado no Profit |
+| Estado | Validação funcional com evidências Profit; revisão global do PR pendente |
 | Versão | 1.0.0 |
 | SHA-256 (conteúdo canónico) | 4e5d2a42e4de94d1667d9e856d687196d9cc87c132d9c21114d0122fbe2e5b0c |
 | Commit de referência | 4224a4a848a6ae7fe3da8e864c1f0876a66ba04a |
@@ -50,8 +50,9 @@ O fator 100 expressa o resultado numa escala percentual. Não é previsão, prob
 
 ## Dependências e limitações
 
-- Requer verificação da sintaxe/compilação na versão instalada do Profit; a presença das funções no Manual NTSL 4.4 não comprova a compilação deste arquivo.
-- A lógica de reset por `Date` é provisória. É necessário confirmar o calendário e a sessão de negociação de WIN/WDO, especialmente barras associadas à sessão noturna, antes de declarar reset operacional correto.
+- A compilação no Profit foi confirmada por evidência visual fornecida pelo utilizador.
+- As exportações OHLC e RV de WIN e WDO e as capturas de apoio foram extraídas do Profit, conforme confirmação expressa do utilizador.
+- A regra funcional de reset pela data civil da sessão operacional foi confirmada com a documentação Profit fornecida; não reabrir esta conclusão como falta de evidência.
 - O indicador depende de fechamentos de barras. Em 60K trades, cada barra agrega 60.000 negócios e o intervalo temporal entre barras é variável.
 - Não contém suavização, classificação de regime, limiares, previsão, stop, gestão de risco nem execução.
 - O resultado é uma estatística acumulada dependente da granularidade e do caminho de preços; não comparar diretamente valores de WIN e WDO como se tivessem a mesma distribuição.
@@ -65,28 +66,33 @@ O fator 100 expressa o resultado numa escala percentual. Não é previsão, prob
 4. Conferir manualmente uma pequena sequência de fechamentos, calculando `ln(C_i/C_(i-1))`, soma dos quadrados e raiz quadrada vezes 100.
 5. Verificar série plana: RV deve permanecer em zero.
 6. Verificar queda e alta: o incremento de RV depende do quadrado do retorno, não da direção.
-7. Confirmar que a mudança de data reinicia a série e avaliar explicitamente a sessão noturna.
-8. Guardar capturas, versão do Profit, ativo, configuração do gráfico, data/hora e resultado da compilação como evidência.
-9. Só após os testes anteriores, comparar com cálculo independente em Python e avaliar a integração.
+7. Regra de reset pela data civil confirmada na documentação Profit enviada.
+8. Evidências visuais e exportações Profit já fornecidas e preservadas no contexto de validação.
+9. Comparação independente das séries exportadas executada; resultados e tolerâncias registados no relatório de validação funcional.
 
 ## Critérios de aceitação
 
-- Compila no Profit sem erros.
-- Aplica-se a WIN e WDO sem dependência de ordens.
-- Resultados coincidem com cálculo manual independente dentro da tolerância definida.
-- Reset de sessão é especificado e comprovado, incluindo sessão noturna.
-- Evidências anexadas e revisão concluída antes de promover de EXPERIMENTAL.
+- Compilação no Profit evidenciada pelo utilizador.
+- Aplicação separada em WIN e WDO nos gráficos de 60K trades evidenciada.
+- Comparação independente: 10.858/10.858 registos WIN e 10.000/10.000 WDO dentro da tolerância absoluta de 0,01.
+- Reset pela data civil confirmado pela documentação Profit fornecida.
+- Relatório e manifesto SHA-256 integrados na branch feature; revisão global do PR continua pendente.
 
 ## Estado de validação
 
-**Ainda não validado na plataforma.** A revisão documental confirmou que o Manual NTSL 4.4 documenta `Log(Valor)` como logaritmo natural, `Sqrt(Valor)` como raiz quadrada, `Date()` como data da barra e `Plot(Valor)` como função de plotagem. Isto apoia a escolha das funções, mas não comprova compilação nem comportamento do indicador completo.
+**Validação funcional documentada com evidências do Profit; revisão global do PR pendente.** O utilizador forneceu evidência de compilação e exportações reais de WIN e WDO. A auditoria independente das exportações ficou dentro da tolerância absoluta de 0,01 em todos os registos analisados. A regra de reset por data civil foi confirmada com a documentação Profit fornecida. Isto não equivale a aprovação para produção, backtest estatístico de estratégia ou autorização para execução de ordens.
 
 ## Histórico
 
 | Versão | Data | Alteração | Estado |
 |---|---|---|---|
 | 1.0.0 | 2026-10-19 | Primeiro protótipo RV acumulada por data para gráfico de 60K trades | EXPERIMENTAL |
+| 1.0.1 | 2026-10-19 | Estado de validação atualizado com compilação, exportações Profit e auditoria independente já fornecidas | REVISÃO DO PR PENDENTE |
 
 ## Integridade documental
 
-O SHA-256 canónico é calculado em UTF-8 com finais de linha LF, excluindo as linhas `SHA-256 (conteúdo canónico)` e `Commit de referência`, conforme a regra documental adotada. O commit indicado é referência de rastreabilidade, não uma declaração de aprovação.
+- SHA-256 canónico do conteúdo, excluindo esta secção: 0d8e6d3ae51a5a0f711d866e178ce84ba8d0d7b0b829150e463ff8b01d1decb1
+- Commit de referência do código original: `2b04df92c2785e4adacf921f7379d9b0ed49da56`
+- Commit desta atualização documental: a registar após o commit ser criado.
+- Relatório de validação: [RELATORIO_VALIDACAO_FUNCIONAL_RV_60K.md](../VALIDACAO/RELATORIO_VALIDACAO_FUNCIONAL_RV_60K.md)
+- Política de reset: [POLITICA_SESSAO_RESET_RV_60K.md](../VALIDACAO/POLITICA_SESSAO_RESET_RV_60K.md)
