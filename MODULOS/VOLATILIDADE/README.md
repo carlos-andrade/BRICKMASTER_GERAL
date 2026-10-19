@@ -87,6 +87,14 @@ A estrutura canónica em construção é `INDICADORES/`, com uma pasta para cada
 
 Os diretórios originais `NTSL/` e `VALIDACAO/` são mantidos como fontes históricas durante a migração. Não apagar até a reconciliação das referências internas e da integridade dos conteúdos estar concluída.
 
+## Índice de diretórios dos indicadores
+
+- [Catálogo dos indicadores](INDICADORES/README.md)
+- [RV-60K — Volatilidade Realizada](INDICADORES/RV-60K/README.md)
+- [IV-WIN — Volatilidade Implícita](INDICADORES/IV-WIN/README.md)
+
+Os ficheiros-fonte antigos permanecem nos respetivos caminhos durante a transição. Os documentos acima são os pontos de entrada da organização por indicador; consultar os ficheiros de origem para preservar a rastreabilidade.
+
 ## Estrutura documental do módulo
 
 - `README.md` — contexto, estado, contrato preliminar, regras e roadmap.
