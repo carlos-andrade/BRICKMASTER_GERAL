@@ -16,8 +16,8 @@ RASTREABILIDADE: commit de criacao e historico Git
 ESCOPO: Investigacao de volatilidade implicita contextual para WIN
 OBJETIVO: Separar especificacao IV-WIN dos demais indicadores
 DEPENDENCIAS: Dados de opcoes e cadeia temporal apropriada, ainda por confirmar
-SHA-256-CANONICO: PENDENTE_DE_CALCULO_APOS_CONGELAMENTO
-COMMIT-DE-REFERENCIA: PENDENTE_DE_COMMIT_FINAL
+SHA-256-CANONICO: ecbe2aedb9581b8d563132ec83fe213fb89ade1719e9b773da4a1c1a797e2d0e
+COMMIT-DE-REFERENCIA: 8f69fba6e8abf8fb5db748755705552d92f5d0b9
 -->
 # IV-WIN — Volatilidade Implícita
 
