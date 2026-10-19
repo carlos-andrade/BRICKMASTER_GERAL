@@ -50,7 +50,7 @@ Este registo é um índice de trabalho. Os estados abaixo descrevem o que está 
 | BM-TOUCH-001 | Contador de toques | Contagem e invalidação de contactos com níveis | A inventariar | Recuperar desenho anterior e identificar parâmetros |
 | BM-FLOW-001 | Fluxo | Delta, volume financeiro e VWAP/TWAP | A inventariar | Confirmar campos reais, fonte e sincronização |
 | BM-MACRO-001 | Calendário económico | Contexto macro e janelas de risco | A inventariar | Inventariar fontes e regras de horário |
-| BM-REF-001 | Referências externas | VIX e IBOV como contexto | A inventariar | Definir proveniência, atraso e regra de uso |
+| BM-REF-001 | Referências externas | IBOV e, opcionalmente, VIX como contexto externo | A inventariar | Validar proveniência, atraso, sincronização e evidência estatística; a pasta VIX autónoma foi retirada por decisão do responsável |
 | BM-RISK-001 | Gestão de risco | Limites, exposição e interrupção | A inventariar | Identificar regras anteriores e propor contrato testável |
 | BM-EXEC-001 | Adaptador NTSL | Implementação e execução controlada | A inventariar | Verificar código e compatibilidade com Manual NTSL 4.4 |
 | BM-OBS-001 | Watchdog/Auditoria | Saúde dos dados, logs e alertas | A inventariar | Localizar watchdog e definir heartbeat e falhas |
@@ -128,7 +128,7 @@ A compilação isolada não satisfaz, por si só, estes critérios.
 
 ## Contexto Histórico
 
-Contexto histórico preservado no conteúdo preexistente e no histórico Git. Não foram inferidas datas ou decisões que não estivessem documentadas.
+Contexto histórico preservado no conteúdo preexistente e no histórico Git. Em 2026-10-19, foi tomada a decisão explícita de retirar `MODULOS/10_VOLATILIDADE_VIX/`, que continha apenas um README de proposta inicial. A remoção será submetida por branch/PR porque a pasta existe em `main` e não na linha atual de `develop`; não se faz alteração direta em `main`.
 
 
 ## Estado
@@ -153,4 +153,4 @@ Cabeçalho documental padronizado sem intenção de alterar as regras ou o conte
 
 ## Próxima Ação
 
-Rever os metadados, preencher datas/versões desconhecidas com evidência verificável e executar os testes específicos quando aplicável.
+Validar o PR de retirada da pasta VIX e, depois, reconciliar a linha de desenvolvimento com `main` conforme a governança.
