@@ -28,7 +28,7 @@ dependencias: "Dados de opções B3; dados WIN de 60K trades; calendário e hor�
 | Estado | EXPERIMENTAL — requisitos em revisão |
 | Versão | 1.0.0 |
 | SHA-256 (conteúdo canónico) | 98c75bc732a07fd51de301c438b246c4682455f664d63f5a134b2cd8b07ed17d |
-| Commit de referência | O próprio commit de criação será registado na referência Git |
+| Commit de referência | `999bc4bdc101e8ee1b9cd05d0f7b93881c107801` |
 | Ativo operacional de interesse | Mini Índice B3 — WIN |
 | Gráfico-alvo | 60K trades |
 | Data de criação | 2026-10-19 |
