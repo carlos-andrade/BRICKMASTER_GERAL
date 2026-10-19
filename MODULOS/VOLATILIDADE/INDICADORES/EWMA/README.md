@@ -16,7 +16,7 @@ RASTREABILIDADE: pasta criada por PR #37; commit de referência da estrutura: 8f
 ESCOPO: Organizar a documentação deste método/indicador de volatilidade
 OBJETIVO: Definir requisitos e evidências sem presumir implementação
 DEPENDENCIAS: Dados OHLC/retornos adequados ao método; disponibilidade e qualidade por confirmar
-SHA-256-CANONICO: PENDENTE_DE_CALCULO_APOS_CONGELAMENTO
+SHA-256-CANONICO: 0d6ed4e29bb31badc95603321c07e1f2ddcd272e8906ccfd313a21aba2e347fa
 COMMIT-DE-REFERENCIA: 8f69fba6e8abf8fb5db748755705552d92f5d0b9
 -->
 # Volatilidade condicional EWMA
