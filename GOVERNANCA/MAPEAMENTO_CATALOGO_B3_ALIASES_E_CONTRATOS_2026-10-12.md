@@ -101,6 +101,6 @@ Para consulta operacional por símbolo e fonte, ver `MODULOS/002-RELOGIO-SESSAO-
 
 - 1.0.1 — 2026-10-12 — referenciada matriz consolidada de cobertura por símbolo e fonte.
 
-<!-- RECONCILIACAO_SHA256: ebd884f59f573b62a7304246e3a29f5c2e7ac4317383e99841cbf45abe7d9c6e
+<!-- RECONCILIACAO_SHA256: 65ba375cd4d95f1751340460012066f0761a85209be80f6211e17769877fcd51
 COMMIT_DE_REFERENCIA: c0740f9fd4d1485b3c3a1b8568053b8cd077e688
 -->
