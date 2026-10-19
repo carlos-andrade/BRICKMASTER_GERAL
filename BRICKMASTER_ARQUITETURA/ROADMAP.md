@@ -5,7 +5,9 @@ IDENTIFICADOR: BM-ROAD-001
 VERSÃO: 1.0.0
 ESTADO: PROPOSTA INICIAL — NÃO VALIDADA EM PRODUÇÃO
 CRIADO EM: 2026-10-11
-ÚLTIMA REVISÃO: 2026-10-11
+ÚLTIMA REVISÃO: 2026-10-19
+SHA-256: PENDENTE DE RECÁLCULO INDEPENDENTE
+COMMIT DE REFERÊNCIA: d1f91fdcae5d92ac56449b570022011ae7857e6b
 RESPONSÁVEL: Carlos Andrade
 REPOSITÓRIO: https://github.com/carlos-andrade/BRICKMASTER_GERAL
 HISTÓRICO:
@@ -34,7 +36,7 @@ FONTE DA VERDADE: documentação e código versionados neste repositório.
 - [ ] Contador de toques e reação.
 - [ ] VWAP/TWAP e distância normalizada.
 - [ ] Volume financeiro, delta e absorção — somente conforme disponibilidade real dos dados.
-- [ ] Volatilidade realizada e contexto IBOV; VIX apenas como referência externa opcional, após validação de origem, atraso e relação estatística. A pasta autónoma `MODULOS/10_VOLATILIDADE_VIX` foi aprovada para retirada por decisão do responsável; a remoção efetiva depende da integração do PR #33.
+- [ ] Volatilidade realizada e contexto IBOV; VIX apenas como referência externa opcional, após validação de origem, atraso e relação estatística. A pasta autónoma `MODULOS/10_VOLATILIDADE_VIX` foi removida de `main` pelo PR #33.
 - [ ] Giroscópio de estado.
 
 ## Fase 3 — Pesquisa e validação
