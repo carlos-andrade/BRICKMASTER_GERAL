@@ -24,7 +24,7 @@ while IFS= read -r -d '' file; do
 
   checked=$((checked + 1))
   for field in projeto repositorio tipo_documento fase id_documento titulo status versao data_criacao data_atualizacao origem autoridade_documental cadeia_autoridade rastreabilidade escopo objetivo dependencias; do
-    if ! grep -Eq "^\${field}:" "$file"; then
+        if ! grep -Eq "^${field}:" "$file"; then
       echo "::error file=$file::Campo obrigatório ausente: $field"
       fail=1
     fi
