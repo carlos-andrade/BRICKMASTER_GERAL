@@ -105,6 +105,6 @@ FVG-ATLAS passa de “repositório relacionado conhecido; código a inventariar�
 
 - 1.0.0 — 2026-10-11 — primeiro inventário estrutural e técnico baseado nos artefactos consultados no FVG-ATLAS.
 
-<!-- RECONCILIACAO_SHA256: fcdfc8a9a5f996fc1af0e7f7f50f68d8b86b15bf335ca643c216f03e0cbd4b1b
+<!-- RECONCILIACAO_SHA256: 7bd671bd4f5a2495736de26e1c925ffd7496dd6a8484ae0ca338090a95fb0a03
 COMMIT_DE_REFERENCIA: c0740f9fd4d1485b3c3a1b8568053b8cd077e688
 -->
