@@ -16,7 +16,7 @@ RASTREABILIDADE: pasta criada por PR #37; commit de referência da estrutura: 8f
 ESCOPO: Organizar a documentação deste método/indicador de volatilidade
 OBJETIVO: Definir requisitos e evidências sem presumir implementação
 DEPENDENCIAS: Dados OHLC/retornos adequados ao método; disponibilidade e qualidade por confirmar
-SHA-256-CANONICO: PENDENTE_DE_CALCULO_APOS_CONGELAMENTO
+SHA-256-CANONICO: 09b14a7a7416b13a1d3a6cda76c40bf0a0ed2206a32ec8b55c6d44f85520be21
 COMMIT-DE-REFERENCIA: 8f69fba6e8abf8fb5db748755705552d92f5d0b9
 -->
 # True Range / Average True Range
