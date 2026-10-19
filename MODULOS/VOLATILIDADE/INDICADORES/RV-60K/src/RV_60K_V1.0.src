@@ -3,8 +3,10 @@
 // Indicador experimental de volatilidade realizada intradiaria para WIN/WDO.
 // Grafico-alvo: 60K trades. Nao usar como indicacao de grafico de ticks ou Renko.
 // Sem ordens; sem integracao com Giroscopio; sem thresholds operacionais.
-// SHA-256 canonico: adc09d82d80a5d052bd4a483748c78cb9f61d0c95770ca9e94753f92ce054688
-// Commit de referencia: 74c506da5569eb4cd9de93cf7c51732e03c12d76
+// SHA-256 canonico do codigo funcional, excluindo este cabecalho de integridade: adc09d82d80a5d052bd4a483748c78cb9f61d0c95770ca9e94753f92ce054688
+// Commit de referencia do codigo funcional original: 74c506da5569eb4cd9de93cf7c51732e03c12d76
+// Caminho canonico documental: MODULOS/VOLATILIDADE/INDICADORES/RV-60K/src/RV_60K_V1.0.src
+// A mudanca de diretorio nao certifica compilacao nem altera a formula.
 
 var
   retornoLog : Float;
