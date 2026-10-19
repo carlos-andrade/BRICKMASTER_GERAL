@@ -84,7 +84,7 @@ Cada pasta de módulo deve conter, conforme aplicável:
 
 ## Estado
 
-EM_DESENVOLVIMENTO — regras modulares documentadas.
+EM_DESENVOLVIMENTO — regras modulares documentadas. A pasta `MODULOS/10_VOLATILIDADE_VIX/` está em processo de retirada por PR; o módulo canónico de volatilidade é `MODULOS/VOLATILIDADE/`.
 
 ## Evidências
 
