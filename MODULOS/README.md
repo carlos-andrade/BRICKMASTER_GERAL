@@ -84,7 +84,7 @@ Cada pasta de módulo deve conter, conforme aplicável:
 
 ## Estado
 
-EM_DESENVOLVIMENTO — regras modulares documentadas.
+EM_DESENVOLVIMENTO — regras modulares documentadas. O PR #33 propõe retirar `MODULOS/10_VOLATILIDADE_VIX/`; até à integração e verificação na branch principal, o estado final deve ser confirmado. O módulo canónico de volatilidade é `MODULOS/VOLATILIDADE/`.
 
 ## Evidências
 

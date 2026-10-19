@@ -34,7 +34,7 @@ FONTE DA VERDADE: documentação e código versionados neste repositório.
 - [ ] Contador de toques e reação.
 - [ ] VWAP/TWAP e distância normalizada.
 - [ ] Volume financeiro, delta e absorção — somente conforme disponibilidade real dos dados.
-- [ ] Volatilidade/VIX e contexto IBOV.
+- [ ] Volatilidade realizada e contexto IBOV; VIX apenas como referência externa opcional, após validação de origem, atraso e relação estatística. A pasta autónoma `MODULOS/10_VOLATILIDADE_VIX` foi aprovada para retirada por decisão do responsável; a remoção efetiva depende da integração do PR #33.
 - [ ] Giroscópio de estado.
 
 ## Fase 3 — Pesquisa e validação
