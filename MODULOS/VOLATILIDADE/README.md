@@ -8,9 +8,10 @@
 | **Tipo documental** | README_MODULO |
 | **Fase** | F1 — Levantamento e adoção documental |
 | **Estado** | EM_REVISAO |
-| **Versão** | 1.4.0 |
-| **SHA-256 (conteúdo canónico)** | 0f06c548e75c228c2d1b1caa86970d314023b72b5df1152f1bb655df0aa7b93f |
+| **Versão** | 1.5.0 |
+| **SHA-256 (conteúdo canónico)** | bd27025b47f9628a84d275fc5417472a890d639109dd713baceccbc168ecaef5|
 | **Commit de referência (retirada da pasta VIX)** | [d1f91fdcae5d92ac56449b570022011ae7857e6b](https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/d1f91fdcae5d92ac56449b570022011ae7857e6b) |
+| **Commit de referência (organização por indicador — checkpoint da branch)** | [8f69fba6e8abf8fb5db748755705552d92f5d0b9](https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/8f69fba6e8abf8fb5db748755705552d92f5d0b9) |
 | **Commit de referência (versão anterior)** | [70f09f95cfbfdc2df8a0dfffaa6a4b157e367b86](https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/70f09f95cfbfdc2df8a0dfffaa6a4b157e367b86) |
 | **Data de criação** | 2026-10-18 |
 | **Data de atualização** | 2026-10-19 |
@@ -77,6 +78,23 @@ Esta interface é preliminar. O contrato não será considerado estável até se
 8. **Segurança:** não gravar segredos, tokens ou dados pessoais desnecessários no repositório.
 9. **Revisão humana:** mudanças de alto impacto, alteração de limiares e promoção de estado exigem revisão e aprovação explícitas.
 10. **Conformidade individual:** inserir cabeçalho ou citar GOVERNANCA não significa que o módulo esteja totalmente conforme, validado ou aprovado.
+
+## Organização por indicador
+
+A estrutura canónica em construção é `INDICADORES/`, com uma pasta para cada indicador ou família formalmente identificada. O inventário inicial separa:
+- `INDICADORES/RV-60K/`: volatilidade realizada no gráfico de 60K trades.
+- `INDICADORES/IV-WIN/`: investigação experimental de volatilidade implícita para contexto do WIN.
+- `INDICADORES/README.md`: catálogo e convenção de criação de pastas.
+
+Os diretórios originais `NTSL/` e `VALIDACAO/` são mantidos como fontes históricas durante a migração. Não apagar até a reconciliação das referências internas e da integridade dos conteúdos estar concluída.
+
+## Índice de diretórios dos indicadores
+
+- [Catálogo dos indicadores](INDICADORES/README.md)
+- [RV-60K — Volatilidade Realizada](INDICADORES/RV-60K/README.md)
+- [IV-WIN — Volatilidade Implícita](INDICADORES/IV-WIN/README.md)
+
+Os ficheiros-fonte antigos permanecem nos respetivos caminhos durante a transição. Os documentos acima são os pontos de entrada da organização por indicador; consultar os ficheiros de origem para preservar a rastreabilidade.
 
 ## Estrutura documental do módulo
 
@@ -181,4 +199,5 @@ Próxima fase: concluir F2 — requisitos e desenho, com fórmulas, janelas, uni
 | 1.0.0 | 2026-10-18 | Criação inicial do README do módulo | Responsável técnico do projeto | Histórico Git do repositório |
 | 1.1.0 | 2026-10-18 | Adoção documental de regras de governança, roadmap por gates, riscos, dependências e evidências | Responsável técnico do projeto | Histórico Git |
 | 1.2.0 | 2026-10-18 | Ligação à Carta/Contrato VOLATILIDADE B3 e ao prompt especializado | Responsável técnico do projeto | Histórico Git |
-| 1.3.0 | 2026-10-18 | Ligação ao Layout Único e atualização do índice documental do módulo | Responsável técnico do projeto | Commit a confirmar após publicação |
+| 1.3.0 | 2026-10-18 | Ligação ao Layout Único e atualização do índice documental do módulo | Responsável técnico do projeto | Histórico Git |
+| 1.5.0 | 2026-10-19 | Catálogo de indicadores individualizados, pastas RV-60K/IV-WIN e candidatos metodológicos; preservação dos caminhos de origem durante a transição | Responsável técnico do projeto | PR #37 — draft |
