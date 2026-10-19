@@ -29,16 +29,24 @@ A pasta VOLATILIDADE continha documentos gerais, código NTSL para RV-60K, docum
 
 Em revisão. Esta árvore representa organização documental, não prova de implementação ou maturidade técnica de todos os indicadores.
 
-## Estrutura proposta
+## Indicadores e diretórios
 
-| Diretório | Indicador/família | Conteúdo | Maturidade conhecida |
-|---|---|---|---|
-| `RV-60K/` | Volatilidade realizada RV-60K | NTSL, especificação, evidências e checkpoints | Experimental; comparação numérica documentada |
-| `IV-WIN/` | Volatilidade implícita contextual IV-WIN | especificação e critérios de investigação | Experimental; especificação apenas |
-| `VIX-EXTERNO/` | Contexto externo VIX | Não criado como módulo ativo; deve existir somente após decisão formal e contrato de dados | Opcional, não integrado |
-| `ATR/` | Average True Range | Criar quando forem inventariados requisitos, implementação ou evidências reais | Por inventariar |
-| `DESVIO-PADRAO/` | Desvio-padrão de retornos | Criar quando houver especificação aprovada e uso definido | Por inventariar |
-| `RANGE-REALIZADO/` | Estimadores de range (ex.: Parkinson, Garman–Klass, Rogers–Satchell, Yang–Zhang) | Manter juntos apenas se contrato indicar que são variantes de um mesmo grupo; caso sejam indicadores independentes, separar | Candidatos documentais |
+| Diretório | Indicador/método | Estado atual |
+|---|---|---|
+| [RV-60K](RV-60K/README.md) | Volatilidade realizada acumulada intradiária | Experimental; código e comparação numérica documentados |
+| [IV-WIN](IV-WIN/README.md) | Volatilidade implícita contextual do Mini Índice | Experimental; especificação documental, fonte ainda por confirmar |
+| [DESVIO-PADRAO-HISTORICO](DESVIO-PADRAO-HISTORICO/README.md) | Desvio-padrão histórico | Candidato documental |
+| [PARKINSON](PARKINSON/README.md) | Estimador Parkinson | Candidato documental |
+| [GARMAN-KLASS](GARMAN-KLASS/README.md) | Estimador Garman–Klass | Candidato documental |
+| [ROGERS-SATCHELL](ROGERS-SATCHELL/README.md) | Estimador Rogers–Satchell | Candidato documental |
+| [YANG-ZHANG](YANG-ZHANG/README.md) | Estimador Yang–Zhang | Candidato documental |
+| [ATR](ATR/README.md) | True Range / Average True Range | Candidato documental |
+| [AMPLITUDE-GAP](AMPLITUDE-GAP/README.md) | Amplitude e gaps | Candidato documental |
+| [EWMA](EWMA/README.md) | Volatilidade condicional EWMA | Candidato documental |
+| [GARCH-1-1](GARCH-1-1/README.md) | Modelo GARCH(1,1) | Candidato documental |
+| [HAR-RV](HAR-RV/README.md) | Modelo HAR-RV | Candidato documental |
+
+VIX permanece fora desta lista de indicadores locais ativos: pode ser estudado apenas como fonte externa opcional, após validar origem, timestamps, atraso, licença e valor informativo.
 
 ## Convenção de pasta por indicador
 
@@ -80,4 +88,4 @@ Catálogo e convenção inicial para separar indicadores existentes dos candidat
 
 ## Próxima Ação
 
-Migrar os artefactos RV-60K e IV-WIN sem perda de conteúdo; rever ligações do README pai e calcular SHA-256 canónico independente após fixar o commit.
+Concluir revisão da migração, corrigir referências relativas e verificar SHA-256 canónico independente; distinguir indicadores existentes de candidatos documentais.
