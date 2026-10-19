@@ -8,7 +8,9 @@ titulo: "BRICKMASTER RAIZ — Registo de módulos e checkpoints"
 status: "PLANEJADO"
 versao: "1.0.0"
 data_criacao: "2026-10-11"
-data_atualizacao: "2026-10-11"
+data_atualizacao: "2026-10-19"
+sha256_canonico: "PENDENTE DE RECÁLCULO INDEPENDENTE"
+commit_referencia: "d1f91fdcae5d92ac56449b570022011ae7857e6b"
 origem: "Conteúdo preexistente; ver histórico Git e referências internas"
 autoridade_documental: "GOVERNANCA"
 cadeia_autoridade: "PROMPT → CARTA → LAYOUT ÚNICO → CÓDIGO"
@@ -128,7 +130,7 @@ A compilação isolada não satisfaz, por si só, estes critérios.
 
 ## Contexto Histórico
 
-Contexto histórico preservado no conteúdo preexistente e no histórico Git. Em 2026-10-19, foi tomada a decisão explícita de retirar `MODULOS/10_VOLATILIDADE_VIX/`, que continha apenas um README de proposta inicial. A remoção foi preparada por branch/PR porque a pasta existia em `main` e não na linha atual de `develop`; a alteração só passa a vigorar em `main` após integração do PR #33.
+Contexto histórico preservado no conteúdo preexistente e no histórico Git. Em 2026-10-19, foi tomada a decisão explícita de retirar `MODULOS/10_VOLATILIDADE_VIX/`, que continha apenas um README de proposta inicial. A remoção foi integrada em `main` pelo PR #33, commit `d1f91fdcae5d92ac56449b570022011ae7857e6b`.
 
 
 ## Estado
@@ -153,4 +155,4 @@ Cabeçalho documental padronizado sem intenção de alterar as regras ou o conte
 
 ## Próxima Ação
 
-Confirmar o estado final do PR #33 e, depois, reconciliar a linha de desenvolvimento com `main` conforme a governança.
+Registar a reconciliação de `develop` com `main` conforme a governança; a remoção em `main` foi verificada, mas a reconciliação não foi executada nesta alteração.

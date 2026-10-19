@@ -10,6 +10,7 @@
 | **Estado** | EM_REVISAO |
 | **Versão** | 1.4.0 |
 | **SHA-256 (conteúdo canónico)** | PENDENTE DE RECÁLCULO — não reutilizar o hash da versão anterior |
+| **Commit de referência (retirada da pasta VIX)** | [d1f91fdcae5d92ac56449b570022011ae7857e6b](https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/d1f91fdcae5d92ac56449b570022011ae7857e6b) |
 | **Commit de referência (versão anterior)** | [70f09f95cfbfdc2df8a0dfffaa6a4b157e367b86](https://github.com/carlos-andrade/BRICKMASTER_GERAL/commit/70f09f95cfbfdc2df8a0dfffaa6a4b157e367b86) |
 | **Data de criação** | 2026-10-18 |
 | **Data de atualização** | 2026-10-19 |
@@ -27,7 +28,7 @@
 
 A pasta foi criada para reunir a definição do módulo de volatilidade. O documento `BASE PARA PROMPT.md` preserva o texto conceitual fornecido para orientar o desenvolvimento. A revisão documental atual aplica os padrões de cabeçalho, rastreabilidade, roadmap, evidência e ciclo de vida consultados no repositório GOVERNANCA.
 
-A pasta `MODULOS/10_VOLATILIDADE_VIX/` foi revista e está destinada à remoção: continha apenas um README de proposta inicial, sem implementação funcional identificada. A decisão do responsável é não utilizar nem manter essa pasta. O conteúdo útil sobre VIX permanece como referência contextual externa potencial, dentro deste módulo canónico, e só poderá ser adotado após validação de proveniência, horário/fuso, atraso, sincronização e relação estatística. A remoção é registada no PR #33, preservando o histórico Git; não implica apagar a possibilidade de estudar VIX como dado externo.
+A pasta `MODULOS/10_VOLATILIDADE_VIX/` foi removida de `main` pelo PR #33, que eliminou o único README de proposta inicial encontrado, sem implementação funcional identificada. O histórico Git foi preservado. O VIX poderá ser estudado como referência externa, mas só poderá ser adotado após validação de proveniência, horário/fuso, atraso, sincronização e relação estatística.
 
 ## Objetivo e âmbito
 
@@ -110,7 +111,7 @@ O progresso percentual só será publicado quando houver scorecard com critério
 | Fase | Objetivo e entregáveis | Critério de saída | Estado |
 |---|---|---|---|
 | F0 — Estrutura inicial | Criar pasta e README inicial | Artefactos existentes e recuperáveis no GitHub | CONCLUIDA — evidência no histórico Git |
-| F1 — Adoção documental e levantamento | Cabeçalho padronizado, regras aplicáveis documentadas e decisão sobre a pasta VIX separada | Pasta removida no PR #33; referências canónicas atualizadas; verificação de integridade documental pendente | EM_REVISAO |
+| F1 — Adoção documental e levantamento | Cabeçalho padronizado, regras aplicáveis documentadas e decisão sobre a pasta VIX separada | Pasta removida em main pelo PR #33; referências canónicas atualizadas; SHA-256 a recalcular por ferramenta independente | EM_REVISAO |
 | F2 — Requisitos e desenho | Definir métricas, fórmulas, janelas, unidades, fontes, regimes, atualidade e falhas | Especificação revisada, contratos e critérios mensuráveis | PLANEADA |
 | F3 — Construção isolada | Implementar somente após fechar os requisitos | Código isolado, revisão e análise estática apropriada | PLANEADA |
 | F4 — Testes e evidências | Testes sintéticos, fronteira, dados inválidos, replay/backtest, reconciliação e limitações | Logs/relatórios reproduzíveis e critérios satisfeitos | PLANEADA |
@@ -119,14 +120,14 @@ O progresso percentual só será publicado quando houver scorecard com critério
 
 ### Ações prioritárias
 
-1. Confirmar a ausência de `MODULOS/10_VOLATILIDADE_VIX/` após integração do PR #33; manter qualquer estudo futuro de VIX sob o módulo canónico VOLATILIDADE.
+1. Pasta `MODULOS/10_VOLATILIDADE_VIX/` removida de `main` pelo PR #33; manter qualquer estudo futuro de VIX sob o módulo canónico VOLATILIDADE.
 2. Inventariar as métricas candidatas e distinguir volatilidade histórica/realizada, implícita e índices externos.
 3. Definir contratos e critérios de dados antes de implementar a classificação dos regimes.
 4. Criar testes isolados reproduzíveis e registar evidência antes de qualquer integração.
 
 ## Riscos e bloqueios
 
-- **Pasta VIX separada:** decisão tomada para retirar a pasta; confirmar a remoção na branch principal após integração do PR #33.
+- **Pasta VIX separada:** removida de `main` pelo PR #33; qualquer uso futuro de VIX permanece opcional e condicionado à validação.
 - **Fórmulas e janelas:** ainda não especificadas; qualquer regime numérico permanece por definir.
 - **Fontes e dados externos:** feeds, timestamps, atraso permitido e reconciliação ainda por confirmar.
 - **Contratos entre módulos:** interfaces dos consumidores ainda não verificadas.
@@ -153,7 +154,7 @@ Verificações executadas nesta atualização documental:
 - consultada a árvore e os documentos canónicos relevantes do repositório GOVERNANCA;
 - inspecionados os ficheiros atuais de VOLATILIDADE e o índice modular;
 - preservado o conteúdo conceptual de `BASE PARA PROMPT.md`;
-- confirmada na branch `main` a existência de apenas um README na pasta distinta `MODULOS/10_VOLATILIDADE_VIX`; decisão de retirada registada nesta proposta;
+- confirmada a ausência de `MODULOS/10_VOLATILIDADE_VIX/` na árvore `main` após o merge do PR #33;
 - não foram executados testes de código, cálculos de volatilidade, replay, backtest ou testes de integração.
 
 A normalização documental ainda requer verificação de integridade SHA-256 canónico após o conteúdo final ser fixado. Esta revisão não constitui certificação de conformidade integral nem aprovação para produção.
@@ -164,7 +165,7 @@ O módulo passa a documentar os controlos de governança aplicáveis, o estado r
 
 ## Próxima Ação
 
-Após integração do PR #33, confirmar a ausência da pasta na branch principal e recalcular o SHA-256 canónico deste documento. O VIX permanece apenas como possível dado externo, sem integração presumida.
+Próxima fase: concluir F2 — requisitos e desenho, com fórmulas, janelas, unidades, fontes, atualidade e critérios de falha. O VIX permanece apenas como possível dado externo, sem integração presumida.
 
 ## Documentos operacionais principais
 

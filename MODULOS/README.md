@@ -8,7 +8,9 @@ titulo: "BRICKMASTER RAIZ — Arquitetura modular"
 status: "EM_DESENVOLVIMENTO"
 versao: "1.0.0"
 data_criacao: "N/A"
-data_atualizacao: "2026-10-11"
+data_atualizacao: "2026-10-19"
+sha256_canonico: "PENDENTE DE RECÁLCULO INDEPENDENTE"
+commit_referencia: "d1f91fdcae5d92ac56449b570022011ae7857e6b"
 origem: "Conteúdo preexistente; histórico Git"
 autoridade_documental: "GOVERNANCA"
 cadeia_autoridade: "PROMPT → CARTA → LAYOUT ÚNICO → CÓDIGO"
@@ -84,7 +86,7 @@ Cada pasta de módulo deve conter, conforme aplicável:
 
 ## Estado
 
-EM_DESENVOLVIMENTO — regras modulares documentadas. O PR #33 propõe retirar `MODULOS/10_VOLATILIDADE_VIX/`; até à integração e verificação na branch principal, o estado final deve ser confirmado. O módulo canónico de volatilidade é `MODULOS/VOLATILIDADE/`.
+EM_DESENVOLVIMENTO — regras modulares documentadas. `MODULOS/10_VOLATILIDADE_VIX/` foi removida de `main` pelo PR #33 (commit `d1f91fdcae5d92ac56449b570022011ae7857e6b`). O módulo canónico de volatilidade é `MODULOS/VOLATILIDADE/`.
 
 ## Evidências
 
