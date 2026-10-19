@@ -8,6 +8,15 @@ titulo: "RV-60K — Volatilidade Realizada Intradiária"
 estado: "VALIDAÇÃO FUNCIONAL COM EVIDÊNCIAS PROFIT — REVISÃO DO PR PENDENTE"
 versao: "1.0.1"
 data_atualizacao: "2026-10-19"
+status: "EM REVISAO DOCUMENTAL"
+data_criacao: "2026-10-19"
+origem: "Documentação Profit fornecida pelo utilizador e repositório BRICKMASTER_GERAL"
+autoridade_documental: "Manual NTSL 4.4, documentação Profit fornecida e governação do repositório"
+cadeia_autoridade: "Documentação de referência > evidência Profit > auditoria independente > documentação do módulo"
+rastreabilidade: "PR #32; commits e SHA-256 registados neste documento"
+escopo: "Módulo RV-60K e governação documental associada"
+objetivo: "Preservar contexto, estado, evidências, validação e próxima ação"
+dependencias: "Profit/NTSL 4.4; exportações WIN/WDO; scripts de validação documental"
 ---
 
 # RV-60K — Volatilidade Realizada Intradiária
@@ -89,9 +98,33 @@ O fator 100 expressa o resultado numa escala percentual. Não é previsão, prob
 | 1.0.0 | 2026-10-19 | Primeiro protótipo RV acumulada por data para gráfico de 60K trades | EXPERIMENTAL |
 | 1.0.1 | 2026-10-19 | Estado de validação atualizado com compilação, exportações Profit e auditoria independente já fornecidas | REVISÃO DO PR PENDENTE |
 
+## Contexto Histórico
+
+Este documento pertence ao trabalho RV-60K desenvolvido na branch feature e preserva o histórico do protótipo, das evidências fornecidas e das decisões registadas. O gráfico-alvo do sistema é 60K trades.
+
+## Estado
+
+O módulo permanece experimental e isolado. A validação numérica documentada não equivale a aprovação para produção; a validação documental do PR #32 tem de passar antes da integração.
+
+## Evidências
+
+As exportações OHLC/RV e capturas referidas neste conjunto foram extraídas do Profit, conforme confirmação do utilizador. Os resultados quantitativos aplicáveis constam do relatório de validação funcional.
+
+## Validação
+
+A validação distingue consistência numérica das exportações, compilação evidenciada no Profit e validação automática documental. Não declarar testes além dos que têm evidência registada.
+
+## Resultado
+
+O conteúdo técnico e o histórico são preservados. A correção documental não altera a lógica NTSL nem amplia o escopo funcional.
+
+## Próxima Ação
+
+Executar novamente o workflow de validação de cabeçalhos no PR #32. Só após resultado PASS e revisão do diff poderá avançar a integração em develop.
+
 ## Integridade documental
 
-- SHA-256 canónico do conteúdo, excluindo esta secção: 0d8e6d3ae51a5a0f711d866e178ce84ba8d0d7b0b829150e463ff8b01d1decb1
+- SHA-256 canónico do conteúdo, excluindo esta secção: ddafe47e7b68eac2a0a6ad9f8c1b65b1b4e8be3e6c4962ed1434613eac28160e
 - Commit de referência do código original: `2b04df92c2785e4adacf921f7379d9b0ed49da56`
 - Commit desta atualização documental: a registar após o commit ser criado.
 - Relatório de validação: [RELATORIO_VALIDACAO_FUNCIONAL_RV_60K.md](../VALIDACAO/RELATORIO_VALIDACAO_FUNCIONAL_RV_60K.md)
