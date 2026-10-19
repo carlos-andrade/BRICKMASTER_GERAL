@@ -26,7 +26,7 @@ FONTE DA VERDADE: documentação e código versionados neste repositório.
 | BM-007 | Contador de Toques | `MODULOS/07_CONTADOR_TOQUES` | Contagem e qualidade de reações em zonas | DOCUMENTADO |
 | BM-008 | VWAP/TWAP Gap | `MODULOS/08_VWAP_TWAP` | Distância, convergência e regime de preço | DOCUMENTADO |
 | BM-009 | Fluxo e Volume | `MODULOS/09_FLUXO_VOLUME` | Volume financeiro, delta e absorção | DOCUMENTADO |
-| BM-010 | Volatilidade / VIX | `MODULOS/10_VOLATILIDADE_VIX` | Contexto de risco e volatilidade | DOCUMENTADO |
+| BM-010 | Volatilidade | `MODULOS/VOLATILIDADE` | Volatilidade realizada e contexto externo opcional sujeito a validação | EM DESENVOLVIMENTO |
 | BM-011 | IBOV / Intermercado | `MODULOS/11_INTERMERCADO_IBOV` | Contexto do índice e relações externas | DOCUMENTADO |
 | BM-012 | Calendário Econômico | `MODULOS/12_CALENDARIO` | Eventos, janelas e bloqueios | DOCUMENTADO |
 | BM-013 | Alvo +1% da Abertura | `MODULOS/13_ALVO_ABERTURA_1PCT` | Referência de preço e acompanhamento | DOCUMENTADO |
