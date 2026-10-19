@@ -320,6 +320,6 @@ Baseline estrutural reproduzível de 212 ficheiros em `main`, com contagem por e
 
 - 1.0.0 — 2026-10-11 — primeiro snapshot estrutural recursivo, com caminhos, tamanhos e hashes; auditoria semântica permanece pendente.
 
-<!-- RECONCILIACAO_SHA256: 655c8ace77138dd7985fb69ba20fa26b6e33e564388388736448daf0b6d8c71b
+<!-- RECONCILIACAO_SHA256: 6309493bbe481c215640765fa8d9a7cbfff533173ea5a818c33d5b05acc647d5
 COMMIT_DE_REFERENCIA: c0740f9fd4d1485b3c3a1b8568053b8cd077e688
 -->
