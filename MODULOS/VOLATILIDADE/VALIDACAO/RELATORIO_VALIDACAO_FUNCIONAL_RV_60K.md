@@ -1,3 +1,23 @@
+---
+projeto: "BRICKMASTER RAIZ"
+repositorio: "carlos-andrade/BRICKMASTER_GERAL"
+tipo_documento: "DOCUMENTACAO_TECNICA"
+fase: "F3 — Construção isolada"
+id_documento: "BM-RV60K-DOC-002"
+titulo: "RELATORIO VALIDACAO FUNCIONAL RV 60K"
+status: "EM REVISAO DOCUMENTAL"
+versao: "1.0.2"
+data_criacao: "2026-10-19"
+data_atualizacao: "2026-10-19"
+origem: "Documentação Profit fornecida pelo utilizador e repositório BRICKMASTER_GERAL"
+autoridade_documental: "Manual NTSL 4.4, documentação Profit fornecida e governação do repositório"
+cadeia_autoridade: "Documentação de referência > evidência Profit > auditoria independente > documentação do módulo"
+rastreabilidade: "PR #32; commits e SHA-256 registados neste documento"
+escopo: "Módulo RV-60K e governação documental associada"
+objetivo: "Preservar contexto, estado, evidências, validação e próxima ação"
+dependencias: "Profit/NTSL 4.4; exportações WIN/WDO; scripts de validação documental"
+---
+
 # BRICKMASTER RAIZ — Validação funcional RV-60K
 
 ## Estado
@@ -48,9 +68,29 @@
 - PR #32: https://github.com/carlos-andrade/BRICKMASTER_GERAL/pull/32
 - Estado do código: experimental; sem promoção a produção.
 
+## Contexto Histórico
+
+Este documento pertence ao trabalho RV-60K desenvolvido na branch feature e preserva o histórico do protótipo, das evidências fornecidas e das decisões registadas. O gráfico-alvo do sistema é 60K trades.
+
+## Evidências
+
+As exportações OHLC/RV e capturas referidas neste conjunto foram extraídas do Profit, conforme confirmação do utilizador. Os resultados quantitativos aplicáveis constam do relatório de validação funcional.
+
+## Validação
+
+A validação distingue consistência numérica das exportações, compilação evidenciada no Profit e validação automática documental. Não declarar testes além dos que têm evidência registada.
+
+## Resultado
+
+O conteúdo técnico e o histórico são preservados. A correção documental não altera a lógica NTSL nem amplia o escopo funcional.
+
+## Próxima Ação
+
+Executar novamente o workflow de validação de cabeçalhos no PR #32. Só após resultado PASS e revisão do diff poderá avançar a integração em develop.
+
 ## Integridade documental
 
-- SHA-256 canónico do conteúdo (excluindo esta secção de integridade): `95e7f92591a236aa687087159283522a98cf71bc1e3a29cabc336bdfaea88400`
+- SHA-256 canónico do conteúdo (excluindo esta secção de integridade): `c97d2211972f4f4b467eeddc511f71dc46646f9db345ebc4a593e80fa55bf01b`
 - Commit de referência do protótipo/código: `2b04df92c2785e4adacf921f7379d9b0ed49da56`
 - PR de referência: https://github.com/carlos-andrade/BRICKMASTER_GERAL/pull/32
 - Estado de integração: commit documental gravado na branch feature; não representa promoção a `develop` ou `main`.
