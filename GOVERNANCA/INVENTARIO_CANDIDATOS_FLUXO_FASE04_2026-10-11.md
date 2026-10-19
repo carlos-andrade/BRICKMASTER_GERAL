@@ -90,3 +90,7 @@ Os candidatos de fluxo/VWAP/TWAP/volume foram identificados sem alterar código.
 ## Histórico de versões
 
 - 1.0.0 — 2026-10-11 — primeiro inventário de candidatos de fluxo e indicadores associados.
+
+<!-- RECONCILIACAO_SHA256: d6f78573a55fb19264881286633e872555c2fd3cb6e3d8885d703e626f9fc637
+COMMIT_DE_REFERENCIA: c0740f9fd4d1485b3c3a1b8568053b8cd077e688
+-->
