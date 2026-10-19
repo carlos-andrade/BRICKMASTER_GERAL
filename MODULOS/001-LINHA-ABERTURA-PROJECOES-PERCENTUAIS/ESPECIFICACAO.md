@@ -6,9 +6,11 @@ fase: "MODULO_001"
 id_documento: "BM-DOC-MODULO-001-ESPECIFICACAO"
 titulo: "Especificação técnica — Módulo 001"
 status: "PLANEJADO"
-versao: "1.0.0"
+versao: "1.0.3"
 data_criacao: "N/A"
-data_atualizacao: "2026-10-11"
+data_atualizacao: "2026-10-19"
+sha256_canonico: "SELF_HASH"
+commit_referencia: "c0740f9fd4d1485b3c3a1b8568053b8cd077e688"
 origem: "Conteúdo preexistente; histórico Git"
 autoridade_documental: "LAYOUT"
 cadeia_autoridade: "PROMPT → CARTA → LAYOUT ÚNICO → CÓDIGO"
@@ -26,31 +28,41 @@ dependencias: "Manual NTSL 4.4; confirmação dos parâmetros operacionais"
 > **Fase:** MÓDULO 001  
 > **ID:** BM-DOC-MODULO-001-ESPECIFICACAO  
 > **Status:** PLANEJADO  
-> **Versão:** 1.0.0  
+> **Versão:** 1.0.3  
 > **Criação:** N/A  
-> **Atualização:** 2026-10-11  
+> **Atualização:** 2026-10-19  
 > **Origem:** Conteúdo preexistente; histórico Git  
 > **Autoridade:** LAYOUT  
 > **Rastreabilidade:** PR feat/cabecalho-padrao-documental
 
 ## Contexto Histórico
 
-Especificação preexistente do Módulo 001; o cabeçalho foi acrescentado sem alterar os contratos e as condições técnicas abaixo.
+Especificação preexistente do Módulo 001. Na revisão 1.0.1, a lista matemática de percentagens foi substituída por uma tabela explícita para eliminar a ambiguidade entre vírgula decimal e separador de elementos. A correção esclarece a notação pretendida; não altera o conjunto de níveis documentado nem comprova implementação.
 
 ## Contrato funcional
 
-**Entrada:** preço de referência da abertura da sessão, instrumento, tick size e identificação da sessão.  
+**Entrada:** preço oficial de abertura confirmado pelo Módulo 002, instrumento/contrato, tick size, identificação da sessão, fonte aprovada e timestamp. A política aprovada em 2026-10-12 é a opção B: preço oficial fornecido pela plataforma ou por fonte oficial validada.  
 **Processamento:** congelar a referência da sessão e calcular oito níveis percentuais.  
 **Saída:** linha-base e oito linhas horizontais plotadas no gráfico.  
 **Efeitos colaterais proibidos:** envio de ordens, alteração de posição ou dependência obrigatória de outros módulos.
 
 ## Modelo matemático
 
-Seja (P₀) o preço de abertura válido para a sessão e (r) um dos valores {-3,-2,-1,-0,5,0,5,1,2,3}. Então:
+Seja P₀ o preço de abertura válido para a sessão. Os oito níveis externos à linha-base correspondem às percentagens abaixo, interpretando a vírgula como separador decimal em português:
 
-`L(r) = P₀ × (1 + r/100)`
+| Nível | Percentagem | Fórmula |
+|---|---:|---|
+| Superior 1 | +0,5% | `P₀ × 1,005` |
+| Superior 2 | +1% | `P₀ × 1,01` |
+| Superior 3 | +2% | `P₀ × 1,02` |
+| Superior 4 | +3% | `P₀ × 1,03` |
+| Linha-base | 0% | `P₀` |
+| Inferior 1 | −0,5% | `P₀ × 0,995` |
+| Inferior 2 | −1% | `P₀ × 0,99` |
+| Inferior 3 | −2% | `P₀ × 0,98` |
+| Inferior 4 | −3% | `P₀ × 0,97` |
 
-A linha-base é `L(0) = P₀`. A lista inclui oito níveis externos à linha-base. Os valores calculados antes do arredondamento devem ser preservados para validação; os valores efetivamente plotados devem seguir a regra de tick size aprovada.
+Os valores calculados antes do arredondamento devem ser preservados para validação; os valores efetivamente plotados devem seguir a regra de tick size aprovada.
 
 ## Ciclo de vida da referência
 
@@ -61,7 +73,7 @@ A linha-base é `L(0) = P₀`. A lista inclui oito níveis externos à linha-bas
 5. Não recalcular a referência em cada tick.
 6. Na próxima sessão válida, reinicializar apenas quando a nova abertura puder ser identificada sem ambiguidade.
 
-Se a plataforma não disponibilizar a abertura pretendida no contexto de execução escolhido, a implementação deve falhar de forma explícita ou aguardar uma condição válida; não deve substituir a abertura por um preço arbitrário.
+Se a plataforma não disponibilizar o campo oficial no contexto escolhido, a implementação deve aguardar ou falhar explicitamente. Não deve substituir a abertura por preço atual, primeiro negócio observado ou primeiro candle visível. Fontes secundárias só podem ser usadas se previamente validadas e configuradas. O módulo não deve calcular níveis quando a referência não estiver CONFIRMED.
 
 ## Compatibilidade
 
@@ -102,4 +114,19 @@ Documento identificável e rastreável, preservando a especificação técnica.
 
 ## Próxima Ação
 
-Confirmar decisões em aberto e preparar testes isolados antes de qualquer integração.
+Confirmar decisões em aberto (fonte exata da abertura, reinicialização de sessão e arredondamento ao tick size) e preparar testes isolados antes de qualquer integração.
+
+## Histórico de versões
+
+- 1.0.0 — 2026-10-11 — especificação inicial.
+- 1.0.1 — 2026-10-11 — desambiguação da notação das percentagens por tabela; sem alteração da lógica pretendida.
+
+
+## Decisão de dependência — 2026-10-12
+
+A política B para o preço oficial de abertura foi aprovada pelo utilizador. O Módulo 001 depende de uma referência `CONFIRMED` emitida pelo Módulo 002. A decisão não comprova que o campo exista no Profit/NTSL nem valida qualquer fornecedor; essa verificação permanece pendente.
+
+- 1.0.2 — 2026-10-12 — dependência explícita do preço oficial de abertura do Módulo 002.
+
+
+- 1.0.3 — 2026-10-19 — reconciliação documental de `develop` para `main`; preservadas as decisões e os bloqueios anteriores. Não implica validação funcional.
