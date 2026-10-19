@@ -100,3 +100,7 @@ A extração de famílias de contratos e a validação do guardrail de aliases f
 Para consulta operacional por símbolo e fonte, ver `MODULOS/002-RELOGIO-SESSAO-ABERTURA/data/MATRIZ_COBERTURA_SEIS_SIMBOLOS_2026-10-12.csv`. Esta matriz consolida a evidência do catálogo com as lacunas COTAHIST e intraday e mantém os seis símbolos em `UNKNOWN/BLOCKED` para abertura enquanto o alias/contrato e o campo de preço não forem comprovados.
 
 - 1.0.1 — 2026-10-12 — referenciada matriz consolidada de cobertura por símbolo e fonte.
+
+<!-- RECONCILIACAO_SHA256: ebd884f59f573b62a7304246e3a29f5c2e7ac4317383e99841cbf45abe7d9c6e
+COMMIT_DE_REFERENCIA: c0740f9fd4d1485b3c3a1b8568053b8cd077e688
+-->
