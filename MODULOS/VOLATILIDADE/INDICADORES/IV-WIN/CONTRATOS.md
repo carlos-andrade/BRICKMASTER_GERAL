@@ -2,22 +2,22 @@
 projeto: BRICKMASTER RAIZ
 repositorio: carlos-andrade/BRICKMASTER_GERAL
 tipo_documento: CONTRATO_DADOS
-fase: feature
+fase: develop
 id_documento: BM_VOL_IVWIN_CONTRACT_001
 titulo: Contrato canonico de dados e saidas IV-WIN
 status: EXPERIMENTAL
 versao: 1.0.0
 data_criacao: 2026-10-20
-data_atualizacao: 2026-10-20
+data_atualizacao: 2026-10-24
 origem: requisito universal IV-WIN
 autoridade_documental: GOVERNANCA e BRICKMASTER_GERAL
 cadeia_autoridade: REQUISITOS -> ESPECIFICACAO -> CONTRATOS -> IMPLEMENTACAO -> VALIDACAO
-rastreabilidade: feature/iv-win-universal-options-v1
+rastreabilidade: PR #38 integrado em develop; commit 6ec1e2e19944f24422adeef06d1bff0fa9e0dc1c
 escopo: entradas, saidas, qualidade e agregacao multi-serie
 objetivo: preservar identidade, proveniencia, metodologia e qualidade
 dependencias: fontes de opcoes, schema de contratos, timestamps e modelo compativel
-sha256_canonico: b2648d1916d6952aa4dbca6893e7c1afb42f9b1e5bb31c5cf909bf6ea1877aca
-commit_referencia: ae2bc43a877b540059a40ed4653a8408936dad2c
+sha256_canonico: bdc6cf9cff293ef64aaf5337321ebf3b424ab11f7c43298cae65699b6bd963a8
+commit_referencia: 6ec1e2e19944f24422adeef06d1bff0fa9e0dc1c
 -->
 
 # IV-WIN — Contrato canónico de dados e saídas
