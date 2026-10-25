@@ -24,7 +24,7 @@ commit_referencia: "PENDENTE_APOS_COMMIT"
 
 ## Sumário
 
-O PR #41 foi integrado em `main` pelo merge commit `6118e0b131e445723ab27018371af9ebb01cddaa`. O workflow de cabeçalhos da PR #41 falhou. A primeira iteração corretiva da PR #42 também falhou. Após nova alteração do validador e atualização deste checkpoint, o workflow `40191664773` concluiu com sucesso no commit `95946ad0af27a7ae07af471b5f5e9d03dff01bdb`.
+O PR #41 foi integrado em `main` pelo merge commit `6118e0b131e445723ab27018371af9ebb01cddaa`. O workflow de cabeçalhos da PR #41 falhou. A primeira iteração corretiva da PR #42 também falhou. Após nova alteração do validador e atualização deste checkpoint, o workflow `40191704776` concluiu com sucesso no commit `83e1c3f5e8f4341c83b384d839828f5cd26b9d5b`.
 
 O resultado é **PASS estrutural parcial**: valida a estrutura dos 55 documentos com Front Matter YAML, não os 114 documentos legados sem YAML nem os seus conteúdos semânticos ou hashes.
 
@@ -35,7 +35,7 @@ O resultado é **PASS estrutural parcial**: valida a estrutura dos 55 documentos
 - Workflow falhado da PR #41: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40190767144
 - PR #42, ainda aberta para revisão: https://github.com/carlos-andrade/BRICKMASTER_GERAL/pull/42
 - Primeira iteração falhada da PR #42: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40191285606
-- Última execução com sucesso estrutural: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40191664773
+- Última execução com sucesso estrutural: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40191704776
 - Job da última execução: `validar-markdown`, ID `121163323006`.
 
 ## Resultado medido
@@ -104,7 +104,7 @@ VALIDAÇÃO ESTRUTURAL PARCIAL. Os documentos YAML verificados passaram no workf
 - Workflow falhado da primeira iteração da PR #42: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40191285606
 - Workflow mais recente: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40191517813
 - Merge commit da PR #41: `6118e0b131e445723ab27018371af9ebb01cddaa`
-- Commit verificado na última execução: `95946ad0af27a7ae07af471b5f5e9d03dff01bdb`
+- Commit verificado na última execução: `83e1c3f5e8f4341c83b384d839828f5cd26b9d5b`
 
 ## Validação
 
