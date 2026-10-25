@@ -12,7 +12,7 @@ data_atualizacao: "2026-10-25"
 origem: "PR #41 integrada; gate documental corrigido parcialmente na PR #42"
 autoridade_documental: "GOVERNANCA"
 cadeia_autoridade: "PROMPT → CARTA → LAYOUT ÚNICO → CÓDIGO"
-rastreabilidade: "PR #41; PR #42; workflow 40191517813; branch fix/governanca-validator-include-frontmatter"
+rastreabilidade: "PR #41; PR #42; workflow 40191704776; branch fix/governanca-validator-include-frontmatter"
 escopo: "Validação estrutural de cabeçalhos Markdown e integridade documental"
 objetivo: "Registar falhas históricas, correção do validador e limites do resultado observado"
 dependencias: "GitHub Actions; scripts/validar_cabecalhos_markdown.sh; INVENTARIO_DOCUMENTAL.md; HISTORICO.md"
@@ -36,7 +36,7 @@ O resultado é **PASS estrutural parcial**: valida a estrutura dos 55 documentos
 - PR #42, ainda aberta para revisão: https://github.com/carlos-andrade/BRICKMASTER_GERAL/pull/42
 - Primeira iteração falhada da PR #42: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40191285606
 - Última execução com sucesso estrutural: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40191704776
-- Job da última execução: `validar-markdown`, ID `121163323006`.
+- Job da última execução: `validar-markdown`, ID `121163880537`.
 
 ## Resultado medido
 
@@ -102,7 +102,7 @@ VALIDAÇÃO ESTRUTURAL PARCIAL. Os documentos YAML verificados passaram no workf
 - PR #42: https://github.com/carlos-andrade/BRICKMASTER_GERAL/pull/42
 - Workflow falhado da PR #41: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40190767144
 - Workflow falhado da primeira iteração da PR #42: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40191285606
-- Workflow mais recente: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40191517813
+- Workflow mais recente: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40191704776
 - Merge commit da PR #41: `6118e0b131e445723ab27018371af9ebb01cddaa`
 - Commit verificado na última execução: `83e1c3f5e8f4341c83b384d839828f5cd26b9d5b`
 
