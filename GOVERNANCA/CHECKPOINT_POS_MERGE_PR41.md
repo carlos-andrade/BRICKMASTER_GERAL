@@ -60,14 +60,15 @@ Esta alteração permite um resultado estrutural reproduzível para os 55 fichei
 
 1. A comparação Git consultada para a PR #3 em 2026-10-25 indicou estado `diverged`, 19 commits à frente e 337 atrás. A branch histórica não foi fundida diretamente.
 2. O PR #41 foi integrado apesar do workflow ter falhado. O histórico preserva esse facto.
-3. Os documentos alterados por esta correção têm campos de SHA-256 e commit de referência pendentes de auditoria independente. A presença de um campo não prova a integridade do hash. Regra canónica adotada nesta correção: normalizar o conteúdo para UTF-8/LF e excluir somente as linhas `sha256_canonico` e `commit_referencia` do cálculo, evitando autorreferência.
+3. Os SHA-256 canónicos do inventário, deste histórico e deste checkpoint foram recalculados e rechecados contra os conteúdos UTF-8/LF, excluindo somente as linhas `sha256_canonico` e `commit_referencia`. Cada campo `commit_referencia` aponta para a revisão de conteúdo usada no cálculo. Isto não certifica os restantes documentos do repositório.
 4. A governança continua em proposta/revisão. Merge documental ou PASS estrutural parcial não prova aprovação semântica, validação de módulos, compilação NTSL, Profit, replay, backtest ou produção.
 
 ## Plano pendente
 
 - [ ] Migrar os 114 documentos legados sem Front Matter YAML por lotes controlados, preservando conteúdo e histórico, ou formalizar exceções de formato por tipo documental.
 - [ ] Validar links e referências cruzadas após cada lote.
-- [ ] Recalcular independentemente SHA-256 dos artefactos novos/alterados e definir a normalização UTF-8/LF aplicada.
+- [x] Recalcular e verificar SHA-256 canónico dos três documentos de controlo alterados nesta PR, usando UTF-8/LF e excluindo somente as duas linhas de metadados de integridade.
+- [ ] Auditar SHA-256 e commits de referência dos restantes documentos do corpus.
 - [ ] Atualizar os campos de commit de referência em commit posterior ao conteúdo final.
 - [ ] Revisar a PR #42 antes de qualquer merge.
 - [ ] Executar validações NTSL/Profit e testes de estratégia apenas quando houver código e escopo aplicável; nada disso foi executado nesta tarefa.
@@ -82,7 +83,8 @@ Esta alteração permite um resultado estrutural reproduzível para os 55 fichei
 | Primeira iteração do workflow da PR #42 | FAIL |
 | Última iteração estrutural YAML da PR #42 | PASS, escopo parcial |
 | Migração dos 114 documentos legados | PENDING |
-| Auditoria independente de SHA-256 | PENDING |
+| SHA-256 dos três documentos de controlo desta PR | PASS |
+| SHA-256 dos restantes documentos do corpus | PENDING |
 | NTSL / compilação Profit | NOT_RUN |
 | Replay / backtest | NOT_RUN |
 | Validação em produção | NOT_RUN |
@@ -116,4 +118,4 @@ A PR #42 passou a verificação estrutural parcial. Continua aberta e não foi i
 
 ## Próxima Ação
 
-Rever o diff da PR #42, completar a auditoria de hashes e planear a migração controlada dos 114 documentos legados antes da promoção.
+Rever o diff da PR #42, planear a migração controlada dos 114 documentos legados e auditar os hashes dos documentos restantes antes da promoção.
