@@ -1,3 +1,24 @@
+---
+projeto: "BRICKMASTER RAIZ"
+repositorio: "carlos-andrade/BRICKMASTER_GERAL"
+tipo_documento: "README_GOVERNANCA"
+fase: "FASE 00 — GOVERNANÇA"
+id_documento: "BM-GOV-README-001"
+titulo: "Índice da Governança BRICKMASTER RAIZ"
+status: "PROPOSTA_PARA_REVISAO"
+versao: "1.0.1"
+data_criacao: "2026-10-11"
+data_atualizacao: "2026-10-25"
+origem: "PR #3; conteúdo anterior preservado e normalizado"
+autoridade_documental: "GOVERNANCA e responsável pelo projeto"
+cadeia_autoridade: "PROMPT -> CARTA -> LAYOUT UNICO -> CODIGO"
+rastreabilidade: "PR #3; branch feature/pr3-governanca-mainline-reconciliation"
+escopo: "Índice da Governança BRICKMASTER RAIZ"
+objetivo: "Documentar governança sem declarar aprovação ou testes não executados"
+dependencias: "GOVERNANCA/NORMA-CABECALHO-PADRAO.md; main base 3db0c88f27fec4c6ea2418749de09ebba8130fe7"
+sha256_canonico: "6b4c5236e30f90fb68dae35c3106a2a92ec5491a839314e2c4081945239b6399"
+commit_referencia: "3db0c88f27fec4c6ea2418749de09ebba8130fe7"
+---
 # BRICKMASTER RAIZ — Governança
 
 - Estado: estrutura documental em revisão; a existência dos documentos não significa aprovação.
@@ -17,7 +38,7 @@ Esta pasta centraliza os documentos de governança do BRICKMASTER RAIZ: autorida
 - [RISCO_E_SEGURANCA.md](RISCO_E_SEGURANCA.md) — risco soberano, dados inválidos e bloqueios.
 - [CHECKPOINTS_E_EVIDENCIAS.md](CHECKPOINTS_E_EVIDENCIAS.md) — checkpoints reproduzíveis e trilha de evidências.
 - [REGISTRO_DE_DECISOES.md](REGISTRO_DE_DECISOES.md) — decisões arquiteturais.
-- [REGISTRO_MODULOS_E_CHECKPOINTS.md](REGISTRO_MODULOS_E_CHECKPOINTS.md) — registo mestre de módulos e checkpoints.
+- [REGISTRO_MODULOS_E_CHECKPOINTS.md](../ARQUITETURA/BRICKMASTER_RAIZ/REGISTRO_MODULOS_E_CHECKPOINTS.md) — registo mestre de módulos e checkpoints.
 - [NORMA-CABECALHO-PADRAO.md](NORMA-CABECALHO-PADRAO.md) — padrão documental já existente no repositório.
 - [INVENTARIO_DOCUMENTAL.md](INVENTARIO_DOCUMENTAL.md) — inventário e migração de documentos.
 - [MODELO_CHECKPOINT.md](MODELO_CHECKPOINT.md) — modelo reutilizável de checkpoint.
@@ -50,3 +71,28 @@ Não apagar documentos para limpar a estrutura. Toda migração deve registar ca
 ## Limite operacional
 
 A meta de 1% desde a abertura do dia é hipótese de pesquisa, não promessa de rentabilidade. A governança de risco prevalece sobre metas de resultado. Nenhuma ordem de mercado deve ser enviada por padrão.
+
+
+## Contexto Histórico
+
+Conteúdo histórico preservado da proposta do PR #3; esta revisão normaliza rastreabilidade sem declarar aprovação.
+
+
+## Evidências
+
+- PR #3 e histórico Git do BRICKMASTER_GERAL.
+
+
+## Validação
+
+Revisão documental; não comprova compilação NTSL, testes no Profit, backtest ou validação operacional.
+
+
+## Resultado
+
+Documento proposto, sujeito a revisão e critérios de aceitação.
+
+
+## Próxima Ação
+
+Rever referências e executar o validador documental antes da promoção.
