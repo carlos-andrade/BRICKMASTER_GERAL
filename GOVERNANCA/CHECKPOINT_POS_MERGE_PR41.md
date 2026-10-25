@@ -24,7 +24,7 @@ commit_referencia: "PENDENTE_APOS_COMMIT"
 
 ## Sumário
 
-O PR #41 foi integrado em `main` pelo merge commit `6118e0b131e445723ab27018371af9ebb01cddaa`. O workflow de cabeçalhos da PR #41 falhou. A primeira iteração corretiva da PR #42 também falhou. Após nova alteração do validador, o workflow `40191517813` concluiu com sucesso no commit `33c4b6d70734efaffbaa93739c7a9e8a277312a0`.
+O PR #41 foi integrado em `main` pelo merge commit `6118e0b131e445723ab27018371af9ebb01cddaa`. O workflow de cabeçalhos da PR #41 falhou. A primeira iteração corretiva da PR #42 também falhou. Após nova alteração do validador e atualização deste checkpoint, o workflow `40191629915` concluiu com sucesso no commit `9a2c6ae0215d460061ed7c2270739e49d8c8346a`.
 
 O resultado é **PASS estrutural parcial**: valida a estrutura dos 55 documentos com Front Matter YAML, não os 114 documentos legados sem YAML nem os seus conteúdos semânticos ou hashes.
 
@@ -35,7 +35,7 @@ O resultado é **PASS estrutural parcial**: valida a estrutura dos 55 documentos
 - Workflow falhado da PR #41: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40190767144
 - PR #42, ainda aberta para revisão: https://github.com/carlos-andrade/BRICKMASTER_GERAL/pull/42
 - Primeira iteração falhada da PR #42: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40191285606
-- Última execução com sucesso estrutural: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40191517813
+- Última execução com sucesso estrutural: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40191629915
 - Job da última execução: `validar-markdown`, ID `121163323006`.
 
 ## Resultado medido
@@ -104,7 +104,7 @@ VALIDAÇÃO ESTRUTURAL PARCIAL. Os documentos YAML verificados passaram no workf
 - Workflow falhado da primeira iteração da PR #42: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40191285606
 - Workflow mais recente: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40191517813
 - Merge commit da PR #41: `6118e0b131e445723ab27018371af9ebb01cddaa`
-- Commit verificado na última execução: `33c4b6d70734efaffbaa93739c7a9e8a277312a0`
+- Commit verificado na última execução: `9a2c6ae0215d460061ed7c2270739e49d8c8346a`
 
 ## Validação
 
