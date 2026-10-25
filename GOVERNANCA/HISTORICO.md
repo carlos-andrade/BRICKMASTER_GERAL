@@ -16,8 +16,8 @@ rastreabilidade: "PR #41; PR #42; workflow 40191746933; branch fix/governanca-va
 escopo: "Histórico de propostas e eventos de governança"
 objetivo: "Preservar decisões, falhas, recuperações e supersessões"
 dependencias: "GOVERNANCA/README.md; INVENTARIO_DOCUMENTAL.md; checkpoints relacionados"
-sha256_canonico: "PENDENTE_DE_RECALCULO"
-commit_referencia: "PENDENTE_APOS_COMMIT"
+sha256_canonico: "1b5d3ea42847a47a4470e008d93b25f92082983d31d12930e0de3a61afd44787"
+commit_referencia: "62026c8b7436eb36ca71c50dbe3f8e4e15da7102"
 ---
 # Histórico da Governança
 
