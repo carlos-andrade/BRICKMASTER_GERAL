@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# BRICKMASTER RAIZ — canonical Markdown validator
+# BRICKMASTER RAIZ — canonical Markdown validator.
 # Legacy Markdown with an HTML comment header is tolerated only as legacy format;
 # recovered governance docs with YAML front matter must meet the full contract.
 # This validation checks structure only, not SHA-256 values or semantic approval.
@@ -26,7 +26,7 @@ while IFS= read -r -d '' file; do
   fi
 
   for field in projeto repositorio tipo_documento fase id_documento titulo status versao data_criacao data_atualizacao origem autoridade_documental cadeia_autoridade rastreabilidade escopo objetivo dependencias; do
-    if ! grep -Eq "^\${field}:" "$file"; then
+    if ! grep -Eq "^$field:" "$file"; then
       echo "::error file=$file::Campo obrigatório ausente: $field"
       fail=1
     fi
