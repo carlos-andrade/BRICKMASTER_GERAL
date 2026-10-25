@@ -2,22 +2,22 @@
 projeto: BRICKMASTER RAIZ
 repositorio: carlos-andrade/BRICKMASTER_GERAL
 tipo_documento: REQUISITO_TECNICO
-fase: feature
+fase: develop
 id_documento: BM_VOL_IVWIN_UNIVERSAL_001
 titulo: Requisito de cobertura universal de series de opcoes IV-WIN
 status: EXPERIMENTAL
 versao: 1.0.0
 data_criacao: 2026-10-20
-data_atualizacao: 2026-10-20
+data_atualizacao: 2026-10-24
 origem: requisito aprovado pelo utilizador e especificacao IV-WIN existente
 autoridade_documental: GOVERNANCA e BRICKMASTER_GERAL
 cadeia_autoridade: REQUISITOS -> ESPECIFICACAO -> CONTRATOS -> IMPLEMENTACAO -> VALIDACAO
-rastreabilidade: feature/iv-win-universal-options-v1; base develop 84e3e66b7d6121cc18d2bce0af755df582ebd705
+rastreabilidade: PR #38 integrado em develop; commit 6ec1e2e19944f24422adeef06d1bff0fa9e0dc1c
 escopo: cobertura multi-serie de opcoes no IV-WIN
 objetivo: formalizar suporte agnostico a series, preservando modelo e qualidade por contrato
 dependencias: fontes autorizadas, identificadores e termos contratuais, dados sincronizados e modelo compatível
-sha256_canonico: 1a0b887a8b29dd0a88e8c6e101c71ba86bfc1e5ceb58378a26e46204506ee02c
-commit_referencia: 84e3e66b7d6121cc18d2bce0af755df582ebd705 (base develop)
+sha256_canonico: bc0a755cf7cb1931254501f851137f1cc6fb591f6338ecc6f0b96d0a44087027
+commit_referencia: 6ec1e2e19944f24422adeef06d1bff0fa9e0dc1c
 -->
 
 # IV-WIN — Requisito de cobertura universal de séries de opções
@@ -28,7 +28,7 @@ A especificação IV-WIN existente propõe investigar volatilidade implícita co
 
 ## Estado
 
-**EXPERIMENTAL — requisito documentado na branch feature.** Feed, cálculo, licenças, testes empíricos e integração não estão comprovados por este documento.
+**EXPERIMENTAL — requisito documental integrado em develop.** Feed, cálculo, licenças, testes empíricos e integração operacional não estão comprovados por este documento.
 
 ## Requisito obrigatório
 
