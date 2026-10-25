@@ -16,7 +16,7 @@ rastreabilidade: "PR #3; branch feature/pr3-governanca-mainline-reconciliation"
 escopo: "Inventário Documental e Plano de Migração"
 objetivo: "Documentar governança sem declarar aprovação ou testes não executados"
 dependencias: "GOVERNANCA/NORMA-CABECALHO-PADRAO.md; main base 3db0c88f27fec4c6ea2418749de09ebba8130fe7"
-sha256_canonico: "18bac6e7b5cfa183ef022d92280bf2cca3acfa39f78c4eb155d1b13fe789554d"
+sha256_canonico: "21bde9401ad564f7c627967f7a341e1812b76c3914bffc2ab15c9790c8d47171"
 commit_referencia: "3db0c88f27fec4c6ea2418749de09ebba8130fe7"
 ---
 # Inventário Documental e Plano de Migração
@@ -48,7 +48,7 @@ commit_referencia: "3db0c88f27fec4c6ea2418749de09ebba8130fe7"
 | MIG-0009 | `GOVERNANÇA/README.md` | `GOVERNANCA/README.md` | Índice central no caminho solicitado | PROPOSTO NA BRANCH |
 | MIG-0010 | `GOVERNANÇA/REGISTRO_DE_DECISOES.md` | `GOVERNANCA/REGISTRO_DE_DECISOES.md` | Centralizar decisões | PROPOSTO NA BRANCH |
 | MIG-0011 | `GOVERNANÇA/RISCO_E_SEGURANCA.md` | `GOVERNANCA/RISCO_E_SEGURANCA.md` | Centralizar política de risco | PROPOSTO NA BRANCH |
-| MIG-0012 | `ARQUITETURA/BRICKMASTER_RAIZ/REGISTRO_MODULOS_E_CHECKPOINTS.md` | `GOVERNANCA/REGISTRO_MODULOS_E_CHECKPOINTS.md` | O conteúdo é registo transversal de governança e checkpoints | PROPOSTO NA BRANCH |
+| MIG-0012 | `ARQUITETURA/BRICKMASTER_RAIZ/REGISTRO_MODULOS_E_CHECKPOINTS.md` | — | Documento já existente em main; preservar a origem e referenciar sem duplicar | NÃO MOVER; ORIGEM PRESERVADA |
 
 O arquivo `GOVERNANCA/NORMA-CABECALHO-PADRAO.md` já existia no destino e é preservado.
 
@@ -99,3 +99,11 @@ Documento proposto, sujeito a revisão e critérios de aceitação.
 ## Próxima Ação
 
 Rever referências e executar o validador documental antes da promoção.
+
+
+## Reconciliação com main — 2026-10-25
+
+- A branch original do PR #3 estava 19 commits à frente e 300 atrás de main, por isso a proposta foi reconstruída na branch atual derivada de main.
+- O documento `ARQUITETURA/BRICKMASTER_RAIZ/REGISTRO_MODULOS_E_CHECKPOINTS.md` permanece na origem e é referenciado pelo índice de governança; não foi copiado para criar uma segunda fonte de verdade.
+- `GOVERNANCA/NORMA-CABECALHO-PADRAO.md` já existe em main e foi preservado.
+- Esta reconciliação não declara classificação semântica integral dos 373 arquivos da árvore main, nem validação operacional.
