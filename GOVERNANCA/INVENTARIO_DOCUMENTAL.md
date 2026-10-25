@@ -16,8 +16,8 @@ rastreabilidade: "PR #41; PR #42; workflow 40192045467; branch fix/governanca-va
 escopo: "Governança documental do BRICKMASTER RAIZ"
 objetivo: "Inventário Documental e Plano de Migração"
 dependencias: "main e documentos canónicos preexistentes; ver corpo documental"
-sha256_canonico: "b247c0c5a83a782140b60ab9dfd72c69893c79fd958aa2baf552e462f64ecd72"
-commit_referencia: "6470c5db9131fa57ece6b18badc6233604007b21"
+sha256_canonico: "2fec6db5b03f3ba86ec57fe12c1e2a10c6944ee086496ff9fda0d6ee9fdbf9bd"
+commit_referencia: "2b15deb08a1ea90603de3861e82c3bbae2629378"
 ---
 # Inventário Documental e Plano de Migração
 
