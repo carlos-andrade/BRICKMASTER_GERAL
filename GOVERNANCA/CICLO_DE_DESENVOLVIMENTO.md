@@ -14,9 +14,9 @@ autoridade_documental: "GOVERNANCA e responsável pelo projeto"
 cadeia_autoridade: "PROMPT -> CARTA -> LAYOUT UNICO -> CODIGO"
 rastreabilidade: "PR #3; branch feature/pr3-governanca-mainline-reconciliation"
 escopo: "Ciclo de Desenvolvimento e Promoção"
-objetivo: "Documentar governança, sem declarar aprovação ou testes não executados"
+objetivo: "Documentar governança sem declarar aprovação ou testes não executados"
 dependencias: "GOVERNANCA/NORMA-CABECALHO-PADRAO.md; main base 3db0c88f27fec4c6ea2418749de09ebba8130fe7"
-sha256_canonico: "25e73f33100bb77c5c4dd5516042b709d792ff2f8e50df818cb5ad71902dd02b"
+sha256_canonico: "b5384898e7d5e6aca26cc23edf6bf772367103addb8eb38f3d215ca69e318fa0"
 commit_referencia: "3db0c88f27fec4c6ea2418749de09ebba8130fe7"
 ---
 # Ciclo de Desenvolvimento e Promoção
