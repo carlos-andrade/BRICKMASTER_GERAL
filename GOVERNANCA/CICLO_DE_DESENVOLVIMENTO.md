@@ -16,7 +16,7 @@ rastreabilidade: "PR #3; branch feature/pr3-governanca-mainline-reconciliation"
 escopo: "Ciclo de Desenvolvimento e Promoção"
 objetivo: "Documentar governança sem declarar aprovação ou testes não executados"
 dependencias: "GOVERNANCA/NORMA-CABECALHO-PADRAO.md; main base 3db0c88f27fec4c6ea2418749de09ebba8130fe7"
-sha256_canonico: "b5384898e7d5e6aca26cc23edf6bf772367103addb8eb38f3d215ca69e318fa0"
+sha256_canonico: "5ad822a55f12ea29e78b169ec74c1068f0f1621a00006839db7ccc79c80d5a0c"
 commit_referencia: "3db0c88f27fec4c6ea2418749de09ebba8130fe7"
 ---
 # Ciclo de Desenvolvimento e Promoção
