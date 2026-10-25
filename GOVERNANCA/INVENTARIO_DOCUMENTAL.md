@@ -6,13 +6,13 @@ fase: "GOVERNANCA"
 id_documento: "BM-GOV-INVENTARIO-001"
 titulo: "Inventário Documental e Plano de Migração"
 status: "PROPOSTA_PARA_REVISAO"
-versao: "1.0.2"
+versao: "1.0.3"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-25"
 origem: "Recuperação documental do PR #3 fechado sem merge"
 autoridade_documental: "GOVERNANCA"
 cadeia_autoridade: "PROMPT → CARTA → LAYOUT ÚNICO → CÓDIGO"
-rastreabilidade: "PR #41; correção pós-merge na branch fix/governanca-validator-include-frontmatter"
+rastreabilidade: "PR #41; PR #42; workflow 40191746933; branch fix/governanca-validator-include-frontmatter"
 escopo: "Governança documental do BRICKMASTER RAIZ"
 objetivo: "Inventário Documental e Plano de Migração"
 dependencias: "main e documentos canónicos preexistentes; ver corpo documental"
@@ -63,18 +63,18 @@ commit_referencia: "PENDENTE_APOS_COMMIT"
 - A comparação Git consultada em 2026-10-25 entre `main` e `feature/governanca-fundacao` retornou: estado `diverged`, `ahead_by=19`, `behind_by=337`, `total_commits=19`. A branch histórica não foi integrada diretamente.
 - A PR #41 recuperou os documentos numa linha derivada do `main` corrente e foi integrada no commit `6118e0b131e445723ab27018371af9ebb01cddaa`.
 - O workflow de cabeçalhos da PR #41 falhou em 2026-10-25: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40190767144. O log apontou múltiplos Markdown sem Front Matter YAML no início. O validador exige YAML universalmente, embora parte do corpus legado comece com comentário HTML.
-- Uma correção de validador encontra-se em branch separada `fix/governanca-validator-include-frontmatter`; ainda requer execução no CI antes de qualquer conclusão.
+- A correção estrutural da PR #42 passou no workflow `40191746933` em 2026-10-25: 169 Markdown rastreados, 55 documentos YAML verificados, 32 cabeçalhos HTML legados e 82 outros formatos legados. O PASS cobre apenas o subconjunto YAML; os 114 documentos legados continuam pendentes.
 - Foram identificados 12 documentos recuperados e pelo menos 2 documentos de governança preexistentes explicitamente preservados; isso não equivale a inventário semântico integral.
 - A regra de cabeçalho estrutural não valida o conteúdo semântico nem certifica hashes SHA-256.
 - Não foram executados testes NTSL, compilação Profit, replay, backtest ou validação operacional.
 
 ## Próximos passos
 
-1. Executar workflow de cabeçalhos na branch de correção.
-2. Produzir relatório com caminhos exatos que falham, se houver.
-3. Recalcular independentemente SHA-256 canónico dos documentos adicionados/alterados, respeitando a definição de normalização registada.
-4. Atualizar referências de commit após o commit final, sem autorreferência circular.
-5. Rever links internos e só depois considerar novo PR de correção.
+1. Definir e executar a migração controlada dos 114 documentos legados ou aprovar exceções documentais explícitas por tipo.
+2. Validar links e referências cruzadas após cada lote.
+3. Recalcular independentemente SHA-256 canónico dos documentos adicionados/alterados, com normalização UTF-8/LF e exclusão apenas dos dois campos de integridade.
+4. Atualizar as referências de commit em commit posterior ao conteúdo final.
+5. Rever a PR #42 e integrar somente após revisão da integridade e dos limites da validação.
 
 ## Contexto Histórico
 
@@ -94,7 +94,7 @@ PROPOSTA PARA REVISÃO. Inventário semântico integral, reconciliação de todo
 
 ## Validação
 
-Este documento foi corrigido para refletir metadados reais da comparação Git e o resultado do workflow. SHA-256 canónico e commit de referência precisam ser calculados/atualizados após a gravação final; a validação estrutural da branch corretiva ainda não foi executada.
+Este documento foi corrigido para refletir metadados reais da comparação Git e o resultado do workflow. CI estrutural parcial PASS no workflow `40191746933`; SHA-256 canónico e commit de referência ainda requerem auditoria e atualização após a gravação final.
 
 ## Resultado
 
