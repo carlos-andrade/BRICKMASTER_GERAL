@@ -14,9 +14,9 @@ autoridade_documental: "GOVERNANCA e responsável pelo projeto"
 cadeia_autoridade: "PROMPT -> CARTA -> LAYOUT UNICO -> CODIGO"
 rastreabilidade: "PR #3; branch feature/pr3-governanca-mainline-reconciliation"
 escopo: "Checkpoints e Evidências"
-objetivo: "Documentar governança, sem declarar aprovação ou testes não executados"
+objetivo: "Documentar governança sem declarar aprovação ou testes não executados"
 dependencias: "GOVERNANCA/NORMA-CABECALHO-PADRAO.md; main base 3db0c88f27fec4c6ea2418749de09ebba8130fe7"
-sha256_canonico: "103081317ca19cecc59ba20536ccf52c4993c31202612557caa43a9cec7d2915"
+sha256_canonico: "48531883113fc1cc43cac2d922c07876895ed3d5f8f196580a76908d9903faf0"
 commit_referencia: "3db0c88f27fec4c6ea2418749de09ebba8130fe7"
 ---
 # Checkpoints e Evidências
