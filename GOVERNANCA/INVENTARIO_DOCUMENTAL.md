@@ -6,13 +6,13 @@ fase: "GOVERNANCA"
 id_documento: "BM-GOV-INVENTARIO-001"
 titulo: "Inventário Documental e Plano de Migração"
 status: "PROPOSTA_PARA_REVISAO"
-versao: "1.0.3"
+versao: "1.0.4"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-25"
 origem: "Recuperação documental do PR #3 fechado sem merge"
 autoridade_documental: "GOVERNANCA"
 cadeia_autoridade: "PROMPT → CARTA → LAYOUT ÚNICO → CÓDIGO"
-rastreabilidade: "PR #41; PR #42; workflow 40191746933; branch fix/governanca-validator-include-frontmatter"
+rastreabilidade: "PR #41; PR #42; workflow 40192045467; branch fix/governanca-validator-include-frontmatter"
 escopo: "Governança documental do BRICKMASTER RAIZ"
 objetivo: "Inventário Documental e Plano de Migração"
 dependencias: "main e documentos canónicos preexistentes; ver corpo documental"
@@ -63,7 +63,7 @@ commit_referencia: "62026c8b7436eb36ca71c50dbe3f8e4e15da7102"
 - A comparação Git consultada em 2026-10-25 entre `main` e `feature/governanca-fundacao` retornou: estado `diverged`, `ahead_by=19`, `behind_by=337`, `total_commits=19`. A branch histórica não foi integrada diretamente.
 - A PR #41 recuperou os documentos numa linha derivada do `main` corrente e foi integrada no commit `6118e0b131e445723ab27018371af9ebb01cddaa`.
 - O workflow de cabeçalhos da PR #41 falhou em 2026-10-25: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40190767144. O log apontou múltiplos Markdown sem Front Matter YAML no início. O validador exige YAML universalmente, embora parte do corpus legado comece com comentário HTML.
-- A correção estrutural da PR #42 passou no workflow `40191746933` em 2026-10-25: 169 Markdown rastreados, 55 documentos YAML verificados, 32 cabeçalhos HTML legados e 82 outros formatos legados. O PASS cobre apenas o subconjunto YAML; os 114 documentos legados continuam pendentes.
+- A correção estrutural da PR #42 passou no workflow `40192045467` em 2026-10-25, no commit testado `325092cb45efc132ce87691897a837dda9a3492d`: 169 Markdown rastreados, 55 documentos YAML verificados, 32 cabeçalhos HTML legados e 82 outros formatos legados. O PASS cobre apenas o subconjunto YAML; os 114 documentos legados continuam pendentes.
 - Foram identificados 12 documentos recuperados e pelo menos 2 documentos de governança preexistentes explicitamente preservados; isso não equivale a inventário semântico integral.
 - A regra de cabeçalho estrutural não valida o conteúdo semântico nem certifica hashes SHA-256.
 - Não foram executados testes NTSL, compilação Profit, replay, backtest ou validação operacional.
@@ -94,7 +94,7 @@ PROPOSTA PARA REVISÃO. Inventário semântico integral, reconciliação de todo
 
 ## Validação
 
-Este documento foi corrigido para refletir metadados reais da comparação Git e o resultado do workflow. CI estrutural parcial PASS no workflow `40191746933`; SHA-256 canónico e commit de referência ainda requerem auditoria e atualização após a gravação final.
+CI estrutural parcial PASS no workflow `40192045467`. O SHA-256 canónico desta versão foi recalculado excluindo apenas as linhas `sha256_canonico` e `commit_referencia`; o valor registado será verificado novamente após a gravação dos metadados.
 
 ## Resultado
 
@@ -102,4 +102,4 @@ Inventário atualizado quanto à divergência da PR #3 e ao gate CI vermelho pó
 
 ## Próxima Ação
 
-Reexecutar o validador na branch corretiva, recolher logs e completar a auditoria de integridade dos artefactos documentais.
+Planear a migração controlada dos 114 documentos legados, verificar links e rever esta PR antes de qualquer promoção.
