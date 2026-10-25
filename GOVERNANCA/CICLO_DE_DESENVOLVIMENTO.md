@@ -1,3 +1,24 @@
+---
+projeto: "BRICKMASTER RAIZ"
+repositorio: "carlos-andrade/BRICKMASTER_GERAL"
+tipo_documento: "PROCESSO_DESENVOLVIMENTO"
+fase: "FASE 00 — GOVERNANÇA"
+id_documento: "BM-GOV-DEV-CYCLE-001"
+titulo: "Ciclo de Desenvolvimento e Promoção"
+status: "PROPOSTA_PARA_REVISAO"
+versao: "1.0.1"
+data_criacao: "2026-10-11"
+data_atualizacao: "2026-10-25"
+origem: "PR #3; conteúdo anterior preservado e normalizado para a branch atual"
+autoridade_documental: "GOVERNANCA e responsável pelo projeto"
+cadeia_autoridade: "PROMPT -> CARTA -> LAYOUT UNICO -> CODIGO"
+rastreabilidade: "PR #3; branch feature/pr3-governanca-mainline-reconciliation"
+escopo: "Ciclo de Desenvolvimento e Promoção"
+objetivo: "Centralizar governança documentada sem declarar aprovação ou testes não executados"
+dependencias: "GOVERNANCA/NORMA-CABECALHO-PADRAO.md; main base 3db0c88f27fec4c6ea2418749de09ebba8130fe7"
+sha256_canonico: "25e73f33100bb77c5c4dd5516042b709d792ff2f8e50df818cb5ad71902dd02b"
+commit_referencia: "3db0c88f27fec4c6ea2418749de09ebba8130fe7"
+---
 # Ciclo de Desenvolvimento e Promoção
 
 - Versão: 1.0.0
@@ -40,3 +61,27 @@ Descrever problema, mudanças, contratos afetados, testes e evidências, riscos,
 ## Hotfix
 
 Limitar escopo, preservar estado anterior, documentar risco de agir/não agir e realizar revisão posterior com evidências.
+
+## Contexto Histórico
+
+Documento histórico de governança preservado e reconciliado a partir da proposta PR #3.
+
+
+## Estado
+
+PROPOSTA PARA REVISÃO; não representa aprovação ou produção.
+
+
+## Evidências
+
+- PR #3 e histórico Git do repositório BRICKMASTER_GERAL.
+
+
+## Resultado
+
+Conteúdo preservado para revisão; estado não promovido.
+
+
+## Próxima Ação
+
+Verificar referências, conteúdo e critérios de aceitação antes de aprovação.
