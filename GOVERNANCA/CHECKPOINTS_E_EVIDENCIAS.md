@@ -16,7 +16,7 @@ rastreabilidade: "PR #3; branch feature/pr3-governanca-mainline-reconciliation"
 escopo: "Checkpoints e Evidências"
 objetivo: "Documentar governança sem declarar aprovação ou testes não executados"
 dependencias: "GOVERNANCA/NORMA-CABECALHO-PADRAO.md; main base 3db0c88f27fec4c6ea2418749de09ebba8130fe7"
-sha256_canonico: "48531883113fc1cc43cac2d922c07876895ed3d5f8f196580a76908d9903faf0"
+sha256_canonico: "20c46a829eeb492e8a4a1561dbf887ad29e10e04035df517f601748f939e8f2a"
 commit_referencia: "3db0c88f27fec4c6ea2418749de09ebba8130fe7"
 ---
 # Checkpoints e Evidências
