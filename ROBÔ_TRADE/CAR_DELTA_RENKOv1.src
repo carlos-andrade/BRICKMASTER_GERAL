@@ -1,0 +1,127 @@
+﻿// ROBÔ: BRICKMASTER
+// Método inspirado no Método 9.1 do Larry Williams e o Método de Joseph Reffson (MeJoRe)(Newton–Raphson).
+// Nome: CAR_DELTA_RENKOv1
+// Versão 05. // USAR SOMENTE NO RENKO 15R NO WINFUT.
+// Estrutura Cinética
+// Paleta: https://www.homehost.com.br/blog/tutoriais/tabela-de-cores-html/
+//input
+  //Periodo(9);
+var
+  //vCandleAVG0, vCandleAVG1, vCandleAVG2 : Integer;
+  vCandleENT                                          : Integer;  // Posicionar a entrada no fechamento do candle 0.
+  vCandleSAI                                          : Integer;  // Posicionar a saída no fechamento do candle 2.
+  sinalC,sinalV                                       : booleano;
+  vlrStopC,vlrStopV,vlrStopM                          : real;
+  vAvgPrice,vEstrategia,vEstrategiaMAX,vEstrategiaMIN : real;
+  vRange                                              : float;
+  vVolatility                                         : Float;
+  vOffSet                                             : float;
+  vDelta                                              : float;  //MODELO 2 — WEIGHTED DELTA (MELHOR) //CHATGPT
+  corvAvgPrice                                        : Integer;
+  corvEstrategia                                      : Integer;
+  corvRange                                           : Integer;
+  corvVolatility                                      : Integer;
+  corvOffSet                                          : Integer;
+  corvDelta                                           : Integer;
+begin
+  begin
+    // PASSO 1 | CARREGAR OS DADOS:
+    //vCandleAVG2 := 2; // AVGPRICE NO CANDLE 2.
+    //vCandleAVG1 := 1; // AVGPRICE NO CANDLE 1.
+    //vCandleAVG0 := 0; // AVGPRICE NO CANDLE 0.
+    vCandleENT := 0;    // Posicionar a entrada no fechamento do candle 0.
+    vCandleSAI := 2;    // Posicionar a saída no fechamento do candle 2.
+    // PASSO 1 | CARREGAR INDICADORES
+    vDelta := ((Close - Open) / TrueRange) * Volume;    //ESTRUTURA CENTRAL.
+    vAvgPrice := AvgPrice();
+    vEstrategiaMAX := maxima;                         // Posicionar a ordem de compra.
+    vEstrategiaMIN := minima;                         // Posicionar a ordem de venda.
+    vRange := Ceiling(Range());                       //Range(); // o range está arredondado ...
+    vVolatility := Ceiling((Volatility(vRange)));     //(Volatility(vRange));  //volatilidade de 30 períodos no timeframe de 15R.
+    vOffSet := (vRange * vVolatility);
+  end;
+  //-----------PADRÃO----------
+  //EXECUÇÃO DE ENTRADA //PASSO 2 // Controle de Fluxo
+  begin
+    sinalC := (vDelta > 0) and (close > vAvgPrice) and (vAvgPrice[1] < vAvgPrice);
+    sinalV := (vDelta < 0) and (close < vAvgPrice) and (vAvgPrice[1] > vAvgPrice);
+  end;
+  begin
+    if ( not HasPosition) and sinalC and (Time > 900) and (Time < 1730) then
+      BuyStop((vEstrategiaMAX[vCandleENT] + MinPriceIncrement),(vEstrategiaMAX[vCandleENT] + MinPriceIncrement) + (vOffSet * MinPriceIncrement))
+    else if ( not HasPosition) and sinalV and (Time > 900) and (Time < 1730) then
+      SellShortStop((vEstrategiaMIN[vCandleENT] - MinPriceIncrement),(vEstrategiaMIN[vCandleENT] - MinPriceIncrement) - (vOffSet * MinPriceIncrement));
+  end;
+
+
+  //EXECUÇÃO DE SAÍDA //PASSO 3
+  begin
+    vlrStopC := (close + open[vCandleSAI]) / 2;
+    vlrStopV := (close + open[vCandleSAI]) / 2;
+    //vlrStopM := (vlrStopC + vlrStopV) / 2;
+
+    vlrStopM := ((close + open[2]) / 2) + ((maxima + minima[6]) / 16000);
+
+    begin
+      if IsBought then      //ordem de compra aberta.
+        SellToCoverStop(vlrStopC,vlrStopC - (vOffSet * MinPriceIncrement))
+      else if IsSold then   //ordem de venda aberta.
+        BuyToCoverStop(vlrStopV,vlrStopv + (vOffSet * MinPriceIncrement));
+    end;
+  end;
+  //EXECUCAO DE SAIDA EM GAP
+  begin
+    if IsBought and (close < vlrStopC) then
+      closeposition
+    else if IsSold and (close > vlrStopV) then
+      closeposition;
+  end;
+  begin
+    //Linhas para demarcar os dois pontos do AVGPRICE:
+    HorizontalLine(vlrStopM[2], RGB(0, 0, 255)); //Azul  // Função: Marcar a posição da estratégia.
+    HorizontalLine(vlrStopM[0], RGB(245,17,0)); //Vermelho       // Função: Marcar a posição do tralingstop.
+  end;
+  begin
+    //TEXTO NO CANDLE:
+    //if (vDelta > vAvgPrice) then PlotText("BUY", (RGB(123,104,238)), 2, 12)
+    //else if (vDelta < vAvgPrice) then PlotText("SELL", (RGB(255,0,0)), 0, 12);
+  end;
+  begin
+    //COLORAÇÃO
+    corvAvgPrice := (RGB(0,0,255));
+    corvRange := (RGB(10,60,145));
+    corvVolatility := (RGB(255,255,255));
+    corvOffSet := (RGB(14,14,14));
+    corvDelta := (RGB(186,30,104));
+    SetPlotColor(1,corvAvgPrice);      //Azul - AVGPrice
+    SetPlotColor(2,corvRange);         //Azul - vRange
+    SetPlotColor(3,corvVolatility);    //Branca - vVolatility
+    SetPlotColor(4,corvOffSet);        //Preto - vOffSet
+    SetPlotColor(5,corvDelta);         //Violeta - vDelta
+    SetPlotColor(6,RGB(255,215,0));
+    //SetPlotColor(8,RGB(255,215,0));
+  end;
+  begin
+    //ESPESSURA
+    SetPlotWidth(1,4);
+    SetPlotWidth(5,1);
+    SetPlotWidth(6,2);
+  end;
+  begin
+    //ESTILO DA LINHA
+    SetPlotStyle(1,0);
+   
+  end;
+  begin
+    //PLOTAGEM
+    Plot(vAvgPrice);
+    Plot2(vRange);
+    Plot3(vVolatility);
+    Plot4(vOffSet);
+    Plot5(vDelta);
+    Plot6(vlrStopM);
+    Plot8(volume);
+
+  end;
+
+end;

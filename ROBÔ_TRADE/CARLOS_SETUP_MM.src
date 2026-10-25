@@ -1,0 +1,25 @@
+﻿//FONTE: https://www.youtube.com/watch?v=-6Qb5owb_ys
+
+var
+vMMA, vMME, vMMW, nVWAP : real;
+
+begin
+// PASSO 1 | CARREGAR INDICADORES
+vMMA := Media(30, close);
+vMME := MediaExp(9,close);
+vMMW := WAverage(close,18);
+nVWAP := VWAP(2);
+
+//COLORAÇÃO
+SetPlotColor(1, clgreen);
+SetPlotColor(2, clred);
+SetPlotColor(3, clblue);
+SetPlotColor(4, clyellow);
+
+//PLOTAGEM
+plot(vMMA);
+Plot2(vMME);
+Plot3(vMMW);
+Plot4(nVWAP);
+end;
+

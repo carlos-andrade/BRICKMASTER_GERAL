@@ -1,0 +1,50 @@
+﻿//SÉRIE DE CÓDIGO REALIZADOS PELO CHATGPT
+//CORRIGIDO POR CARLOS ANDRADE.
+//NOME: CodigoNTSL_v2_CHATGPT
+
+input
+    PeriodoTWAP(20);
+    LimiteExaustao(0);
+
+var
+    vwapValue     : float;
+    twapValue     : float;
+    somaPreco     : float;
+    gap           : float;
+    agressao      : float;
+    volFinanceiro : float;
+    exaustao      : boolean;
+    i             : integer;
+
+begin
+
+    vwapValue := (VWAP(0));
+
+    somaPreco := 0;
+
+    for i := 0 to PeriodoTWAP - 1 do
+    begin
+        somaPreco := somaPreco + Close[i];
+    end;
+
+    twapValue := somaPreco / PeriodoTWAP;
+
+    gap := vwapValue - twapValue;
+
+    // Fluxo
+    agressao := AgressionVolBalance;
+    volFinanceiro := FinancialVol;
+
+    // Exaustão (lógica inicial)
+    exaustao := (agressao < agressao[1]) and (volFinanceiro < volFinanceiro[1]);
+
+    // PLOTS
+    Plot(vwapValue);
+    Plot2(twapValue);
+    Plot3(gap);
+
+    // Sinal visual de exaustão
+    if exaustao then
+        PlotText("EXAUSTAO", clYellow, 0, Close);
+
+end;

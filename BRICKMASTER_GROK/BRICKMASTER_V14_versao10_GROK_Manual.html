@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRICKMASTER V14_versao10_GROK — Manual</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap');
+  :root { --bg:#0a0c10; --bg2:#0f1218; --border:#1e2530; --text:#c8d0dc; --text2:#7a8799; --accent:#00d4ff; --green:#00e676; --red:#ff1744; --orange:#ff9800; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; font-size:15px; line-height:1.7; }
+  .header { background:linear-gradient(135deg,#0a0c10,#0f1a2e); border-bottom:1px solid var(--border); padding:48px 40px; }
+  .header h1 { font-size:28px; font-weight:700; color:#fff; }
+  .header h1 span { color:var(--accent); }
+  .header-sub { font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--text2); margin-top:10px; }
+  .container { max-width:920px; margin:0 auto; padding:40px 32px; }
+  h2 { font-size:20px; color:#fff; margin:40px 0 16px; padding-bottom:8px; border-bottom:1px solid var(--border); }
+  p,li { color:var(--text); margin-bottom:10px; }
+  ul { padding-left:22px; margin-bottom:16px; }
+  code { font-family:'JetBrains Mono',monospace; background:#151a22; padding:2px 6px; border-radius:4px; font-size:13px; }
+  .box { background:var(--bg2); border:1px solid var(--border); border-radius:8px; padding:18px 20px; margin:18px 0; }
+  .box.ok { border-left:4px solid var(--green); }
+  .box.danger { border-left:4px solid var(--red); }
+  .box.warn { border-left:4px solid var(--orange); }
+  table { width:100%; border-collapse:collapse; margin:16px 0; font-size:14px; }
+  th,td { padding:10px 12px; text-align:left; border-bottom:1px solid var(--border); }
+  th { color:var(--text2); font-size:12px; text-transform:uppercase; }
+  footer { text-align:center; padding:40px; color:var(--text2); font-size:12px; border-top:1px solid var(--border); margin-top:50px; font-family:'JetBrains Mono',monospace; }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="container">
+    <h1>BRICKMASTER <span>V14_versao10_GROK</span></h1>
+    <div class="header-sub">Módulos 00–10 (FINAL) • Fluxo / VWAP / Agressão • 13/09/2026</div>
+  </div>
+</div>
+<div class="container">
+
+  <div class="box danger">
+    <strong>REGRA OBRIGATÓRIA</strong><br>
+    Coloração de candles + Sistema com fonte — ativos em todo o sistema.
+  </div>
+
+  <h2>1. O que esta versão adiciona</h2>
+  <div class="box ok">
+    <strong>Módulo 10 — Proxy de Fluxo / VWAP / Agressão</strong> (último módulo da série V14)<br>
+    Confirmação de direção por VWAP e fluxo (agressão nativa ou proxy).
+  </div>
+
+  <h2>2. VWAP</h2>
+  <ul>
+    <li><code>VWAP(PeriodoVWAP)</code> — padrão diário (<code>1</code>)</li>
+    <li><code>PrecoAcimaVWAP</code> / <code>PrecoAbaixoVWAP</code></li>
+    <li><code>DistanciaVWAPPct</code> — distância percentual do preço ao VWAP</li>
+    <li><code>Plot18</code> — linha dourada do VWAP</li>
+  </ul>
+
+  <h2>3. Fluxo / Agressão</h2>
+  <table>
+    <thead><tr><th>Modo</th><th>Como funciona</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><code>UsarAgressaoNativa = false</code> (padrão)</td>
+        <td>Proxy universal: posição do fechamento no range (0–100) + volume anômalo / força do volume + lado do VWAP</td>
+      </tr>
+      <tr>
+        <td><code>UsarAgressaoNativa = true</code></td>
+        <td>Usa <code>AgressionVolBalance</code> (requer Profit Pro/Ultra ou módulo Scalper)</td>
+      </tr>
+    </tbody>
+  </table>
+  <ul>
+    <li><code>FluxoComprador</code> / <code>FluxoVendedor</code> / <code>FluxoNeutro</code></li>
+    <li><code>Plot19</code> — ProxyAgressao (0–100)</li>
+  </ul>
+
+  <h2>4. Integração com o sistema</h2>
+  <ul>
+    <li>Reforço leve no Score quando fluxo alinha com o Contexto</li>
+    <li>Se <code>ExigirFluxo = true</code>, a execução só libera a favor do fluxo</li>
+    <li>Alertas/PlotText: <code>[C] FLUXO COMPRADOR</code>, <code>[V] FLUXO VENDEDOR</code>, preço vs VWAP</li>
+  </ul>
+
+  <h2>5. Inputs novos</h2>
+  <table>
+    <thead><tr><th>Input</th><th>Padrão</th><th>Função</th></tr></thead>
+    <tbody>
+      <tr><td><code>HabilitarFluxo</code></td><td>true</td><td>Liga o módulo</td></tr>
+      <tr><td><code>PeriodoVWAP</code></td><td>1</td><td>0=barra · 1=diário · 2=semanal · 3=mensal</td></tr>
+      <tr><td><code>MostrarVWAP</code></td><td>true</td><td>Plota VWAP</td></tr>
+      <tr><td><code>ExigirFluxo</code></td><td>false</td><td>Filtra execução pelo fluxo</td></tr>
+      <tr><td><code>PesoFluxoScore</code></td><td>1.0</td><td>Intensidade do reforço no Score</td></tr>
+      <tr><td><code>UsarAgressaoNativa</code></td><td>false</td><td>true = AgressionVolBalance (Pro/Ultra)</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box warn">
+    <strong>Importante:</strong> Deixe <code>UsarAgressaoNativa = false</code> se sua versão do Profit não tiver o indicador de agressão.
+    O proxy por candle + volume funciona em todas as versões.
+  </div>
+
+  <h2>6. Arquitetura completa V14</h2>
+  <ul>
+    <li>00 Base · 01 Eventos · 02 PaintBar · 03 Score · 04 Abertura</li>
+    <li>05 Recusa · 06 Volume · 07 Alertas+Fonte · 08 Execução</li>
+    <li>09 Trailing · <strong>10 Fluxo/VWAP/Agressão</strong></li>
+  </ul>
+
+  <h2>7. Arquivos</h2>
+  <ul>
+    <li><code>BRICKMASTER_V14_versao10_GROK.src</code></li>
+    <li><code>BRICKMASTER_V14_versao10_GROK_Manual.html</code></li>
+    <li><code>BRICKMASTER_V14_versao10_Roadmap_Modulos.html</code></li>
+  </ul>
+
+</div>
+<footer>
+  BRICKMASTER V14_versao10_GROK — SÉRIE COMPLETA (00–10)<br>
+  Recriado por Grok (xAI) • Baseado no sistema de Carlos Andrade
+</footer>
+</body>
+</html>

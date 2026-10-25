@@ -1,0 +1,20 @@
+﻿begin
+
+EMA_= 20;
+
+//begin
+    // Cálculo da média móvel exponencial
+    plot EMA = ExpAverage(close, EMA_Period);
+
+    // Condições de tendência forte
+    TrendUp = close > EMA and high[1] > high[2];
+    TrendDown = close < EMA and low[1] < low[2];
+
+    // Condições de pullback
+    PullbackUp = low <= EMA and close > EMA and TrendUp;
+    PullbackDown = high >= EMA and close < EMA and TrendDown;
+
+    // Filtro para Radar
+    filter PullbackUp or PullbackDown;
+end;
+

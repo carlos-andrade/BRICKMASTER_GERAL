@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRICKMASTER V14_versao1_GROK — Manual</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap');
+  :root {
+    --bg: #0a0c10; --bg2: #0f1218; --border: #1e2530;
+    --text: #c8d0dc; --text2: #7a8799; --accent: #00d4ff;
+    --green: #00e676; --orange: #ff9800; --purple: #b388ff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 15px; line-height: 1.7; }
+  .header { background: linear-gradient(135deg, #0a0c10, #0f1a2e); border-bottom: 1px solid var(--border); padding: 48px 40px; }
+  .header h1 { font-size: 28px; font-weight: 700; color: #fff; }
+  .header h1 span { color: var(--accent); }
+  .header-sub { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text2); margin-top: 10px; }
+  .container { max-width: 900px; margin: 0 auto; padding: 40px 32px; }
+  h2 { font-size: 20px; color: #fff; margin: 40px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  h3 { font-size: 15px; color: var(--accent); margin: 24px 0 10px; }
+  p, li { color: var(--text); margin-bottom: 10px; }
+  ul, ol { padding-left: 22px; margin-bottom: 16px; }
+  code { font-family: 'JetBrains Mono', monospace; background: #151a22; padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+  .box { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 18px 20px; margin: 18px 0; }
+  .box.ok { border-left: 4px solid var(--green); }
+  .box.info { border-left: 4px solid var(--accent); }
+  .box.warn { border-left: 4px solid var(--orange); }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+  th { color: var(--text2); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+  .dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 8px; vertical-align: middle; }
+  footer { text-align: center; padding: 40px; color: var(--text2); font-size: 12px; border-top: 1px solid var(--border); margin-top: 50px; font-family: 'JetBrains Mono', monospace; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="container">
+    <h1>BRICKMASTER <span>V14_versao1_GROK</span></h1>
+    <div class="header-sub">Módulo 00 (Base) + Módulo 01 (Ciclo de Eventos) • 12/09/2026</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <h2>1. O que esta versão contém</h2>
+  <div class="box ok">
+    <strong>Módulos inclusos:</strong><br>
+    • <strong>00 – Base</strong> (Bandas + Médias + Abertura) → herdado da versao0<br>
+    • <strong>01 – Ciclo de Eventos das Bandas</strong> → novo nesta versão
+  </div>
+
+  <h2>2. Módulo Base (herdado)</h2>
+  <ul>
+    <li>Linha branca da <strong>Abertura do Dia</strong></li>
+    <li>8 bandas percentuais (±0,50% / ±1% / ±2% / ±3%)</li>
+    <li>Médias Curta (M9) e Longa (M25) que <strong>reiniciam a cada dia</strong> a partir da abertura</li>
+  </ul>
+
+  <h2>3. Módulo 01 — Ciclo de Eventos</h2>
+  <p>Para <strong>cada uma das 8 bandas</strong> o sistema detecta a seguinte sequência:</p>
+
+  <table>
+    <thead>
+      <tr><th>Evento</th><th>Condição</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Toque</strong></td>
+        <td>High alcança a banda de cima <em>ou</em> Low alcança a banda de baixo</td>
+      </tr>
+      <tr>
+        <td><strong>Aceitação</strong></td>
+        <td>Close fecha <strong>além</strong> da banda (rompe e aceita o lado)</td>
+      </tr>
+      <tr>
+        <td><strong>Rejeição</strong></td>
+        <td>Tocou a banda, mas o Close voltou para dentro + pavio mínimo</td>
+      </tr>
+      <tr>
+        <td><strong>Armadilha</strong></td>
+        <td>Rejeição forte (pavio ainda maior que o mínimo de rejeição)</td>
+      </tr>
+      <tr>
+        <td><strong>Confirmação</strong></td>
+        <td>Versão simples: Armadilha/Rejeição + candle na direção oposta ao toque</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="box info">
+    <strong>Observação:</strong> A confirmação desta versão é <em>simples</em> (ainda sem filtros de VWAP, M9 ou volume).  
+    Filtros avançados serão adicionados em módulos posteriores.
+  </div>
+
+  <h3>3.1 Variáveis geradas (exemplos para ±1%)</h3>
+  <ul>
+    <li><code>TocouMais1</code> / <code>TocouMenos1</code></li>
+    <li><code>AceitouMais1</code> / <code>AceitouMenos1</code></li>
+    <li><code>RejeitouMais1</code> / <code>RejeitouMenos1</code></li>
+    <li><code>ArmadilhaMais1</code> / <code>ArmadilhaMenos1</code></li>
+    <li><code>ConfirmouArmadilhaMais1</code> / <code>ConfirmouArmadilhaMenos1</code></li>
+    <li><code>ConfirmouRejeicaoMais1</code> / <code>ConfirmouRejeicaoMenos1</code></li>
+  </ul>
+  <p>O mesmo padrão existe para ±0,50%, ±2% e ±3%.</p>
+
+  <h3>3.2 Inputs de calibração do ciclo</h3>
+  <table>
+    <thead>
+      <tr><th>Input</th><th>Padrão</th><th>Função</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>MinPavioRejeicao</code></td>
+        <td>0.40</td>
+        <td>Pavio mínimo (em % do range do candle) para registrar Rejeição</td>
+      </tr>
+      <tr>
+        <td><code>MinPavioArmadilha</code></td>
+        <td>0.55</td>
+        <td>Pavio mínimo (em % do range) para registrar Armadilha (mais rigoroso)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>4. Plotagem atual</h2>
+  <table>
+    <thead>
+      <tr><th>Plot</th><th>Conteúdo</th><th>Cor</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>Abertura do Dia</td><td><span class="dot" style="background:#fff;border:1px solid #555"></span>Branco</td></tr>
+      <tr><td>2-3</td><td>±0,50%</td><td>Amarelo suave</td></tr>
+      <tr><td>4-5</td><td>±1,00%</td><td>Azul</td></tr>
+      <tr><td>6-7</td><td>±2,00%</td><td>Verde</td></tr>
+      <tr><td>8-9</td><td>±3,00%</td><td>Vermelho</td></tr>
+      <tr><td>10</td><td>Média Curta (M9)</td><td><span class="dot" style="background:#ff9800"></span>Laranja</td></tr>
+      <tr><td>11</td><td>Média Longa (M25)</td><td><span class="dot" style="background:#b388ff"></span>Roxo</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box warn">
+    <strong>Ainda não existe PaintBar.</strong><br>
+    Os eventos são detectados e ficam disponíveis nas variáveis, mas os candles ainda não são pintados.  
+    O Módulo 02 (Cores / PaintBar) será o próximo.
+  </div>
+
+  <h2>5. Arquivos desta versão</h2>
+  <ul>
+    <li><code>BRICKMASTER_V14_versao1_GROK.src</code> → Código-fonte</li>
+    <li><code>BRICKMASTER_V14_versao1_GROK_Manual.html</code> → Este manual</li>
+    <li><code>BRICKMASTER_V14_Roadmap_Modulos.html</code> → Roadmap atualizado</li>
+  </ul>
+
+  <h2>6. Próximo passo</h2>
+  <p><strong>Módulo 02 — PaintBar (Cores)</strong></p>
+  <p>Hierarquia de prioridade para pintar os candles de acordo com o evento mais importante que ocorreu em cada barra.</p>
+
+</div>
+
+<footer>
+  BRICKMASTER V14_versao1_GROK • Módulo Base + Ciclo de Eventos<br>
+  Recriado por Grok (xAI) • Baseado no sistema de Carlos Andrade
+</footer>
+
+</body>
+</html>

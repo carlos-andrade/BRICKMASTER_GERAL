@@ -1,0 +1,66 @@
+﻿// FVG ICT temporário usando PlotN / NoPlot (Editor de Estratégias)
+var
+  corBull, corBear : integer;
+  vida             : integer;
+  precoFVG         : real;
+  fvgBull, fvgBear : boolean;
+  plotIdx          : integer;
+  fimAtivo         : integer;   // candle onde o plot deve desaparecer
+  ativoPreco       : real;
+
+begin
+  // ============================
+  // CONFIG
+  // ============================
+  corBull := clLime;
+  corBear := clRed;
+  vida    := 38;      // quantos candles a linha permanece
+  plotIdx := 1;      // escolhe um plot (1..99)
+
+  // ============================
+  // DETECÇÃO FVG ICT (SIMPLES)
+  // Bullish: Low[1] > High[2]
+  // Bearish: High[1] < Low[2]
+  // ============================
+  fvgBull := (Low[1] > High[2]);
+  fvgBear := (High[1] < Low[2]);
+
+  // ============================
+  // ATIVAÇÃO: guarda preço e define fim do plot
+  // ============================
+  if fvgBull then
+  begin
+    // preço técnico do gap (base do FVG)
+    precoFVG := High[2];
+    ativoPreco := precoFVG;
+    fimAtivo := CurrentBar + vida;
+    // desenha imediatamente no candle do gatilho
+    PlotN(plotIdx, ativoPreco);        // plot principal
+    PlotText("FVG BULL", corBull, 2, 8); // label acima (opcional)
+  end
+  else if fvgBear then
+  begin
+    precoFVG := Low[2];
+    ativoPreco := precoFVG;
+    fimAtivo := CurrentBar + vida;
+    PlotN(plotIdx, ativoPreco);
+    PlotText("FVG BEAR", corBear, 0, 8);  // label abaixo (opcional)
+  end
+  else
+  begin
+    // se já existe um preço ativo e ainda estamos na janela, mante-lo
+    if (fimAtivo > 0) and (CurrentBar <= fimAtivo) then
+    begin
+      PlotN(plotIdx, ativoPreco);
+    end
+    else
+    begin
+      // nada ativo: garante que o plot seja removido
+      NoPlot(plotIdx);
+      fimAtivo := 0;
+      ativoPreco := 0;
+    end;
+  end;
+
+end;
+

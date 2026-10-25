@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRICKMASTER V14_versao4_GROK — Manual</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap');
+  :root { --bg:#0a0c10; --bg2:#0f1218; --border:#1e2530; --text:#c8d0dc; --text2:#7a8799; --accent:#00d4ff; --green:#00e676; --red:#ff1744; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; font-size:15px; line-height:1.7; }
+  .header { background:linear-gradient(135deg,#0a0c10,#0f1a2e); border-bottom:1px solid var(--border); padding:48px 40px; }
+  .header h1 { font-size:28px; font-weight:700; color:#fff; }
+  .header h1 span { color:var(--accent); }
+  .header-sub { font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--text2); margin-top:10px; }
+  .container { max-width:920px; margin:0 auto; padding:40px 32px; }
+  h2 { font-size:20px; color:#fff; margin:40px 0 16px; padding-bottom:8px; border-bottom:1px solid var(--border); }
+  h3 { font-size:15px; color:var(--accent); margin:24px 0 10px; }
+  p,li { color:var(--text); margin-bottom:10px; }
+  ul,ol { padding-left:22px; margin-bottom:16px; }
+  code { font-family:'JetBrains Mono',monospace; background:#151a22; padding:2px 6px; border-radius:4px; font-size:13px; }
+  .box { background:var(--bg2); border:1px solid var(--border); border-radius:8px; padding:18px 20px; margin:18px 0; }
+  .box.ok { border-left:4px solid var(--green); }
+  .box.danger { border-left:4px solid var(--red); }
+  .box.info { border-left:4px solid var(--accent); }
+  table { width:100%; border-collapse:collapse; margin:16px 0; font-size:14px; }
+  th,td { padding:10px 12px; text-align:left; border-bottom:1px solid var(--border); }
+  th { color:var(--text2); font-size:12px; text-transform:uppercase; letter-spacing:1px; }
+  footer { text-align:center; padding:40px; color:var(--text2); font-size:12px; border-top:1px solid var(--border); margin-top:50px; font-family:'JetBrains Mono',monospace; }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="container">
+    <h1>BRICKMASTER <span>V14_versao4_GROK</span></h1>
+    <div class="header-sub">Módulos 00–04 (Aceitação/Rejeição da Abertura) • 13/09/2026</div>
+  </div>
+</div>
+<div class="container">
+
+  <div class="box danger">
+    <strong>REGRA OBRIGATÓRIA</strong><br>
+    1. Coloração de candles (PaintBar com hierarquia) — ativa<br>
+    2. Sistema com fonte (PlotText/Alert) — obrigatório nas próximas versões<br>
+    Princípio: todo evento relevante deve ser validado, pesado no Score, sinalizado no candle de origem e plotado.
+  </div>
+
+  <h2>1. O que esta versão adiciona</h2>
+  <div class="box ok">
+    <strong>Módulo 04 — Aceitação / Rejeição da Abertura</strong><br>
+    Trata o preço de abertura do dia como “banda zero”.
+  </div>
+
+  <h2>2. Regras do módulo</h2>
+  <ul>
+    <li><strong>Gate obrigatório:</strong> só é válido se o preço já tocou ±Meio no mesmo dia</li>
+    <li><strong>Aceitação:</strong> cruzamento da abertura na direção da virada de lado</li>
+    <li><strong>Rejeição:</strong> reteste da abertura com pavio + fechamento confirmando a direção atual</li>
+    <li><strong>Confirmação:</strong> evento + candle seguinte na mesma direção</li>
+    <li><strong>Peso no Score:</strong> +3 (máximo do sistema) via <code>PesoAbertura</code></li>
+    <li><strong>PaintBar:</strong> prioridade P0 (acima de tudo)</li>
+    <li><strong>Somente leitura:</strong> nunca gera ordem</li>
+  </ul>
+
+  <h2>3. Variáveis principais</h2>
+  <table>
+    <thead><tr><th>Variável</th><th>Significado</th></tr></thead>
+    <tbody>
+      <tr><td><code>AceitacaoAberturaCompra</code></td><td>Cruzou a abertura para cima (após ter tocado −Meio)</td></tr>
+      <tr><td><code>AceitacaoAberturaVenda</code></td><td>Cruzou a abertura para baixo (após ter tocado +Meio)</td></tr>
+      <tr><td><code>RejeicaoAberturaCompra</code></td><td>Reteste da abertura confirmando compra</td></tr>
+      <tr><td><code>RejeicaoAberturaVenda</code></td><td>Reteste da abertura confirmando venda</td></tr>
+      <tr><td><code>ConfirmouAceitacaoAberturaCompra/Venda</code></td><td>Confirmação em 2 candles</td></tr>
+      <tr><td><code>ConfirmouRejeicaoAberturaCompra/Venda</code></td><td>Confirmação em 2 candles</td></tr>
+    </tbody>
+  </table>
+
+  <h2>4. Cores P0 (prioridade máxima)</h2>
+  <table>
+    <thead><tr><th>Evento</th><th>Cor</th></tr></thead>
+    <tbody>
+      <tr><td>Confirmação Aceitação/Rejeição Compra</td><td>Verde-água forte</td></tr>
+      <tr><td>Confirmação Aceitação/Rejeição Venda</td><td>Rosa-choque</td></tr>
+      <tr><td>Aceitação/Rejeição (ainda sem confirmação) Compra</td><td>Verde-água claro</td></tr>
+      <tr><td>Aceitação/Rejeição (ainda sem confirmação) Venda</td><td>Rosa claro</td></tr>
+    </tbody>
+  </table>
+
+  <h2>5. Input novo</h2>
+  <table>
+    <thead><tr><th>Input</th><th>Padrão</th><th>Função</th></tr></thead>
+    <tbody>
+      <tr><td><code>PesoAbertura</code></td><td>3.0</td><td>Peso máximo no Score para eventos da abertura</td></tr>
+    </tbody>
+  </table>
+
+  <h2>6. Arquivos desta versão</h2>
+  <ul>
+    <li><code>BRICKMASTER_V14_versao4_GROK.src</code></li>
+    <li><code>BRICKMASTER_V14_versao4_GROK_Manual.html</code></li>
+    <li><code>BRICKMASTER_V14_versao4_Roadmap_Modulos.html</code></li>
+  </ul>
+
+</div>
+<footer>
+  BRICKMASTER V14_versao4_GROK • Base + Eventos + PaintBar + Score + Abertura<br>
+  Regra obrigatória: Coloração de candles + Sistema com fonte<br>
+  Recriado por Grok (xAI) • Baseado no sistema de Carlos Andrade
+</footer>
+</body>
+</html>

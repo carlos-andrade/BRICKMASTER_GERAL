@@ -1,0 +1,654 @@
+// ============================================================================
+// BRICKMASTER — REJECTION ENGINE V1.0 — LABORATÓRIO 60K
+
+// NOME NO CHATGPT: BRICKMASTER — REJECTION ENGINE V1.0
+// NOME NO PROFIT: REJECTION_ENGINE_V1.0
+
+// ----------------------------------------------------------------------------
+// FINALIDADE:
+//   Módulo independente de diagnóstico para estudar rejeição direcional,
+//   progressão, persistência, divergência de extremo e confirmação por fluxo.
+//
+// PLATAFORMA:
+//   Profit / Nelogica — NTSL
+// GRÁFICO-ALVO:
+//   WINFUT — 60.000 TICKS
+//
+// IMPORTANTE:
+//   - NÃO executa ordens.
+//   - NÃO altera posição.
+//   - NÃO usa VIX.
+//   - NÃO usa RSI, MACD, FVG, VWAP, TWAP ou calendário macro.
+//   - Trabalha somente com candles FECHADOS.
+//   - State 7 = CANDIDATO A REVERSÃO, NÃO é sinal de entrada.
+//   - Thresholds são parâmetros de laboratório; não são "otimizados" nesta V1.
+//
+// DEFINIÇÕES:
+//   Range R       = High - Low
+//   Displacement = Close - Open
+//   Body B       = Abs(Close - Open)
+//   DE            = Body / Range * 100
+//   RI            = 100 - DE
+//   UW            = High - Max(Open, Close)
+//   LW            = Min(Open, Close) - Low
+//   CL            = (Close - Low) / Range * 100
+//   HF            = 100 - CL
+//   LF            = CL
+//   URE           = UW% * HF / 100
+//   LRE           = LW% * LF / 100
+//
+// INTERPRETAÇÃO:
+//   REJEIÇÃO SUPERIOR = rejeição de preços altos / falha da sustentação acima.
+//   REJEIÇÃO INFERIOR = rejeição de preços baixos / falha da sustentação abaixo.
+//
+//   State 0 NORMAL
+//   State 1 PERDA DE EFICIÊNCIA
+//   State 2 REJEIÇÃO EM DESENVOLVIMENTO
+//   State 3 REJEIÇÃO ATIVA
+//   State 4 REJEIÇÃO PROGRESSIVA
+//   State 5 REJEIÇÃO PERSISTENTE
+//   State 6 FLUXO CONFIRMADO
+//   State 7 CANDIDATO A REVERSÃO
+//
+// ORDEM DE ESTUDO:
+//   A) RI
+//   B) URE/LRE
+//   C) + progressão
+//   D) + persistência
+//   E) + volume
+//   F) + agressão/CVD
+//   G) combinação completa
+//
+// Validar no SIMULADOR antes de qualquer integração ao Brickmaster.
+// ============================================================================
+
+input
+  // --- Janela comportamental ---
+  JanelaProgressao(5);
+  MinRI(30.0);
+  MinWick(25.0);
+  MinEvidence(20.0);
+  MinSlope(2.0);
+  MinAcceleration(1.0);
+  MinPersistence(4);
+
+  // --- Fechamento dentro do range ---
+  MaxCLSuperior(45.0);
+  MinCLInferior(55.0);
+
+  // --- Volume ---
+  PeriodoMediaVolume(20);
+  MinVolumeRatio(1.20);
+
+  // --- Agressão / CVD ---
+  UsarAgressaoUltra(true);
+  MinDeltaDivergencia(0.0);
+
+  // --- Visual ---
+  MostrarPlots(true);
+  MostrarTextosEstado(true);
+  MostrarAlertas(false);
+
+var
+  // =========================
+  // PREÇO
+  // =========================
+  RangeCandle       : Float;
+  Displacement      : Float;
+  Corpo             : Float;
+  DE                : Float;
+  RI                : Float;
+
+  PavioSuperior     : Float;
+  PavioInferior     : Float;
+  PavioSuperiorPct  : Float;
+  PavioInferiorPct  : Float;
+
+  CloseLocation     : Float;
+  HighFailure       : Float;
+  LowFailure        : Float;
+
+  URE               : Float;
+  LRE               : Float;
+
+  // =========================
+  // PROGRESSÃO
+  // =========================
+  DeltaURE          : Float;
+  DeltaLRE          : Float;
+  DeltaUREAnterior  : Float;
+  DeltaLREAnterior  : Float;
+
+  SlopeURE          : Float;
+  SlopeLRE          : Float;
+  AccelURE          : Float;
+  AccelLRE          : Float;
+
+  SomaX             : Float;
+  SomaYURE          : Float;
+  SomaYLRE          : Float;
+  SomaXYURE         : Float;
+  SomaXYLRE         : Float;
+  SomaX2            : Float;
+  MediaX            : Float;
+  MediaYURE         : Float;
+  MediaYLRE         : Float;
+  DenSlope          : Float;
+  K                 : Integer;
+
+  CountURE          : Integer;
+  CountLRE          : Integer;
+  PersisteSuperior  : Boolean;
+  PersisteInferior  : Boolean;
+
+  // =========================
+  // EXTREMO / DIVERGÊNCIA
+  // =========================
+  ERD_UP            : Boolean;
+  ERD_DOWN          : Boolean;
+  DeterioracaoDE    : Boolean;
+
+  // =========================
+  // VOLUME
+  // =========================
+  SomaVolume        : Float;
+  MediaVolume       : Float;
+  VolumeRatio       : Float;
+  VolumeRelevante   : Boolean;
+  LimiteLoop        : Integer;
+
+  // =========================
+  // FLUXO
+  // =========================
+  AgressaoBuy       : Float;
+  AgressaoSell      : Float;
+  AgressaoBalance   : Float;
+  DeltaAtual        : Float;
+  FluxoComprador    : Boolean;
+  FluxoVendedor     : Boolean;
+  CVDSubindo        : Boolean;
+  CVDCaindo         : Boolean;
+
+  // Divergência preço x delta:
+  // superior = preço tenta subir / delta perde força
+  // inferior = preço tenta cair / delta perde força
+  FlowDivSuperior   : Boolean;
+  FlowDivInferior   : Boolean;
+
+  // =========================
+  // CLASSIFICAÇÃO
+  // =========================
+  RejeicaoSuperior  : Boolean;
+  RejeicaoInferior  : Boolean;
+  ProgressaoSuperior: Boolean;
+  ProgressaoInferior: Boolean;
+  Estado            : Integer;
+  Direcao           : Integer;
+  EstadoAnterior    : Integer;
+  ConflitoDirecional : Boolean;
+
+  // =========================
+  // FLAGS
+  // =========================
+  EventoSuperior    : Boolean;
+  EventoInferior    : Boolean;
+  FluxoConfirmado   : Boolean;
+  CandidatoReversao : Boolean;
+
+begin
+
+  // ==========================================================================
+  // 1. MÉTRICAS PRIMÁRIAS
+  // ==========================================================================
+
+  RangeCandle := High - Low;
+  Displacement := Close - Open;
+  Corpo := Abs(Displacement);
+
+  DE := 0;
+  RI := 100;
+
+  PavioSuperior := 0;
+  PavioInferior := 0;
+  PavioSuperiorPct := 0;
+  PavioInferiorPct := 0;
+  CloseLocation := 50;
+  HighFailure := 50;
+  LowFailure := 50;
+  URE := 0;
+  LRE := 0;
+
+  if RangeCandle > 0 then
+  begin
+    DE := (Corpo / RangeCandle) * 100;
+    if DE > 100 then
+      DE := 100;
+
+    RI := 100 - DE;
+
+    if Open > Close then
+      PavioSuperior := High - Open
+    else
+      PavioSuperior := High - Close;
+
+    if Open < Close then
+      PavioInferior := Open - Low
+    else
+      PavioInferior := Close - Low;
+
+    PavioSuperiorPct := (PavioSuperior / RangeCandle) * 100;
+    PavioInferiorPct := (PavioInferior / RangeCandle) * 100;
+
+    CloseLocation := ((Close - Low) / RangeCandle) * 100;
+    HighFailure := 100 - CloseLocation;
+    LowFailure := CloseLocation;
+
+    URE := PavioSuperiorPct * (HighFailure / 100);
+    LRE := PavioInferiorPct * (LowFailure / 100);
+  end;
+
+  // ==========================================================================
+  // 2. DELTAS / PROGRESSÃO
+  // ==========================================================================
+
+  DeltaURE := URE - URE[1];
+  DeltaLRE := LRE - LRE[1];
+
+  DeltaUREAnterior := URE[1] - URE[2];
+  DeltaLREAnterior := LRE[1] - LRE[2];
+
+  AccelURE := DeltaURE - DeltaUREAnterior;
+  AccelLRE := DeltaLRE - DeltaLREAnterior;
+
+  // Regressão linear manual para evitar depender de função externa.
+  // x = 0..N-1; slope = Cov(x,y) / Var(x)
+
+  SlopeURE := 0;
+  SlopeLRE := 0;
+
+  if CurrentBar() >= JanelaProgressao then
+  begin
+    SomaX := 0;
+    SomaYURE := 0;
+    SomaYLRE := 0;
+    SomaXYURE := 0;
+    SomaXYLRE := 0;
+    SomaX2 := 0;
+
+    for K := 0 to JanelaProgressao - 1 do
+    begin
+      SomaX := SomaX + K;
+      SomaYURE := SomaYURE + URE[K];
+      SomaYLRE := SomaYLRE + LRE[K];
+      SomaXYURE := SomaXYURE + (K * URE[K]);
+      SomaXYLRE := SomaXYLRE + (K * LRE[K]);
+      SomaX2 := SomaX2 + (K * K);
+    end;
+
+    MediaX := SomaX / JanelaProgressao;
+    MediaYURE := SomaYURE / JanelaProgressao;
+    MediaYLRE := SomaYLRE / JanelaProgressao;
+
+    DenSlope := SomaX2 - (JanelaProgressao * MediaX * MediaX);
+
+    if DenSlope <> 0 then
+    begin
+      SlopeURE := (SomaXYURE - (JanelaProgressao * MediaX * MediaYURE)) / DenSlope;
+      SlopeLRE := (SomaXYLRE - (JanelaProgressao * MediaX * MediaYLRE)) / DenSlope;
+    end;
+  end;
+
+  // ==========================================================================
+  // 3. PERSISTÊNCIA
+  // ==========================================================================
+
+  CountURE := 0;
+  CountLRE := 0;
+
+  if CurrentBar() >= JanelaProgressao then
+  begin
+    for K := 0 to JanelaProgressao - 1 do
+    begin
+      if URE[K] >= MinEvidence then
+        CountURE := CountURE + 1;
+
+      if LRE[K] >= MinEvidence then
+        CountLRE := CountLRE + 1;
+    end;
+  end;
+
+  PersisteSuperior := CountURE >= MinPersistence;
+  PersisteInferior := CountLRE >= MinPersistence;
+
+  // ==========================================================================
+  // 4. REJEIÇÃO DIRECIONAL
+  // ==========================================================================
+
+  RejeicaoSuperior := false;
+  RejeicaoInferior := false;
+
+  // Superior:
+  // pavio superior relevante + evidência relevante + fechamento distante da máxima.
+  if (RI >= MinRI) and
+     (PavioSuperiorPct >= MinWick) and
+     (URE >= MinEvidence) and
+     (CloseLocation <= MaxCLSuperior) then
+    RejeicaoSuperior := true;
+
+  // Inferior:
+  // pavio inferior relevante + evidência relevante + fechamento distante da mínima.
+  if (RI >= MinRI) and
+     (PavioInferiorPct >= MinWick) and
+     (LRE >= MinEvidence) and
+     (CloseLocation >= MinCLInferior) then
+    RejeicaoInferior := true;
+
+  // ==========================================================================
+  // 5. EXTREME REJECTION DIVERGENCE
+  // ==========================================================================
+
+  DeterioracaoDE := DE < DE[1];
+
+  ERD_UP := false;
+  ERD_DOWN := false;
+
+  if (High > High[1]) and
+     (URE > URE[1]) and
+     DeterioracaoDE then
+    ERD_UP := true;
+
+  if (Low < Low[1]) and
+     (LRE > LRE[1]) and
+     DeterioracaoDE then
+    ERD_DOWN := true;
+
+  // ==========================================================================
+  // 6. PROGRESSÃO
+  // ==========================================================================
+
+  ProgressaoSuperior := false;
+  ProgressaoInferior := false;
+
+  if (SlopeURE >= MinSlope) and
+     (AccelURE >= MinAcceleration) then
+    ProgressaoSuperior := true;
+
+  if (SlopeLRE >= MinSlope) and
+     (AccelLRE >= MinAcceleration) then
+    ProgressaoInferior := true;
+
+  // ==========================================================================
+  // 7. VOLUME
+  // ==========================================================================
+
+  SomaVolume := 0;
+  MediaVolume := 0;
+  VolumeRatio := 1;
+  VolumeRelevante := false;
+
+  LimiteLoop := Min(PeriodoMediaVolume, CurrentBar());
+
+  if LimiteLoop > 0 then
+  begin
+    for K := 1 to LimiteLoop do
+      SomaVolume := SomaVolume + Volume[K];
+
+    MediaVolume := SomaVolume / LimiteLoop;
+
+    if MediaVolume > 0 then
+      VolumeRatio := Volume / MediaVolume;
+  end;
+
+  if VolumeRatio >= MinVolumeRatio then
+    VolumeRelevante := true;
+
+  // ==========================================================================
+  // 8. AGRESSÃO REAL / CVD
+  // ==========================================================================
+
+  AgressaoBuy := 0;
+  AgressaoSell := 0;
+  AgressaoBalance := 0;
+  DeltaAtual := 0;
+
+  FluxoComprador := false;
+  FluxoVendedor := false;
+  CVDSubindo := false;
+  CVDCaindo := false;
+  FlowDivSuperior := false;
+  FlowDivInferior := false;
+
+  if UsarAgressaoUltra then
+  begin
+    AgressaoBuy := AgressionVolBuy();
+    AgressaoSell := AgressionVolSell();
+    AgressaoBalance := AgressionVolBalance();
+
+    DeltaAtual := AgressaoBalance - AgressaoBalance[1];
+
+    if AgressaoSell > 0 then
+      if (AgressaoBuy / AgressaoSell) >= 1.50 then
+        FluxoComprador := true;
+
+    if AgressaoBuy > 0 then
+      if (AgressaoSell / AgressaoBuy) >= 1.50 then
+        FluxoVendedor := true;
+
+    CVDSubindo := AgressaoBalance > AgressaoBalance[1];
+    CVDCaindo := AgressaoBalance < AgressaoBalance[1];
+
+    // Preço tenta renovar topo enquanto o CVD perde direção compradora.
+    if (Close > Close[1]) and
+       (DeltaAtual <= MinDeltaDivergencia) then
+      FlowDivSuperior := true;
+
+    // Preço tenta renovar fundo enquanto o CVD perde direção vendedora.
+    if (Close < Close[1]) and
+       (DeltaAtual >= -MinDeltaDivergencia) then
+      FlowDivInferior := true;
+  end;
+
+  // ==========================================================================
+  // 9. CLASSIFICAÇÃO DIRECIONAL
+  // ==========================================================================
+
+  EventoSuperior := RejeicaoSuperior or
+                    ProgressaoSuperior or
+                    ERD_UP or
+                    FlowDivSuperior;
+
+  EventoInferior := RejeicaoInferior or
+                    ProgressaoInferior or
+                    ERD_DOWN or
+                    FlowDivInferior;
+
+  ConflitoDirecional := EventoSuperior and EventoInferior;
+
+  Direcao := 0;
+
+  if not ConflitoDirecional then
+  begin
+    if EventoSuperior then
+      Direcao := 1
+    else if EventoInferior then
+      Direcao := -1;
+  end;
+
+  // ==========================================================================
+  // 10. MÁQUINA DE ESTADOS
+  // ==========================================================================
+
+  EstadoAnterior := Estado;
+  Estado := 0;
+
+  // State 1 — perda de eficiência
+  if RI >= MinRI then
+    Estado := 1;
+
+  // State 2 — evidência direcional
+  if (RejeicaoSuperior or RejeicaoInferior) and not ConflitoDirecional then
+    Estado := 2;
+
+  // State 3 — rejeição ativa
+  if ((RejeicaoSuperior and (DeltaURE > 0)) or
+      (RejeicaoInferior and (DeltaLRE > 0))) and
+     not ConflitoDirecional then
+    Estado := 3;
+
+  // State 4 — progressão
+  if ((RejeicaoSuperior and ProgressaoSuperior) or
+      (RejeicaoInferior and ProgressaoInferior)) and
+     not ConflitoDirecional then
+    Estado := 4;
+
+  // State 5 — persistência
+  if ((RejeicaoSuperior and PersisteSuperior) or
+      (RejeicaoInferior and PersisteInferior)) and
+     not ConflitoDirecional then
+    Estado := 5;
+
+  // State 6 — fluxo confirma a rejeição
+  FluxoConfirmado := false;
+
+  if UsarAgressaoUltra then
+  begin
+    if RejeicaoSuperior and (FluxoVendedor or CVDCaindo or FlowDivSuperior) then
+      FluxoConfirmado := true;
+
+    if RejeicaoInferior and (FluxoComprador or CVDSubindo or FlowDivInferior) then
+      FluxoConfirmado := true;
+  end;
+
+  if FluxoConfirmado and not ConflitoDirecional then
+    Estado := 6;
+
+  // State 7 — candidato a reversão:
+  // exige extremo novo + deterioração + rejeição + confirmação de fluxo
+  // e persistência/progressão. Continua sendo diagnóstico, não entrada.
+  CandidatoReversao := false;
+
+  if not ConflitoDirecional then
+  begin
+    if RejeicaoSuperior and
+       ERD_UP and
+       FluxoConfirmado and
+       (ProgressaoSuperior or PersisteSuperior) then
+      CandidatoReversao := true;
+
+    if RejeicaoInferior and
+       ERD_DOWN and
+       FluxoConfirmado and
+       (ProgressaoInferior or PersisteInferior) then
+      CandidatoReversao := true;
+  end;
+
+  if CandidatoReversao then
+    Estado := 7;
+
+  // ==========================================================================
+  // 11. SAÍDA VISUAL
+  // ==========================================================================
+
+  if MostrarPlots then
+  begin
+    Plot1(DE);
+    SetPlotColor(1, clWhite);
+    SetPlotWidth(1, 2);
+
+    Plot2(RI);
+    SetPlotColor(2, clYellow);
+    SetPlotWidth(2, 2);
+
+    Plot3(URE);
+    SetPlotColor(3, RGB(240, 105, 15));
+    SetPlotWidth(3, 2);
+
+    Plot4(LRE);
+    SetPlotColor(4, RGB(13, 201, 179));
+    SetPlotWidth(4, 2);
+
+    Plot5(Estado);
+    SetPlotColor(5, clAqua);
+    SetPlotWidth(5, 2);
+
+    Plot6(VolumeRatio);
+    SetPlotColor(6, clOrange);
+    SetPlotWidth(6, 2);
+
+    if UsarAgressaoUltra then
+    begin
+      Plot7(DeltaAtual);
+      if DeltaAtual > 0 then
+        SetPlotColor(7, RGB(11, 218, 94))
+      else if DeltaAtual < 0 then
+        SetPlotColor(7, RGB(218, 11, 11))
+      else
+        SetPlotColor(7, clGray);
+      SetPlotWidth(7, 2);
+    end;
+
+    Plot8(PavioSuperiorPct);
+    SetPlotColor(8, RGB(240, 140, 40));
+    SetPlotWidth(8, 1);
+
+    Plot9(PavioInferiorPct);
+    SetPlotColor(9, RGB(13, 201, 179));
+    SetPlotWidth(9, 1);
+
+    Plot10(CloseLocation);
+    SetPlotColor(10, clSilver);
+    SetPlotWidth(10, 1);
+  end;
+
+  // ==========================================================================
+  // 12. TEXTO SOMENTE NA MUDANÇA DE ESTADO
+  // ==========================================================================
+
+  if MostrarTextosEstado then
+  begin
+    if Estado <> Estado[1] then
+    begin
+      if Estado = 1 then
+        PlotText("REJ STATE 1 | EFICIENCIA " + FloatToString(DE, 1) +
+                 "% | RI " + FloatToString(RI, 1) +
+                 "%", clYellow, 3, 8, High);
+
+      if Estado = 2 then
+        PlotText("REJ STATE 2 | REJEICAO EM DESENVOLVIMENTO", clYellow, 3, 8, High);
+
+      if Estado = 3 then
+        PlotText("REJ STATE 3 | REJEICAO ATIVA", clOrange, 3, 8, High);
+
+      if Estado = 4 then
+        PlotText("REJ STATE 4 | PROGRESSAO", clOrange, 3, 9, High);
+
+      if Estado = 5 then
+        PlotText("REJ STATE 5 | PERSISTENCIA", clFuchsia, 3, 9, High);
+
+      if Estado = 6 then
+        PlotText("REJ STATE 6 | FLUXO CONFIRMADO", clAqua, 3, 9, High);
+
+      if Estado = 7 then
+      begin
+        if Direcao = 1 then
+          PlotText("REJ STATE 7 | CANDIDATO REVERSAO SUPERIOR | ERD UP",
+                   RGB(240, 105, 15), 3, 10, High)
+        else if Direcao = -1 then
+          PlotText("REJ STATE 7 | CANDIDATO REVERSAO INFERIOR | ERD DOWN",
+                   RGB(13, 201, 179), 3, 10, Low)
+        else
+          PlotText("REJ STATE 7 | CANDIDATO REVERSAO | CONFLITO",
+                   clWhite, 3, 10, High);
+      end;
+    end;
+  end;
+
+  // ==========================================================================
+  // 13. ALERTA OPCIONAL — APENAS STATE 7
+  // ==========================================================================
+
+  if MostrarAlertas then
+    if (Estado = 7) and (Estado[1] <> 7) then
+      Alert(clYellow);
+
+end;

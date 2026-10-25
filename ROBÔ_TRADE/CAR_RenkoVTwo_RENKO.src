@@ -1,0 +1,78 @@
+﻿// Método inspirado no Método 9.1 do Larry Williams.
+// Versão 01. // RENKO 35R.
+input
+  offset(20);
+
+ 
+var
+  mm,vlrStopC,vlrStopV     : real; //real;
+  sinalC,sinalV            : booleano;
+    
+  vEtrategia               : float;
+  
+  //3 VWAPS / TRIWAP:
+  vVWAPd                   : real;
+  vVWAPs                   : real;
+  vVWAPm                   : real;
+  vTRIWAP                  : real; 
+  
+begin
+  // PASSO 1 | CARREGAR INDICADORES
+  mm := MediaExp(9,close);
+ 
+  //vEtrategia  := vAvgPrice;
+  vEtrategia  := vVWAPd;
+  
+  //VWAPS
+  vVWAPd := VWAP(1);
+  vVWAPs := VWAP(2);
+  vVWAPm := VWAP(3);
+  vTRIWAP := (vVWAPd + vVWAPs + vVWAPm) / 3; 
+
+  //-----------PADRÃO----------
+  //EXECUÇÃO DE ENTRADA //PASSO 2 | SINAIS DE ENTRADA
+  //sinalC :=(mm[2] > mm[1]) e (mm[1] < mm[0]);
+  //sinalV :=(mm[2] < mm[1]) e (mm[1] > mm[0]);
+  sinalC := (vEtrategia[2] > vEtrategia[1]) e (vEtrategia[1] < vEtrategia[0]);
+  sinalV := (vEtrategia[2] < vEtrategia[1]) e (vEtrategia[1] > vEtrategia[0]);
+  
+  //EXECUCAO DE ENTRADA
+  //se (not HasPosition) e sinalC entao
+    //BuyStop((maxima[0] + MinPriceIncrement),(maxima[0] + MinPriceIncrement) + (offSet * MinPriceIncrement));
+  //se (not HasPosition) e sinalV entao
+    //SellShortStop((minima[0] - MinPriceIncrement),(minima[0] - MinPriceIncrement) - (offSet * MinPriceIncrement));
+
+  se (not HasPosition) e sinalC entao
+    BuyStop((vEtrategia[0] + MinPriceIncrement),(vEtrategia[0] + MinPriceIncrement) + (offSet * MinPriceIncrement));
+  se (not HasPosition) e sinalV entao
+    SellShortStop((vEtrategia[0] - MinPriceIncrement),(vEtrategia[0] - MinPriceIncrement) - (offSet * MinPriceIncrement));
+  
+  //EXECUÇÃO DE SAÍDA //PASSO 3 | SINAIS DE SAÍDA //EXECUCAO DA SAIDA
+  //vlrStopC := minima[0];
+  //vlrStopV := maxima[0];
+  
+  //EM TESTE 1
+  vlrStopC := (vEtrategia[0]); //PADRÃO: [0] 
+  vlrStopV := (vEtrategia[0]); //PADRÃO: [0]
+
+  se IsBought entao SellToCoverStop(vlrStopC,vlrStopC - (offSet * MinPriceIncrement));
+  se IsSold entao BuyToCoverStop(vlrStopV,vlrStopv + (offSet * MinPriceIncrement));
+  
+  //EXECUCAO DE SAIDA EM GAP
+  se IsBought e (close < vlrStopC) entao closeposition;
+  se IsSold e (close > vlrStopV) entao closeposition;
+  
+  //COLORAÇÃO
+  SetPlotColor(1,clAzul);
+  
+  //ESPESSURA
+  SetPlotWidth(1,2);
+  
+  //ESTILO DA LINHA
+  SetPlotStyle(1,0);
+  
+  //PLOTAGEM
+    //Plot(vAvgPrice);
+    Plot2(vTRIWAP);
+
+end;

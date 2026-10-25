@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRICKMASTER V14_versao6_GROK — Manual</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap');
+  :root { --bg:#0a0c10; --bg2:#0f1218; --border:#1e2530; --text:#c8d0dc; --text2:#7a8799; --accent:#00d4ff; --green:#00e676; --red:#ff1744; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; font-size:15px; line-height:1.7; }
+  .header { background:linear-gradient(135deg,#0a0c10,#0f1a2e); border-bottom:1px solid var(--border); padding:48px 40px; }
+  .header h1 { font-size:28px; font-weight:700; color:#fff; }
+  .header h1 span { color:var(--accent); }
+  .header-sub { font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--text2); margin-top:10px; }
+  .container { max-width:920px; margin:0 auto; padding:40px 32px; }
+  h2 { font-size:20px; color:#fff; margin:40px 0 16px; padding-bottom:8px; border-bottom:1px solid var(--border); }
+  p,li { color:var(--text); margin-bottom:10px; }
+  ul { padding-left:22px; margin-bottom:16px; }
+  code { font-family:'JetBrains Mono',monospace; background:#151a22; padding:2px 6px; border-radius:4px; font-size:13px; }
+  .box { background:var(--bg2); border:1px solid var(--border); border-radius:8px; padding:18px 20px; margin:18px 0; }
+  .box.ok { border-left:4px solid var(--green); }
+  .box.danger { border-left:4px solid var(--red); }
+  table { width:100%; border-collapse:collapse; margin:16px 0; font-size:14px; }
+  th,td { padding:10px 12px; text-align:left; border-bottom:1px solid var(--border); }
+  th { color:var(--text2); font-size:12px; text-transform:uppercase; }
+  footer { text-align:center; padding:40px; color:var(--text2); font-size:12px; border-top:1px solid var(--border); margin-top:50px; font-family:'JetBrains Mono',monospace; }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="container">
+    <h1>BRICKMASTER <span>V14_versao6_GROK</span></h1>
+    <div class="header-sub">Módulos 00–06 (Volume Anômalo + Força) • 13/09/2026</div>
+  </div>
+</div>
+<div class="container">
+
+  <div class="box danger">
+    <strong>REGRA OBRIGATÓRIA</strong><br>
+    1. Coloração de candles (PaintBar com hierarquia) — ativa<br>
+    2. Sistema com fonte (PlotText/Alert) — obrigatório<br>
+    Princípio: todo evento relevante deve ser validado, pesado no Score, sinalizado no candle de origem e plotado.
+  </div>
+
+  <h2>1. O que esta versão adiciona</h2>
+  <div class="box ok">
+    <strong>Módulo 06 — Volume Anômalo + Força do Volume</strong><br>
+    Detecta anomalias de volume e calcula uma escala única de intensidade (0–100).
+  </div>
+
+  <h2>2. Força do Volume (0–100)</h2>
+  <ul>
+    <li><code>ForcaCandle</code> — volume do candle atual vs média recente (peso padrão 40%)</li>
+    <li><code>ForcaDia</code> — volume do candle vs média do dia até agora (peso padrão 60%)</li>
+    <li><code>ForcaVolume</code> — combinação ponderada final (0 a 100)</li>
+  </ul>
+
+  <h2>3. Volume Anômalo</h2>
+  <ul>
+    <li>Ativo quando: <code>Volume >= MediaVolumeCandle * FatorAnomaliaVolume</code></li>
+    <li>Padrão do fator: <strong>1.8</strong> (80% acima da média)</li>
+    <li>Quando ativo, multiplica os pesos do Score por <code>ReforcoScoreEmAlerta</code> (padrão 1.5)</li>
+  </ul>
+
+  <h2>4. Janelas horárias (referência)</h2>
+  <p>O sistema identifica a janela atual (1 a 8) com base no horário, para uso futuro em médias históricas por janela.</p>
+
+  <h2>5. Inputs novos</h2>
+  <table>
+    <thead><tr><th>Input</th><th>Padrão</th><th>Função</th></tr></thead>
+    <tbody>
+      <tr><td><code>FatorAnomaliaVolume</code></td><td>1.8</td><td>Multiplicador para considerar volume anômalo</td></tr>
+      <tr><td><code>PeriodoMediaVolume</code></td><td>20</td><td>Barras para média de volume do candle</td></tr>
+      <tr><td><code>PesoForcaCandle</code></td><td>40</td><td>% da Força vinda do candle</td></tr>
+      <tr><td><code>PesoForcaDia</code></td><td>60</td><td>% da Força vinda do dia</td></tr>
+      <tr><td><code>ReforcoScoreEmAlerta</code></td><td>1.5</td><td>Multiplicador de Score quando anomalia ativa</td></tr>
+    </tbody>
+  </table>
+
+  <h2>6. Plots novos</h2>
+  <ul>
+    <li><code>Plot15</code> → ForcaVolume (0–100) — azul</li>
+    <li><code>Plot16</code> → Marcador de Volume Anômalo (100 quando ativo, 0 quando não)</li>
+  </ul>
+
+  <h2>7. Arquivos desta versão</h2>
+  <ul>
+    <li><code>BRICKMASTER_V14_versao6_GROK.src</code></li>
+    <li><code>BRICKMASTER_V14_versao6_GROK_Manual.html</code></li>
+    <li><code>BRICKMASTER_V14_versao6_Roadmap_Modulos.html</code></li>
+  </ul>
+
+</div>
+<footer>
+  BRICKMASTER V14_versao6_GROK • Base + Eventos + PaintBar + Score + Abertura + Recusa + Volume<br>
+  Regra obrigatória: Coloração de candles + Sistema com fonte<br>
+  Recriado por Grok (xAI) • Baseado no sistema de Carlos Andrade
+</footer>
+</body>
+</html>
