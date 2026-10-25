@@ -79,7 +79,7 @@ PROPOSTA PARA REVISÃO; o estado documental não representa aprovação operacio
 
 ## Validação
 
-Atualização redacional do histórico com base em metadados e logs consultados. SHA-256 canónico e commit de referência precisam ser atualizados após a gravação final.
+SHA-256 canónico do inventário, deste histórico e do checkpoint foi recalculado e confirmado, usando UTF-8/LF e excluindo somente as linhas `sha256_canonico` e `commit_referencia`. Os commits de referência apontam para os commits que contêm as versões de conteúdo usadas no cálculo. Outros documentos do corpus ainda requerem auditoria.
 
 ## Resultado
 
@@ -87,4 +87,4 @@ O histórico conserva tanto a recuperação integrada quanto a falha do gate que
 
 ## Próxima Ação
 
-Concluir a migração controlada dos 114 documentos legados ou aprovar exceções explícitas; manter a aprovação documental separada da validação de produção.
+Concluir a migração controlada dos 114 documentos legados ou aprovar exceções explícitas; auditar os restantes hashes; manter a aprovação documental separada da validação de produção.
