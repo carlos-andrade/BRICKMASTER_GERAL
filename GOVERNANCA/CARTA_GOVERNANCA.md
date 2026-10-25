@@ -1,3 +1,24 @@
+---
+projeto: "BRICKMASTER RAIZ"
+repositorio: "carlos-andrade/BRICKMASTER_GERAL"
+tipo_documento: "CARTA_GOVERNANCA"
+fase: "FASE 00 — GOVERNANÇA"
+id_documento: "BM-GOV-CHARTER-001"
+titulo: "Carta de Governança BRICKMASTER RAIZ"
+status: "PROPOSTA_PARA_REVISAO"
+versao: "1.0.1"
+data_criacao: "2026-10-11"
+data_atualizacao: "2026-10-25"
+origem: "PR #3; conteúdo anterior preservado e normalizado para a branch atual"
+autoridade_documental: "GOVERNANCA e responsável pelo projeto"
+cadeia_autoridade: "PROMPT -> CARTA -> LAYOUT UNICO -> CODIGO"
+rastreabilidade: "PR #3; branch feature/pr3-governanca-mainline-reconciliation"
+escopo: "Carta de Governança BRICKMASTER RAIZ"
+objetivo: "Centralizar governança documentada sem declarar aprovação ou testes não executados"
+dependencias: "GOVERNANCA/NORMA-CABECALHO-PADRAO.md; main base 3db0c88f27fec4c6ea2418749de09ebba8130fe7"
+sha256_canonico: "a67692bd0a5b87bb581b5572f242dbba6eb7596acb2528c871a77e07344009a8"
+commit_referencia: "3db0c88f27fec4c6ea2418749de09ebba8130fe7"
+---
 # Carta de Governança — BRICKMASTER RAIZ
 
 - Versão: 1.0.0
@@ -69,3 +90,33 @@ Distinguir dado observado, dado derivado, hipótese e sinal. Não fabricar preç
 ## 9. Estado desta carta
 
 Esta carta permanece PROPOSTA PARA REVISÃO até aprovação explícita. A existência do documento no repositório não prova sua aprovação.
+
+
+## Contexto Histórico
+
+Documento histórico de governança preservado e reconciliado a partir da proposta PR #3.
+
+
+## Estado
+
+PROPOSTA PARA REVISÃO; não representa aprovação ou produção.
+
+
+## Evidências
+
+- PR #3 e histórico Git do repositório BRICKMASTER_GERAL.
+
+
+## Validação
+
+Apenas revisão documental; não foram executados testes de trading, compilação NTSL ou validação no Profit por esta alteração.
+
+
+## Resultado
+
+Conteúdo preservado para revisão; estado não promovido.
+
+
+## Próxima Ação
+
+Verificar referências, conteúdo e critérios de aceitação antes de aprovação.
