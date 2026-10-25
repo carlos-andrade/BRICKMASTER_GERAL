@@ -16,8 +16,8 @@ rastreabilidade: "PR #41; PR #42; workflow 40191746933; branch fix/governanca-va
 escopo: "Validação estrutural de cabeçalhos Markdown e integridade documental"
 objetivo: "Registar falhas históricas, correção do validador e limites do resultado observado"
 dependencias: "GitHub Actions; scripts/validar_cabecalhos_markdown.sh; INVENTARIO_DOCUMENTAL.md; HISTORICO.md"
-sha256_canonico: "PENDENTE_DE_RECALCULO"
-commit_referencia: "PENDENTE_APOS_COMMIT"
+sha256_canonico: "5542818f19c7189d009c41a40427bbfc392476456aaa7e2c0f7c6fd3ed1c1d00"
+commit_referencia: "62026c8b7436eb36ca71c50dbe3f8e4e15da7102"
 ---
 
 # Checkpoint pós-merge — recuperação da governança
