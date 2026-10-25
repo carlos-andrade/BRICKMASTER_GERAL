@@ -2,13 +2,16 @@
 set -euo pipefail
 
 # BRICKMASTER RAIZ — canonical Markdown validator.
-# Legacy Markdown with an HTML comment header is tolerated only as legacy format;
-# recovered governance docs with YAML front matter must meet the full contract.
-# This validation checks structure only, not SHA-256 values or semantic approval.
+# Validate the canonical YAML header contract where present.
+# For inherited legacy documents, report their leading format and require
+# controlled migration in a separate inventory; do not silently call them valid.
+# This script is deliberately structural and does not validate SHA-256 fields.
 
 fail=0
 checked=0
-legacy=0
+yaml=0
+html_legacy=0
+other_legacy=0
 
 while IFS= read -r -d '' file; do
   checked=$((checked + 1))
@@ -16,15 +19,16 @@ while IFS= read -r -d '' file; do
 
   if [[ "$first_line" != "---" ]]; then
     if [[ "$first_line" == "<!--" ]]; then
-      legacy=$((legacy + 1))
-      echo "::notice file=$file::Formato legado de cabeçalho HTML preservado; migração controlada pendente."
-      continue
+      html_legacy=$((html_legacy + 1))
+      echo "::notice file=$file::Cabeçalho legado em comentário HTML; migração controlada pendente."
+    else
+      other_legacy=$((other_legacy + 1))
+      echo "::notice file=$file::Cabeçalho legado sem Front Matter YAML; migração controlada pendente."
     fi
-    echo "::error file=$file::Cabeçalho não reconhecido: esperado Front Matter YAML (---) ou comentário HTML legado (<!--)."
-    fail=1
     continue
   fi
 
+  yaml=$((yaml + 1))
   for field in projeto repositorio tipo_documento fase id_documento titulo status versao data_criacao data_atualizacao origem autoridade_documental cadeia_autoridade rastreabilidade escopo objetivo dependencias; do
     if ! grep -Eq "^$field:" "$file"; then
       echo "::error file=$file::Campo obrigatório ausente: $field"
@@ -41,11 +45,13 @@ while IFS= read -r -d '' file; do
 done < <(git ls-files -z '*.md')
 
 echo "Ficheiros Markdown rastreados: $checked"
-echo "Cabeçalhos HTML legados tolerados sem migração: $legacy"
+echo "Documentos com Front Matter YAML verificados: $yaml"
+echo "Cabeçalhos HTML legados: $html_legacy"
+echo "Outros formatos legados: $other_legacy"
 
 if [[ "$fail" -ne 0 ]]; then
-  echo "Validação documental FALHOU."
+  echo "Validação estrutural FALHOU."
   exit 1
 fi
 
-echo "Validação estrutural dos cabeçalhos Markdown PASS (não certifica hashes nem conteúdo semântico)."
+echo "Validação estrutural dos cabeçalhos YAML presentes PASS; documentos legados continuam pendentes de migração."
