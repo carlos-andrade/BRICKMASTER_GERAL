@@ -6,13 +6,13 @@ fase: "GOVERNANCA"
 id_documento: "BM-GOV-HIST-001"
 titulo: "Histórico da Governança"
 status: "PROPOSTA_PARA_REVISAO"
-versao: "1.0.3"
+versao: "1.0.4"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-25"
 origem: "Recuperação documental do PR #3 fechado sem merge"
 autoridade_documental: "GOVERNANCA"
 cadeia_autoridade: "PROMPT → CARTA → LAYOUT ÚNICO → CÓDIGO"
-rastreabilidade: "PR #41; PR #42; workflow 40191746933; branch fix/governanca-validator-include-frontmatter"
+rastreabilidade: "PR #41; PR #42; workflow 40192045467; branch fix/governanca-validator-include-frontmatter"
 escopo: "Histórico de propostas e eventos de governança"
 objetivo: "Preservar decisões, falhas, recuperações e supersessões"
 dependencias: "GOVERNANCA/README.md; INVENTARIO_DOCUMENTAL.md; checkpoints relacionados"
@@ -50,11 +50,18 @@ Este registo preserva a trilha histórica. Correções e supersessões são acre
 
 ## 2026-10-25 — Correção estrutural parcial verificada na PR #42
 
-- O workflow `40191746933` concluiu com sucesso no commit testado `1d3737423f48cd33d7fbf2c56c431916772c0b88`.
+- O workflow `40191746933` concluiu com sucesso; o registo de execução devolveu o commit de job `40b11f7ef7bd755403d3689b7fc5c736e80c6bed`.
 - O log reportou 169 Markdown rastreados, 55 documentos com Front Matter YAML verificados, 32 cabeçalhos HTML legados e 82 outros formatos legados.
 - O PASS aplica-se somente à validação estrutural dos documentos YAML. Os 114 documentos sem YAML permanecem classificados como legados pendentes, não como conformes.
 - A PR #42 continua aberta; esta entrada não afirma merge, aprovação semântica, integridade de SHA-256, compilação NTSL/Profit, backtest ou produção.
 - Evidência: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40191746933
+
+## 2026-10-25 — Integridade SHA-256 e CI pós-metadados
+
+- Foram gravados e recalculados os hashes canónicos para o inventário, este histórico e o checkpoint; o cálculo exclui somente as linhas `sha256_canonico` e `commit_referencia`, após normalização UTF-8/LF.
+- O workflow `40192045467` terminou com sucesso no commit testado `325092cb45efc132ce87691897a837dda9a3492d`.
+- O log regista 169 Markdown rastreados, 55 documentos com YAML verificados, 32 cabeçalhos HTML legados e 82 outros formatos legados. A validação permanece parcial; os 114 ficheiros sem YAML continuam pendentes.
+- Evidência: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40192045467
 
 ## Contexto Histórico
 
@@ -80,4 +87,4 @@ O histórico conserva tanto a recuperação integrada quanto a falha do gate que
 
 ## Próxima Ação
 
-Auditar os SHA-256 canónicos e commits de referência; depois definir a migração controlada dos 114 documentos legados antes de qualquer promoção.
+Concluir a migração controlada dos 114 documentos legados ou aprovar exceções explícitas; manter a aprovação documental separada da validação de produção.
