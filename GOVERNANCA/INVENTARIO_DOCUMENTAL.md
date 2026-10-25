@@ -2,29 +2,30 @@
 projeto: "BRICKMASTER RAIZ"
 repositorio: "carlos-andrade/BRICKMASTER_GERAL"
 tipo_documento: "INVENTARIO_DOCUMENTAL"
-fase: "FASE 00 — GOVERNANÇA"
-id_documento: "BM-GOV-INVENTORY-001"
+fase: "GOVERNANCA"
+id_documento: "BM-GOV-INVENTARIO-001"
 titulo: "Inventário Documental e Plano de Migração"
 status: "PROPOSTA_PARA_REVISAO"
 versao: "1.0.1"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-25"
-origem: "PR #3; conteúdo anterior preservado e normalizado"
-autoridade_documental: "GOVERNANCA e responsável pelo projeto"
-cadeia_autoridade: "PROMPT -> CARTA -> LAYOUT UNICO -> CODIGO"
-rastreabilidade: "PR #3; branch feature/pr3-governanca-mainline-reconciliation"
-escopo: "Inventário Documental e Plano de Migração"
-objetivo: "Documentar governança sem declarar aprovação ou testes não executados"
-dependencias: "GOVERNANCA/NORMA-CABECALHO-PADRAO.md; main base 3db0c88f27fec4c6ea2418749de09ebba8130fe7"
-sha256_canonico: "21bde9401ad564f7c627967f7a341e1812b76c3914bffc2ab15c9790c8d47171"
-commit_referencia: "3db0c88f27fec4c6ea2418749de09ebba8130fe7"
+origem: "Recuperação documental do PR #3 fechado sem merge"
+autoridade_documental: "GOVERNANCA"
+cadeia_autoridade: "PROMPT → CARTA → LAYOUT ÚNICO → CÓDIGO"
+rastreabilidade: "PR #41; branch feature/pr3-governanca-mainline-reconciliation; main-base 3db0c88f27fec4c6ea2418749de09ebba8130fe7"
+escopo: "Governança documental do BRICKMASTER RAIZ"
+objetivo: "Inventário Documental e Plano de Migração"
+dependencias: "main e documentos canónicos preexistentes; ver corpo documental"
+sha256_canonico: "a3f40030e9ae10cd2274b9693b0d8f2ab46ec8a04dec3c552c0f6159bf8d8ff7"
+commit_referencia: "PENDENTE_APOS_COMMIT"
 ---
+
 # Inventário Documental e Plano de Migração
 
 - Estado: INVENTÁRIO INICIAL EXECUTADO; classificação semântica final ainda requer revisão.
-- Data: 2026-10-11
-- Base examinada: árvore Git recursiva da branch `feature/governanca-fundacao`, derivada de `main`.
-- Método: caminhos e metadados Git; conteúdo integral não foi revisto para todos os 212 arquivos.
+- Data: 2026-10-25
+- Base examinada: main em `3db0c88f27fec4c6ea2418749de09ebba8130fe7` e proposta histórica do PR #3.
+- Método: comparação das árvores Git e identificação de caminhos; não representa leitura semântica integral de todos os documentos do repositório.
 
 ## Critério de classificação
 
@@ -33,77 +34,65 @@ commit_referencia: "3db0c88f27fec4c6ea2418749de09ebba8130fe7"
 3. Módulo: especificações e testes próprios; permanecem junto ao módulo.
 4. Evidência/referência: permanece na localização funcional original, com referência na governança quando necessário.
 
-## Migrações nesta alteração
+## Documentos recuperados pelo PR #41
 
-| ID | Origem | Destino | Motivo | Estado |
-|---|---|---|---|---|
-| MIG-0001 | `GOVERNANÇA/CARTA_GOVERNANCA.md` | `GOVERNANCA/CARTA_GOVERNANCA.md` | Padronizar o destino para a pasta canónica já existente em main | PROPOSTO NA BRANCH |
-| MIG-0002 | `GOVERNANÇA/CHECKPOINTS_E_EVIDENCIAS.md` | `GOVERNANCA/CHECKPOINTS_E_EVIDENCIAS.md` | Centralizar regras de evidência | PROPOSTO NA BRANCH |
-| MIG-0003 | `GOVERNANÇA/CICLO_DE_DESENVOLVIMENTO.md` | `GOVERNANCA/CICLO_DE_DESENVOLVIMENTO.md` | Centralizar ciclo de desenvolvimento | PROPOSTO NA BRANCH |
-| MIG-0004 | `GOVERNANÇA/HISTORICO.md` | `GOVERNANCA/HISTORICO.md` | Centralizar histórico da governança | PROPOSTO NA BRANCH |
-| MIG-0005 | `GOVERNANÇA/INVENTARIO_DOCUMENTAL.md` | `GOVERNANCA/INVENTARIO_DOCUMENTAL.md` | Centralizar inventário | PROPOSTO NA BRANCH |
-| MIG-0006 | `GOVERNANÇA/MODELO_CHECKPOINT.md` | `GOVERNANCA/MODELO_CHECKPOINT.md` | Centralizar modelo de checkpoint | PROPOSTO NA BRANCH |
-| MIG-0007 | `GOVERNANÇA/MODELO_DECISAO.md` | `GOVERNANCA/MODELO_DECISAO.md` | Centralizar modelo de decisão | PROPOSTO NA BRANCH |
-| MIG-0008 | `GOVERNANÇA/PADRAO_DE_MODULOS_E_CONTRATOS.md` | `GOVERNANCA/PADRAO_DE_MODULOS_E_CONTRATOS.md` | Centralizar contratos transversais | PROPOSTO NA BRANCH |
-| MIG-0009 | `GOVERNANÇA/README.md` | `GOVERNANCA/README.md` | Índice central no caminho solicitado | PROPOSTO NA BRANCH |
-| MIG-0010 | `GOVERNANÇA/REGISTRO_DE_DECISOES.md` | `GOVERNANCA/REGISTRO_DE_DECISOES.md` | Centralizar decisões | PROPOSTO NA BRANCH |
-| MIG-0011 | `GOVERNANÇA/RISCO_E_SEGURANCA.md` | `GOVERNANCA/RISCO_E_SEGURANCA.md` | Centralizar política de risco | PROPOSTO NA BRANCH |
-| MIG-0012 | `ARQUITETURA/BRICKMASTER_RAIZ/REGISTRO_MODULOS_E_CHECKPOINTS.md` | — | Documento já existente em main; preservar a origem e referenciar sem duplicar | NÃO MOVER; ORIGEM PRESERVADA |
+| ID | Caminho | Estado |
+|---|---|---|
+| REC-0001 | `GOVERNANCA/CARTA_GOVERNANCA.md` | PROPOSTO |
+| REC-0002 | `GOVERNANCA/CHECKPOINTS_E_EVIDENCIAS.md` | PROPOSTO |
+| REC-0003 | `GOVERNANCA/CICLO_DE_DESENVOLVIMENTO.md` | PROPOSTO |
+| REC-0004 | `GOVERNANCA/HISTORICO.md` | PROPOSTO |
+| REC-0005 | `GOVERNANCA/INVENTARIO_DOCUMENTAL.md` | PROPOSTO |
+| REC-0006 | `GOVERNANCA/MODELO_CHECKPOINT.md` | PROPOSTO |
+| REC-0007 | `GOVERNANCA/MODELO_DECISAO.md` | PROPOSTO |
+| REC-0008 | `GOVERNANCA/PADRAO_DE_MODULOS_E_CONTRATOS.md` | PROPOSTO |
+| REC-0009 | `GOVERNANCA/README.md` | PROPOSTO |
+| REC-0010 | `GOVERNANCA/REGISTRO_DE_DECISOES.md` | PROPOSTO |
+| REC-0011 | `GOVERNANCA/RISCO_E_SEGURANCA.md` | PROPOSTO |
+| REC-0012 | `GOVERNANCA/ROADMAP_MESTRE.md` | PROPOSTO |
 
-O arquivo `GOVERNANCA/NORMA-CABECALHO-PADRAO.md` já existia no destino e é preservado.
+## Documentos preexistentes preservados
 
-## Documentos que permanecem fora da pasta
+- `GOVERNANCA/NORMA-CABECALHO-PADRAO.md`.
+- `GOVERNANCA/REGISTRO_MODULOS_E_CHECKPOINTS.md`, mantido no caminho e conteúdo de `main`.
+- Inventários, auditorias e planos específicos já presentes em `main`.
+- `README.md` principal já presente em `main`.
 
-- `ARQUITETURA/BRICKMASTER_RAIZ/ARQUITETURA_MODULAR_BASELINE_2026-10-11.md`: documento de arquitetura técnica; referenciado pela governança, mas não movido automaticamente.
-- Especificações, changelogs, evidências e testes específicos de módulos: permanecem junto aos respetivos módulos.
-- `.github/workflows/validar-cabecalhos-documentais.yml`: automação executável, não documento de política; permanece em `.github/workflows/`.
+## Verificações e limitações
 
-## Verificações
-
-- Árvore recursiva consultada: 212 arquivos no commit da base consultada.
-- Caminhos identificados por nome: norma de cabeçalho e registo de módulos/checkpoints, além dos documentos criados nesta iniciativa.
-- A classificação semântica de todos os arquivos não está concluída, porque nem todos os conteúdos foram lidos integralmente.
-- Não foram executados testes de código ou validações automáticas nesta etapa.
-- A migração só será efetiva em `main` após revisão e merge do PR.
+- `main` consultado em `3db0c88f27fec4c6ea2418749de09ebba8130fe7`.
+- A proposta histórica do PR #3 estava 19 commits à frente e 300 commits atrás de `main`, portanto não foi fundida diretamente.
+- Foram identificados 12 documentos recuperados e 2 documentos de governança preexistentes explicitamente preservados.
+- A classificação semântica integral de todos os documentos não está concluída.
+- O validador de estrutura deve ser executado após normalização de metadados; esse validador não comprova conteúdo, hash ou validade técnica.
+- Não foram executados testes NTSL, compilação Profit, backtest ou validação operacional.
 
 ## Próximo passo
 
-Rever os documentos de governança e verificar referências cruzadas e links após a migração de caminhos. Não declarar a migração concluída em `main` antes do merge.
-
+Validar a estrutura documental, conferir os SHA-256 canónicos dos artefactos finalizados, rever as referências cruzadas e só depois considerar integração.
 
 ## Contexto Histórico
 
-Conteúdo histórico preservado da proposta do PR #3; esta revisão normaliza rastreabilidade sem declarar aprovação.
-
+Documento recuperado da proposta histórica PR #3, fechada sem merge, e reconciliado numa branch derivada do main corrente.
 
 ## Estado
 
-PROPOSTA PARA REVISÃO; a presença do documento não constitui aprovação nem produção.
-
+PROPOSTA PARA REVISÃO. Não equivale a aprovação da governança, implementação operacional ou produção.
 
 ## Evidências
 
-- PR #3 e histórico Git do BRICKMASTER_GERAL.
-
+- PR #3 fechado sem merge: https://github.com/carlos-andrade/BRICKMASTER_GERAL/pull/3
+- PR de recuperação: https://github.com/carlos-andrade/BRICKMASTER_GERAL/pull/41
+- Main-base: 3db0c88f27fec4c6ea2418749de09ebba8130fe7
 
 ## Validação
 
-Revisão documental; não comprova compilação NTSL, testes no Profit, backtest ou validação operacional.
-
+Estrutura documental sujeita ao workflow do repositório. O SHA-256 canónico será calculado sobre o corpo normalizado UTF-8/LF, excluindo apenas este bloco de metadados; o commit de referência será atualizado após a gravação final. Não foram executados testes NTSL, Profit, backtest nem validação operacional.
 
 ## Resultado
 
-Documento proposto, sujeito a revisão e critérios de aceitação.
-
+Conteúdo preservado e adaptado para revisão sobre o main corrente, sem substituir os artefactos de governança preexistentes.
 
 ## Próxima Ação
 
-Rever referências e executar o validador documental antes da promoção.
-
-
-## Reconciliação com main — 2026-10-25
-
-- A branch original do PR #3 estava 19 commits à frente e 300 atrás de main, por isso a proposta foi reconstruída na branch atual derivada de main.
-- O documento `ARQUITETURA/BRICKMASTER_RAIZ/REGISTRO_MODULOS_E_CHECKPOINTS.md` permanece na origem e é referenciado pelo índice de governança; não foi copiado para criar uma segunda fonte de verdade.
-- `GOVERNANCA/NORMA-CABECALHO-PADRAO.md` já existe em main e foi preservado.
-- Esta reconciliação não declara classificação semântica integral dos 373 arquivos da árvore main, nem validação operacional.
+Executar a validação documental, auditar o SHA-256 final, conferir links e referências cruzadas e rever o PR antes de qualquer integração.

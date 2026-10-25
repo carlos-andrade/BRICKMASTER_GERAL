@@ -1,24 +1,25 @@
 ---
 projeto: "BRICKMASTER RAIZ"
 repositorio: "carlos-andrade/BRICKMASTER_GERAL"
-tipo_documento: "HISTORICO"
-fase: "FASE 00 — GOVERNANÇA"
-id_documento: "BM-GOV-HISTORY-001"
+tipo_documento: "HISTORICO_GOVERNANCA"
+fase: "GOVERNANCA"
+id_documento: "BM-GOV-HIST-001"
 titulo: "Histórico da Governança"
 status: "PROPOSTA_PARA_REVISAO"
 versao: "1.0.1"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-25"
-origem: "PR #3; conteúdo anterior preservado e normalizado"
-autoridade_documental: "GOVERNANCA e responsável pelo projeto"
-cadeia_autoridade: "PROMPT -> CARTA -> LAYOUT UNICO -> CODIGO"
-rastreabilidade: "PR #3; branch feature/pr3-governanca-mainline-reconciliation"
-escopo: "Histórico da Governança"
-objetivo: "Documentar governança sem declarar aprovação ou testes não executados"
-dependencias: "GOVERNANCA/NORMA-CABECALHO-PADRAO.md; main base 3db0c88f27fec4c6ea2418749de09ebba8130fe7"
-sha256_canonico: "d81b92ac8d090348ff78df662e2d5ef0076ea64c2073996c4861d9f880e19997"
-commit_referencia: "3db0c88f27fec4c6ea2418749de09ebba8130fe7"
+origem: "Recuperação documental do PR #3 fechado sem merge"
+autoridade_documental: "GOVERNANCA"
+cadeia_autoridade: "PROMPT → CARTA → LAYOUT ÚNICO → CÓDIGO"
+rastreabilidade: "PR #41; branch feature/pr3-governanca-mainline-reconciliation; main-base 3db0c88f27fec4c6ea2418749de09ebba8130fe7"
+escopo: "Governança documental do BRICKMASTER RAIZ"
+objetivo: "Histórico da Governança"
+dependencias: "main e documentos canónicos preexistentes; ver corpo documental"
+sha256_canonico: "053c7ad70496ca559a846508b804c5c67d84fa16ad422221ac4d6cdc910a8f1c"
+commit_referencia: "PENDENTE_APOS_COMMIT"
 ---
+
 # Histórico da Governança
 
 Este registo preserva a trilha histórica. Correções e supersessões são acrescentadas como novas entradas; não apagar falhas ou decisões anteriores.
@@ -31,41 +32,36 @@ Este registo preserva a trilha histórica. Correções e supersessões são acre
 - Evidência: commit de fundação `b9f54d0b479e0a727e6dec409152b129cd55a36e`; PR #3 aberto em modo draft.
 - Limitação inicial: a árvore completa não tinha sido obtida naquela etapa; a afirmação foi revista após consulta posterior à API Git.
 
-## 2026-10-11 — Inventário e normalização do destino
+## 2026-10-25 — Recuperação controlada da proposta fechada
 
-- Consultada a árvore recursiva Git da branch, com 212 arquivos.
-- Confirmado que o repositório já possui a pasta `GOVERNANCA/` e o documento `NORMA-CABECALHO-PADRAO.md`.
-- Preparada a transferência dos 11 documentos da pasta provisória `GOVERNANÇA/` para `GOVERNANCA/`.
-- Identificado `ARQUITETURA/BRICKMASTER_RAIZ/REGISTRO_MODULOS_E_CHECKPOINTS.md` como documento transversal de governança, proposto para transferência.
-- Estado desta alteração: proposta em branch; ainda não representa alteração efetiva em `main`.
-- Verificações: inventário de caminhos executado; leitura integral/classificação de todos os 212 arquivos e testes automáticos não executados.
-
+- O PR #3 foi encerrado sem merge; os seus commits não foram integrados.
+- A branch antiga divergiu do `main` corrente e não foi fundida diretamente.
+- Foi aberta uma proposta de recuperação numa branch nova derivada do `main` corrente.
+- A recuperação preserva a norma de cabeçalho e os registos de governança preexistentes.
+- O PR de recuperação deve passar pelo validador documental e pela revisão dos hashes antes de merge.
 
 ## Contexto Histórico
 
-Conteúdo histórico preservado da proposta do PR #3; esta revisão normaliza rastreabilidade sem declarar aprovação.
-
+Documento recuperado da proposta histórica PR #3, fechada sem merge, e reconciliado numa branch derivada do main corrente.
 
 ## Estado
 
-PROPOSTA PARA REVISÃO; a presença do documento não constitui aprovação nem produção.
-
+PROPOSTA PARA REVISÃO. Não equivale a aprovação da governança, implementação operacional ou produção.
 
 ## Evidências
 
-- PR #3 e histórico Git do BRICKMASTER_GERAL.
-
+- PR #3 fechado sem merge: https://github.com/carlos-andrade/BRICKMASTER_GERAL/pull/3
+- PR de recuperação: https://github.com/carlos-andrade/BRICKMASTER_GERAL/pull/41
+- Main-base: 3db0c88f27fec4c6ea2418749de09ebba8130fe7
 
 ## Validação
 
-Revisão documental; não comprova compilação NTSL, testes no Profit, backtest ou validação operacional.
-
+Estrutura documental sujeita ao workflow do repositório. O SHA-256 canónico será calculado sobre o corpo normalizado UTF-8/LF, excluindo apenas este bloco de metadados; o commit de referência será atualizado após a gravação final. Não foram executados testes NTSL, Profit, backtest nem validação operacional.
 
 ## Resultado
 
-Documento proposto, sujeito a revisão e critérios de aceitação.
-
+Conteúdo preservado e adaptado para revisão sobre o main corrente, sem substituir os artefactos de governança preexistentes.
 
 ## Próxima Ação
 
-Rever referências e executar o validador documental antes da promoção.
+Executar a validação documental, auditar o SHA-256 final, conferir links e referências cruzadas e rever o PR antes de qualquer integração.

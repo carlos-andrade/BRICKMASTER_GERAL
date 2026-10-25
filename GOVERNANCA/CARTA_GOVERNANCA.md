@@ -2,28 +2,29 @@
 projeto: "BRICKMASTER RAIZ"
 repositorio: "carlos-andrade/BRICKMASTER_GERAL"
 tipo_documento: "CARTA_GOVERNANCA"
-fase: "FASE 00 — GOVERNANÇA"
-id_documento: "BM-GOV-CHARTER-001"
-titulo: "Carta de Governança BRICKMASTER RAIZ"
+fase: "GOVERNANCA"
+id_documento: "BM-GOV-CARTA-001"
+titulo: "Carta de Governança — BRICKMASTER RAIZ"
 status: "PROPOSTA_PARA_REVISAO"
 versao: "1.0.1"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-25"
-origem: "PR #3; conteúdo anterior preservado e normalizado"
-autoridade_documental: "GOVERNANCA e responsável pelo projeto"
-cadeia_autoridade: "PROMPT -> CARTA -> LAYOUT UNICO -> CODIGO"
-rastreabilidade: "PR #3; branch feature/pr3-governanca-mainline-reconciliation"
-escopo: "Carta de Governança BRICKMASTER RAIZ"
-objetivo: "Documentar governança sem declarar aprovação ou testes não executados"
-dependencias: "GOVERNANCA/NORMA-CABECALHO-PADRAO.md; main base 3db0c88f27fec4c6ea2418749de09ebba8130fe7"
-sha256_canonico: "6b800e74aa38b06126f96b49f3977b0d23d685ac7a223b031c31a84fab45fb39"
-commit_referencia: "3db0c88f27fec4c6ea2418749de09ebba8130fe7"
+origem: "Recuperação documental do PR #3 fechado sem merge"
+autoridade_documental: "GOVERNANCA"
+cadeia_autoridade: "PROMPT → CARTA → LAYOUT ÚNICO → CÓDIGO"
+rastreabilidade: "PR #41; branch feature/pr3-governanca-mainline-reconciliation; main-base 3db0c88f27fec4c6ea2418749de09ebba8130fe7"
+escopo: "Governança documental do BRICKMASTER RAIZ"
+objetivo: "Carta de Governança — BRICKMASTER RAIZ"
+dependencias: "main e documentos canónicos preexistentes; ver corpo documental"
+sha256_canonico: "8c86ef5dcf973c0bdbae444f18cb710df0b99ac55a377bad9e5dd38f29abf263"
+commit_referencia: "PENDENTE_APOS_COMMIT"
 ---
+
 # Carta de Governança — BRICKMASTER RAIZ
 
-- Versão: 1.0.0
+- Versão: 1.0.1
 - Estado: PROPOSTA PARA REVISÃO
-- Data: 2026-10-11
+- Data: 2026-10-25
 - Escopo: BRICKMASTER_GERAL e módulos integrados
 - Autoridade de aprovação: responsável pelo projeto
 
@@ -69,7 +70,7 @@ Papéis podem ser acumulados por uma pessoa, mas as responsabilidades continuam 
 - Giroscópio: consolida contexto, localização no gráfico, confiança, divergências e motivos de bloqueio.
 - Interface: apresenta instrumento, sessão, tipo de gráfico, estrutura, níveis, qualidade dos dados e estado operacional.
 
-Gráficos baseados em ticks, incluindo 60K ticks, são cenários essenciais de arquitetura e validação.
+O gráfico de referência BRICKMASTER usa 60K trades. A linha branca representa sempre o preço de abertura do mercado. Não confundir gráficos de 60K trades com gráficos de Renko nem assumir duração temporal fixa por barra.
 
 ## 5. Confiança e falha segura
 
@@ -77,7 +78,7 @@ A confiança considera atualidade e integridade dos dados, coerência entre font
 
 ## 6. Desenvolvimento
 
-Fluxo normal: feature/* → develop → validação → principal. Promoção exige critérios de aceitação, testes reproduzíveis, evidências, aprovação explícita e rollback. Correções emergenciais exigem justificativa e revisão posterior.
+Fluxo normal: feature/* → develop → validação → main. Promoção exige critérios de aceitação, testes reproduzíveis, evidências, aprovação explícita e rollback. Correções emergenciais exigem justificativa e revisão posterior.
 
 ## 7. Critérios mínimos de produção
 
@@ -91,32 +92,28 @@ Distinguir dado observado, dado derivado, hipótese e sinal. Não fabricar preç
 
 Esta carta permanece PROPOSTA PARA REVISÃO até aprovação explícita. A existência do documento no repositório não prova sua aprovação.
 
-
 ## Contexto Histórico
 
-Documento histórico de governança preservado e reconciliado a partir da proposta PR #3.
-
+Documento recuperado da proposta histórica PR #3, fechada sem merge, e reconciliado numa branch derivada do main corrente.
 
 ## Estado
 
-PROPOSTA PARA REVISÃO; não representa aprovação ou produção.
-
+PROPOSTA PARA REVISÃO. Não equivale a aprovação da governança, implementação operacional ou produção.
 
 ## Evidências
 
-- PR #3 e histórico Git do repositório BRICKMASTER_GERAL.
-
+- PR #3 fechado sem merge: https://github.com/carlos-andrade/BRICKMASTER_GERAL/pull/3
+- PR de recuperação: https://github.com/carlos-andrade/BRICKMASTER_GERAL/pull/41
+- Main-base: 3db0c88f27fec4c6ea2418749de09ebba8130fe7
 
 ## Validação
 
-Apenas revisão documental; não foram executados testes de trading, compilação NTSL ou validação no Profit por esta alteração.
-
+Estrutura documental sujeita ao workflow do repositório. O SHA-256 canónico será calculado sobre o corpo normalizado UTF-8/LF, excluindo apenas este bloco de metadados; o commit de referência será atualizado após a gravação final. Não foram executados testes NTSL, Profit, backtest nem validação operacional.
 
 ## Resultado
 
-Conteúdo preservado para revisão; estado não promovido.
-
+Conteúdo preservado e adaptado para revisão sobre o main corrente, sem substituir os artefactos de governança preexistentes.
 
 ## Próxima Ação
 
-Verificar referências, conteúdo e critérios de aceitação antes de aprovação.
+Executar a validação documental, auditar o SHA-256 final, conferir links e referências cruzadas e rever o PR antes de qualquer integração.

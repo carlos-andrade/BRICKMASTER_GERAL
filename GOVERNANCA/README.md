@@ -2,28 +2,29 @@
 projeto: "BRICKMASTER RAIZ"
 repositorio: "carlos-andrade/BRICKMASTER_GERAL"
 tipo_documento: "README_GOVERNANCA"
-fase: "FASE 00 — GOVERNANÇA"
+fase: "GOVERNANCA"
 id_documento: "BM-GOV-README-001"
-titulo: "Índice da Governança BRICKMASTER RAIZ"
+titulo: "BRICKMASTER RAIZ — Governança"
 status: "PROPOSTA_PARA_REVISAO"
 versao: "1.0.1"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-25"
-origem: "PR #3; conteúdo anterior preservado e normalizado"
-autoridade_documental: "GOVERNANCA e responsável pelo projeto"
-cadeia_autoridade: "PROMPT -> CARTA -> LAYOUT UNICO -> CODIGO"
-rastreabilidade: "PR #3; branch feature/pr3-governanca-mainline-reconciliation"
-escopo: "Índice da Governança BRICKMASTER RAIZ"
-objetivo: "Documentar governança sem declarar aprovação ou testes não executados"
-dependencias: "GOVERNANCA/NORMA-CABECALHO-PADRAO.md; main base 3db0c88f27fec4c6ea2418749de09ebba8130fe7"
-sha256_canonico: "ebb01523602a171c04a4fd1ff98bb50d89ae9abc3fa60b622646842eed92d6c9"
-commit_referencia: "3db0c88f27fec4c6ea2418749de09ebba8130fe7"
+origem: "Recuperação documental do PR #3 fechado sem merge"
+autoridade_documental: "GOVERNANCA"
+cadeia_autoridade: "PROMPT → CARTA → LAYOUT ÚNICO → CÓDIGO"
+rastreabilidade: "PR #41; branch feature/pr3-governanca-mainline-reconciliation; main-base 3db0c88f27fec4c6ea2418749de09ebba8130fe7"
+escopo: "Governança documental do BRICKMASTER RAIZ"
+objetivo: "BRICKMASTER RAIZ — Governança"
+dependencias: "main e documentos canónicos preexistentes; ver corpo documental"
+sha256_canonico: "7de9912abed3cb05900b34a12c5722203b54614d6036fff8a9631a306494a699"
+commit_referencia: "PENDENTE_APOS_COMMIT"
 ---
+
 # BRICKMASTER RAIZ — Governança
 
 - Estado: estrutura documental em revisão; a existência dos documentos não significa aprovação.
 - Repositório: https://github.com/carlos-andrade/BRICKMASTER_GERAL
-- Pasta canónica: `GOVERNANCA/` (sem acento, conforme caminho publicado em `main`).
+- Pasta canónica: `GOVERNANCA/`.
 - Integridade: preservar históricos; não declarar testes, aprovações ou validações sem evidências verificáveis.
 
 ## Finalidade
@@ -32,25 +33,25 @@ Esta pasta centraliza os documentos de governança do BRICKMASTER RAIZ: autorida
 
 ## Mapa documental
 
-- [CARTA_GOVERNANCA.md](CARTA_GOVERNANCA.md) — princípios, autoridade e limites.
-- [CICLO_DE_DESENVOLVIMENTO.md](CICLO_DE_DESENVOLVIMENTO.md) — fluxo feature → develop → validação → principal.
-- [PADRAO_DE_MODULOS_E_CONTRATOS.md](PADRAO_DE_MODULOS_E_CONTRATOS.md) — contratos, dependências, estados e testes.
-- [RISCO_E_SEGURANCA.md](RISCO_E_SEGURANCA.md) — risco soberano, dados inválidos e bloqueios.
-- [CHECKPOINTS_E_EVIDENCIAS.md](CHECKPOINTS_E_EVIDENCIAS.md) — checkpoints reproduzíveis e trilha de evidências.
-- [REGISTRO_DE_DECISOES.md](REGISTRO_DE_DECISOES.md) — decisões arquiteturais.
-- [REGISTRO_MODULOS_E_CHECKPOINTS.md](../ARQUITETURA/BRICKMASTER_RAIZ/REGISTRO_MODULOS_E_CHECKPOINTS.md) — registo mestre de módulos e checkpoints.
-- [NORMA-CABECALHO-PADRAO.md](NORMA-CABECALHO-PADRAO.md) — padrão documental já existente no repositório.
-- [INVENTARIO_DOCUMENTAL.md](INVENTARIO_DOCUMENTAL.md) — inventário e migração de documentos.
-- [MODELO_CHECKPOINT.md](MODELO_CHECKPOINT.md) — modelo reutilizável de checkpoint.
-- [MODELO_DECISAO.md](MODELO_DECISAO.md) — modelo reutilizável de decisão.
-- [HISTORICO.md](HISTORICO.md) — histórico de alterações.
-- [ROADMAP_MESTRE.md](ROADMAP_MESTRE.md) — fases, dependências e gates do projeto.
+- [Carta de Governança](CARTA_GOVERNANCA.md) — princípios, autoridade e limites.
+- [Ciclo de Desenvolvimento](CICLO_DE_DESENVOLVIMENTO.md) — fluxo feature → develop → validação → main.
+- [Padrão de Módulos](PADRAO_DE_MODULOS_E_CONTRATOS.md) — contratos, dependências, estados e testes.
+- [Risco e Segurança](RISCO_E_SEGURANCA.md) — risco soberano, dados inválidos e bloqueios.
+- [Checkpoints e Evidências](CHECKPOINTS_E_EVIDENCIAS.md) — checkpoints reproduzíveis e trilha de evidências.
+- [Registo de Decisões](REGISTRO_DE_DECISOES.md) — decisões arquiteturais.
+- [Registo Mestre](REGISTRO_MODULOS_E_CHECKPOINTS.md) — registo de módulos já mantido em main.
+- [Norma de Cabeçalho](NORMA-CABECALHO-PADRAO.md) — norma documental preexistente.
+- [Inventário Documental](INVENTARIO_DOCUMENTAL.md) — estado do inventário e recuperação PR #3.
+- [Modelo de Checkpoint](MODELO_CHECKPOINT.md) — modelo reutilizável.
+- [Modelo de Decisão](MODELO_DECISAO.md) — modelo reutilizável.
+- [Histórico](HISTORICO.md) — histórico de alterações.
+- [Roadmap Mestre](ROADMAP_MESTRE.md) — fases e critérios de promoção.
 
 ## Estados controlados
 
 - **EXPERIMENTAL:** hipótese, protótipo ou implementação sem evidência suficiente.
 - **VALIDADO:** passou pelos testes documentados e reproduzíveis dentro de escopo definido.
-- **PRODUÇÃO:** aprovado para uso operacional, com monitoramento, recuperação e rollback.
+- **PRODUÇÃO:** aprovado para uso operacional, com monitorização, recuperação e rollback.
 - **BLOQUEADO:** dependência, qualidade dos dados, divergência ou risco impede avanço seguro.
 - **DEPRECADO:** substituído formalmente; preservar referência histórica e motivo.
 
@@ -73,27 +74,28 @@ Não apagar documentos para limpar a estrutura. Toda migração deve registar ca
 
 A meta de 1% desde a abertura do dia é hipótese de pesquisa, não promessa de rentabilidade. A governança de risco prevalece sobre metas de resultado. Nenhuma ordem de mercado deve ser enviada por padrão.
 
-
 ## Contexto Histórico
 
-Conteúdo histórico preservado da proposta do PR #3; esta revisão normaliza rastreabilidade sem declarar aprovação.
+Documento recuperado da proposta histórica PR #3, fechada sem merge, e reconciliado numa branch derivada do main corrente.
 
+## Estado
+
+PROPOSTA PARA REVISÃO. Não equivale a aprovação da governança, implementação operacional ou produção.
 
 ## Evidências
 
-- PR #3 e histórico Git do BRICKMASTER_GERAL.
-
+- PR #3 fechado sem merge: https://github.com/carlos-andrade/BRICKMASTER_GERAL/pull/3
+- PR de recuperação: https://github.com/carlos-andrade/BRICKMASTER_GERAL/pull/41
+- Main-base: 3db0c88f27fec4c6ea2418749de09ebba8130fe7
 
 ## Validação
 
-Revisão documental; não comprova compilação NTSL, testes no Profit, backtest ou validação operacional.
-
+Estrutura documental sujeita ao workflow do repositório. O SHA-256 canónico será calculado sobre o corpo normalizado UTF-8/LF, excluindo apenas este bloco de metadados; o commit de referência será atualizado após a gravação final. Não foram executados testes NTSL, Profit, backtest nem validação operacional.
 
 ## Resultado
 
-Documento proposto, sujeito a revisão e critérios de aceitação.
-
+Conteúdo preservado e adaptado para revisão sobre o main corrente, sem substituir os artefactos de governança preexistentes.
 
 ## Próxima Ação
 
-Rever referências e executar o validador documental antes da promoção.
+Executar a validação documental, auditar o SHA-256 final, conferir links e referências cruzadas e rever o PR antes de qualquer integração.
