@@ -6,20 +6,19 @@ fase: "GOVERNANCA"
 id_documento: "BM-GOV-HIST-001"
 titulo: "Histórico da Governança"
 status: "PROPOSTA_PARA_REVISAO"
-versao: "1.0.1"
+versao: "1.0.2"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-25"
 origem: "Recuperação documental do PR #3 fechado sem merge"
 autoridade_documental: "GOVERNANCA"
 cadeia_autoridade: "PROMPT → CARTA → LAYOUT ÚNICO → CÓDIGO"
-rastreabilidade: "PR #41; branch feature/pr3-governanca-mainline-reconciliation; main-base 3db0c88f27fec4c6ea2418749de09ebba8130fe7"
-escopo: "Governança documental do BRICKMASTER RAIZ"
-objetivo: "Histórico da Governança"
-dependencias: "main e documentos canónicos preexistentes; ver corpo documental"
-sha256_canonico: "053c7ad70496ca559a846508b804c5c67d84fa16ad422221ac4d6cdc910a8f1c"
+rastreabilidade: "PR #41; correção pós-merge na branch fix/governanca-validator-include-frontmatter"
+escopo: "Histórico de propostas e eventos de governança"
+objetivo: "Preservar decisões, falhas, recuperações e supersessões"
+dependencias: "GOVERNANCA/README.md; INVENTARIO_DOCUMENTAL.md; checkpoints relacionados"
+sha256_canonico: "PENDENTE_DE_RECALCULO"
 commit_referencia: "PENDENTE_APOS_COMMIT"
 ---
-
 # Histórico da Governança
 
 Este registo preserva a trilha histórica. Correções e supersessões são acrescentadas como novas entradas; não apagar falhas ou decisões anteriores.
@@ -34,34 +33,43 @@ Este registo preserva a trilha histórica. Correções e supersessões são acre
 
 ## 2026-10-25 — Recuperação controlada da proposta fechada
 
-- O PR #3 foi encerrado sem merge; os seus commits não foram integrados.
-- A branch antiga divergiu do `main` corrente e não foi fundida diretamente.
+- O PR #3 foi encerrado sem merge; os seus commits não foram integrados diretamente.
+- A branch antiga divergiu do `main` corrente: a comparação consultada indicou 19 commits à frente e 337 atrás.
 - Foi aberta uma proposta de recuperação numa branch nova derivada do `main` corrente.
-- A recuperação preserva a norma de cabeçalho e os registos de governança preexistentes.
-- O PR de recuperação deve passar pelo validador documental e pela revisão dos hashes antes de merge.
+- A recuperação preservou a norma de cabeçalho e o registo de módulos preexistentes.
+- O PR #41 foi integrado no commit `6118e0b131e445723ab27018371af9ebb01cddaa`.
+
+## 2026-10-25 — Supersessão: gate de validação pós-merge falhado
+
+- A versão anterior deste histórico dizia que o PR de recuperação devia passar pelo validador e pela revisão dos hashes antes do merge. Essa condição não foi satisfeita: o workflow da PR #41 terminou em FAIL.
+- Evidência: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40190767144
+- O log do job `validar-markdown` reporta múltiplas falhas `Falta Front Matter YAML no início.`.
+- A causa observada é a incompatibilidade entre a regra universal do validador e Markdown legado cujo primeiro elemento é comentário HTML. A correção deverá ser executada em branch e validada antes de novo merge.
+- O merge da PR #41 não é prova de aprovação semântica de governança, integridade independente de hashes, validação NTSL/Profit, backtest ou produção.
+- A integração com gate vermelho é preservada no histórico; não reescrever o resultado para PASS.
 
 ## Contexto Histórico
 
-Documento recuperado da proposta histórica PR #3, fechada sem merge, e reconciliado numa branch derivada do main corrente.
+Histórico recuperado da proposta original do PR #3 e atualizado para registar eventos posteriores sem apagar os registos anteriores.
 
 ## Estado
 
-PROPOSTA PARA REVISÃO. Não equivale a aprovação da governança, implementação operacional ou produção.
+PROPOSTA PARA REVISÃO; o estado documental não representa aprovação operacional.
 
 ## Evidências
 
-- PR #3 fechado sem merge: https://github.com/carlos-andrade/BRICKMASTER_GERAL/pull/3
-- PR de recuperação: https://github.com/carlos-andrade/BRICKMASTER_GERAL/pull/41
-- Main-base: 3db0c88f27fec4c6ea2418749de09ebba8130fe7
+- PR #3: https://github.com/carlos-andrade/BRICKMASTER_GERAL/pull/3
+- PR #41: https://github.com/carlos-andrade/BRICKMASTER_GERAL/pull/41
+- Workflow falhado: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40190767144
 
 ## Validação
 
-Estrutura documental sujeita ao workflow do repositório. O SHA-256 canónico será calculado sobre o corpo normalizado UTF-8/LF, excluindo apenas este bloco de metadados; o commit de referência será atualizado após a gravação final. Não foram executados testes NTSL, Profit, backtest nem validação operacional.
+Atualização redacional do histórico com base em metadados e logs consultados. SHA-256 canónico e commit de referência precisam ser atualizados após a gravação final.
 
 ## Resultado
 
-Conteúdo preservado e adaptado para revisão sobre o main corrente, sem substituir os artefactos de governança preexistentes.
+O histórico conserva tanto a recuperação integrada quanto a falha do gate que não impediu o merge.
 
 ## Próxima Ação
 
-Executar a validação documental, auditar o SHA-256 final, conferir links e referências cruzadas e rever o PR antes de qualquer integração.
+Executar o validador corrigido, obter log reproduzível e completar a auditoria de hashes antes de promover qualquer outra alteração.
