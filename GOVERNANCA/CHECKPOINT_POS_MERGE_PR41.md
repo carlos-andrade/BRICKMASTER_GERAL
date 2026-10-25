@@ -12,7 +12,7 @@ data_atualizacao: "2026-10-25"
 origem: "PR #41 integrada; gate documental corrigido parcialmente na PR #42"
 autoridade_documental: "GOVERNANCA"
 cadeia_autoridade: "PROMPT → CARTA → LAYOUT ÚNICO → CÓDIGO"
-rastreabilidade: "PR #41; PR #42; workflow 40191746933; branch fix/governanca-validator-include-frontmatter"
+rastreabilidade: "PR #41; PR #42; workflow 40192045467; branch fix/governanca-validator-include-frontmatter"
 escopo: "Validação estrutural de cabeçalhos Markdown e integridade documental"
 objetivo: "Registar falhas históricas, correção do validador e limites do resultado observado"
 dependencias: "GitHub Actions; scripts/validar_cabecalhos_markdown.sh; INVENTARIO_DOCUMENTAL.md; HISTORICO.md"
@@ -24,7 +24,7 @@ commit_referencia: "62026c8b7436eb36ca71c50dbe3f8e4e15da7102"
 
 ## Sumário
 
-O PR #41 foi integrado em `main` pelo merge commit `6118e0b131e445723ab27018371af9ebb01cddaa`. O workflow de cabeçalhos da PR #41 falhou. A primeira iteração corretiva da PR #42 também falhou. Após nova alteração do validador e atualização deste checkpoint, o workflow `40191746933` concluiu com sucesso no commit testado `1d3737423f48cd33d7fbf2c56c431916772c0b88`.
+O PR #41 foi integrado em `main` pelo merge commit `6118e0b131e445723ab27018371af9ebb01cddaa`. O workflow de cabeçalhos da PR #41 falhou. A primeira iteração corretiva da PR #42 também falhou. Após nova alteração do validador e atualização deste checkpoint, o workflow `40192045467` concluiu com sucesso no commit testado `325092cb45efc132ce87691897a837dda9a3492d`, já com os metadados SHA-256 registados.
 
 O resultado é **PASS estrutural parcial**: valida a estrutura dos 55 documentos com Front Matter YAML, não os 114 documentos legados sem YAML nem os seus conteúdos semânticos ou hashes.
 
@@ -35,8 +35,8 @@ O resultado é **PASS estrutural parcial**: valida a estrutura dos 55 documentos
 - Workflow falhado da PR #41: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40190767144
 - PR #42, ainda aberta para revisão: https://github.com/carlos-andrade/BRICKMASTER_GERAL/pull/42
 - Primeira iteração falhada da PR #42: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40191285606
-- Última execução com sucesso estrutural: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40191746933
-- Job da última execução: `validar-markdown`, ID `121164002299`.
+- Última execução com sucesso estrutural: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40192045467
+- Job da última execução: `validar-markdown`, ID `121164904928`.
 
 ## Resultado medido
 
@@ -104,7 +104,7 @@ VALIDAÇÃO ESTRUTURAL PARCIAL. Os documentos YAML verificados passaram no workf
 - Workflow falhado da primeira iteração da PR #42: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40191285606
 - Workflow mais recente: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40191704776
 - Merge commit da PR #41: `6118e0b131e445723ab27018371af9ebb01cddaa`
-- Commit verificado na última execução: `1d3737423f48cd33d7fbf2c56c431916772c0b88`
+- Commit verificado na última execução: `325092cb45efc132ce87691897a837dda9a3492d`
 
 ## Validação
 
