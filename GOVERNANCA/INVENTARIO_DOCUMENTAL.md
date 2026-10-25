@@ -6,26 +6,25 @@ fase: "GOVERNANCA"
 id_documento: "BM-GOV-INVENTARIO-001"
 titulo: "Inventário Documental e Plano de Migração"
 status: "PROPOSTA_PARA_REVISAO"
-versao: "1.0.1"
+versao: "1.0.4"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-25"
 origem: "Recuperação documental do PR #3 fechado sem merge"
 autoridade_documental: "GOVERNANCA"
 cadeia_autoridade: "PROMPT → CARTA → LAYOUT ÚNICO → CÓDIGO"
-rastreabilidade: "PR #41; branch feature/pr3-governanca-mainline-reconciliation; main-base 3db0c88f27fec4c6ea2418749de09ebba8130fe7"
+rastreabilidade: "PR #41; PR #42; workflow 40192045467; branch fix/governanca-validator-include-frontmatter"
 escopo: "Governança documental do BRICKMASTER RAIZ"
 objetivo: "Inventário Documental e Plano de Migração"
 dependencias: "main e documentos canónicos preexistentes; ver corpo documental"
-sha256_canonico: "a3f40030e9ae10cd2274b9693b0d8f2ab46ec8a04dec3c552c0f6159bf8d8ff7"
-commit_referencia: "PENDENTE_APOS_COMMIT"
+sha256_canonico: "2fec6db5b03f3ba86ec57fe12c1e2a10c6944ee086496ff9fda0d6ee9fdbf9bd"
+commit_referencia: "2b15deb08a1ea90603de3861e82c3bbae2629378"
 ---
-
 # Inventário Documental e Plano de Migração
 
-- Estado: INVENTÁRIO INICIAL EXECUTADO; classificação semântica final ainda requer revisão.
-- Data: 2026-10-25
-- Base examinada: main em `3db0c88f27fec4c6ea2418749de09ebba8130fe7` e proposta histórica do PR #3.
-- Método: comparação das árvores Git e identificação de caminhos; não representa leitura semântica integral de todos os documentos do repositório.
+- Estado: INVENTÁRIO ESTRUTURAL INICIAL; classificação semântica final ainda requer revisão.
+- Data de atualização: 2026-10-25
+- Base de recuperação: `main` em `3db0c88f27fec4c6ea2418749de09ebba8130fe7`, integrada pelo merge commit `6118e0b131e445723ab27018371af9ebb01cddaa`.
+- Método: comparação das árvores Git e identificação de caminhos. Não representa leitura semântica integral de todos os documentos do repositório.
 
 ## Critério de classificação
 
@@ -54,45 +53,53 @@ commit_referencia: "PENDENTE_APOS_COMMIT"
 ## Documentos preexistentes preservados
 
 - `GOVERNANCA/NORMA-CABECALHO-PADRAO.md`.
-- `GOVERNANCA/REGISTRO_MODULOS_E_CHECKPOINTS.md`, mantido no caminho e conteúdo de `main`.
+- `GOVERNANCA/REGISTRO_MODULOS_E_CHECKPOINTS.md`, mantido no caminho e conteúdo existente em `main`.
 - Inventários, auditorias e planos específicos já presentes em `main`.
 - `README.md` principal já presente em `main`.
 
 ## Verificações e limitações
 
-- `main` consultado em `3db0c88f27fec4c6ea2418749de09ebba8130fe7`.
-- A proposta histórica do PR #3 estava 19 commits à frente e 300 commits atrás de `main`, portanto não foi fundida diretamente.
-- Foram identificados 12 documentos recuperados e 2 documentos de governança preexistentes explicitamente preservados.
-- A classificação semântica integral de todos os documentos não está concluída.
-- O validador de estrutura deve ser executado após normalização de metadados; esse validador não comprova conteúdo, hash ou validade técnica.
-- Não foram executados testes NTSL, compilação Profit, backtest ou validação operacional.
+- A PR #3 foi fechada sem merge.
+- A comparação Git consultada em 2026-10-25 entre `main` e `feature/governanca-fundacao` retornou: estado `diverged`, `ahead_by=19`, `behind_by=337`, `total_commits=19`. A branch histórica não foi integrada diretamente.
+- A PR #41 recuperou os documentos numa linha derivada do `main` corrente e foi integrada no commit `6118e0b131e445723ab27018371af9ebb01cddaa`.
+- O workflow de cabeçalhos da PR #41 falhou em 2026-10-25: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40190767144. O log apontou múltiplos Markdown sem Front Matter YAML no início. O validador exige YAML universalmente, embora parte do corpus legado comece com comentário HTML.
+- A correção estrutural da PR #42 passou no workflow `40192045467` em 2026-10-25, no commit testado `325092cb45efc132ce87691897a837dda9a3492d`: 169 Markdown rastreados, 55 documentos YAML verificados, 32 cabeçalhos HTML legados e 82 outros formatos legados. O PASS cobre apenas o subconjunto YAML; os 114 documentos legados continuam pendentes.
+- Foram identificados 12 documentos recuperados e pelo menos 2 documentos de governança preexistentes explicitamente preservados; isso não equivale a inventário semântico integral.
+- A regra de cabeçalho estrutural não valida o conteúdo semântico nem certifica hashes SHA-256.
+- Não foram executados testes NTSL, compilação Profit, replay, backtest ou validação operacional.
 
-## Próximo passo
+## Próximos passos
 
-Validar a estrutura documental, conferir os SHA-256 canónicos dos artefactos finalizados, rever as referências cruzadas e só depois considerar integração.
+1. Definir e executar a migração controlada dos 114 documentos legados ou aprovar exceções documentais explícitas por tipo.
+2. Validar links e referências cruzadas após cada lote.
+3. Recalcular independentemente SHA-256 canónico dos documentos adicionados/alterados, com normalização UTF-8/LF e exclusão apenas dos dois campos de integridade.
+4. Atualizar as referências de commit em commit posterior ao conteúdo final.
+5. Rever a PR #42 e integrar somente após revisão da integridade e dos limites da validação.
 
 ## Contexto Histórico
 
-Documento recuperado da proposta histórica PR #3, fechada sem merge, e reconciliado numa branch derivada do main corrente.
+A proposta original do PR #3 foi recuperada por meio do PR #41 porque a branch antiga divergiu substancialmente do `main`. O merge da recuperação não prova que os documentos ou a governança foram semanticamente aprovados.
 
 ## Estado
 
-PROPOSTA PARA REVISÃO. Não equivale a aprovação da governança, implementação operacional ou produção.
+PROPOSTA PARA REVISÃO. Inventário semântico integral, reconciliação de todos os documentos e auditoria independente de hashes permanecem pendentes.
 
 ## Evidências
 
 - PR #3 fechado sem merge: https://github.com/carlos-andrade/BRICKMASTER_GERAL/pull/3
-- PR de recuperação: https://github.com/carlos-andrade/BRICKMASTER_GERAL/pull/41
-- Main-base: 3db0c88f27fec4c6ea2418749de09ebba8130fe7
+- PR #41 integrado: https://github.com/carlos-andrade/BRICKMASTER_GERAL/pull/41
+- Workflow de cabeçalhos falhado: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40190767144
+- Merge commit: `6118e0b131e445723ab27018371af9ebb01cddaa`
+- Comparação da branch original: 19 commits à frente e 337 atrás no momento da consulta.
 
 ## Validação
 
-Estrutura documental sujeita ao workflow do repositório. O SHA-256 canónico será calculado sobre o corpo normalizado UTF-8/LF, excluindo apenas este bloco de metadados; o commit de referência será atualizado após a gravação final. Não foram executados testes NTSL, Profit, backtest nem validação operacional.
+CI estrutural parcial PASS no workflow `40192045467`. O SHA-256 canónico desta versão foi recalculado e confirmado contra o conteúdo UTF-8/LF, excluindo apenas as linhas `sha256_canonico` e `commit_referencia`. A auditoria aqui abrange este inventário, o histórico e o checkpoint, não todo o corpus documental.
 
 ## Resultado
 
-Conteúdo preservado e adaptado para revisão sobre o main corrente, sem substituir os artefactos de governança preexistentes.
+Inventário atualizado quanto à divergência da PR #3 e ao gate CI vermelho pós-merge. Sem declaração de validação técnica.
 
 ## Próxima Ação
 
-Executar a validação documental, auditar o SHA-256 final, conferir links e referências cruzadas e rever o PR antes de qualquer integração.
+Executar a migração controlada dos 114 documentos legados ou aprovar exceções explícitas; auditar os hashes dos restantes documentos e rever a PR antes de qualquer promoção.

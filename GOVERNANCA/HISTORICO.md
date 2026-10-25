@@ -6,20 +6,19 @@ fase: "GOVERNANCA"
 id_documento: "BM-GOV-HIST-001"
 titulo: "Histórico da Governança"
 status: "PROPOSTA_PARA_REVISAO"
-versao: "1.0.1"
+versao: "1.0.4"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-25"
 origem: "Recuperação documental do PR #3 fechado sem merge"
 autoridade_documental: "GOVERNANCA"
 cadeia_autoridade: "PROMPT → CARTA → LAYOUT ÚNICO → CÓDIGO"
-rastreabilidade: "PR #41; branch feature/pr3-governanca-mainline-reconciliation; main-base 3db0c88f27fec4c6ea2418749de09ebba8130fe7"
-escopo: "Governança documental do BRICKMASTER RAIZ"
-objetivo: "Histórico da Governança"
-dependencias: "main e documentos canónicos preexistentes; ver corpo documental"
-sha256_canonico: "053c7ad70496ca559a846508b804c5c67d84fa16ad422221ac4d6cdc910a8f1c"
-commit_referencia: "PENDENTE_APOS_COMMIT"
+rastreabilidade: "PR #41; PR #42; workflow 40192045467; branch fix/governanca-validator-include-frontmatter"
+escopo: "Histórico de propostas e eventos de governança"
+objetivo: "Preservar decisões, falhas, recuperações e supersessões"
+dependencias: "GOVERNANCA/README.md; INVENTARIO_DOCUMENTAL.md; checkpoints relacionados"
+sha256_canonico: "2f624ce09609d5ee5f02fd104c25495c8e7d03d663b5bc77e7ef45bc99ef1c52"
+commit_referencia: "acd9fad250400ad6c49943e16ff3ee04e6637527"
 ---
-
 # Histórico da Governança
 
 Este registo preserva a trilha histórica. Correções e supersessões são acrescentadas como novas entradas; não apagar falhas ou decisões anteriores.
@@ -34,34 +33,58 @@ Este registo preserva a trilha histórica. Correções e supersessões são acre
 
 ## 2026-10-25 — Recuperação controlada da proposta fechada
 
-- O PR #3 foi encerrado sem merge; os seus commits não foram integrados.
-- A branch antiga divergiu do `main` corrente e não foi fundida diretamente.
+- O PR #3 foi encerrado sem merge; os seus commits não foram integrados diretamente.
+- A branch antiga divergiu do `main` corrente: a comparação consultada indicou 19 commits à frente e 337 atrás.
 - Foi aberta uma proposta de recuperação numa branch nova derivada do `main` corrente.
-- A recuperação preserva a norma de cabeçalho e os registos de governança preexistentes.
-- O PR de recuperação deve passar pelo validador documental e pela revisão dos hashes antes de merge.
+- A recuperação preservou a norma de cabeçalho e o registo de módulos preexistentes.
+- O PR #41 foi integrado no commit `6118e0b131e445723ab27018371af9ebb01cddaa`.
+
+## 2026-10-25 — Supersessão: gate de validação pós-merge falhado
+
+- A versão anterior deste histórico dizia que o PR de recuperação devia passar pelo validador e pela revisão dos hashes antes do merge. Essa condição não foi satisfeita: o workflow da PR #41 terminou em FAIL.
+- Evidência: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40190767144
+- O log do job `validar-markdown` reporta múltiplas falhas `Falta Front Matter YAML no início.`.
+- A causa observada é a incompatibilidade entre a regra universal do validador e Markdown legado cujo primeiro elemento é comentário HTML. A correção deverá ser executada em branch e validada antes de novo merge.
+- O merge da PR #41 não é prova de aprovação semântica de governança, integridade independente de hashes, validação NTSL/Profit, backtest ou produção.
+- A integração com gate vermelho é preservada no histórico; não reescrever o resultado para PASS.
+
+## 2026-10-25 — Correção estrutural parcial verificada na PR #42
+
+- O workflow `40191746933` concluiu com sucesso; o registo de execução devolveu o commit de job `40b11f7ef7bd755403d3689b7fc5c736e80c6bed`.
+- O log reportou 169 Markdown rastreados, 55 documentos com Front Matter YAML verificados, 32 cabeçalhos HTML legados e 82 outros formatos legados.
+- O PASS aplica-se somente à validação estrutural dos documentos YAML. Os 114 documentos sem YAML permanecem classificados como legados pendentes, não como conformes.
+- A PR #42 continua aberta; esta entrada não afirma merge, aprovação semântica, integridade de SHA-256, compilação NTSL/Profit, backtest ou produção.
+- Evidência: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40191746933
+
+## 2026-10-25 — Integridade SHA-256 e CI pós-metadados
+
+- Foram gravados e recalculados os hashes canónicos para o inventário, este histórico e o checkpoint; o cálculo exclui somente as linhas `sha256_canonico` e `commit_referencia`, após normalização UTF-8/LF.
+- O workflow `40192045467` terminou com sucesso no commit testado `325092cb45efc132ce87691897a837dda9a3492d`.
+- O log regista 169 Markdown rastreados, 55 documentos com YAML verificados, 32 cabeçalhos HTML legados e 82 outros formatos legados. A validação permanece parcial; os 114 ficheiros sem YAML continuam pendentes.
+- Evidência: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40192045467
 
 ## Contexto Histórico
 
-Documento recuperado da proposta histórica PR #3, fechada sem merge, e reconciliado numa branch derivada do main corrente.
+Histórico recuperado da proposta original do PR #3 e atualizado para registar eventos posteriores sem apagar os registos anteriores.
 
 ## Estado
 
-PROPOSTA PARA REVISÃO. Não equivale a aprovação da governança, implementação operacional ou produção.
+PROPOSTA PARA REVISÃO; o estado documental não representa aprovação operacional.
 
 ## Evidências
 
-- PR #3 fechado sem merge: https://github.com/carlos-andrade/BRICKMASTER_GERAL/pull/3
-- PR de recuperação: https://github.com/carlos-andrade/BRICKMASTER_GERAL/pull/41
-- Main-base: 3db0c88f27fec4c6ea2418749de09ebba8130fe7
+- PR #3: https://github.com/carlos-andrade/BRICKMASTER_GERAL/pull/3
+- PR #41: https://github.com/carlos-andrade/BRICKMASTER_GERAL/pull/41
+- Workflow falhado: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40190767144
 
 ## Validação
 
-Estrutura documental sujeita ao workflow do repositório. O SHA-256 canónico será calculado sobre o corpo normalizado UTF-8/LF, excluindo apenas este bloco de metadados; o commit de referência será atualizado após a gravação final. Não foram executados testes NTSL, Profit, backtest nem validação operacional.
+SHA-256 canónico do inventário, deste histórico e do checkpoint foi recalculado e confirmado, usando UTF-8/LF e excluindo somente as linhas `sha256_canonico` e `commit_referencia`. Os commits de referência apontam para os commits que contêm as versões de conteúdo usadas no cálculo. Outros documentos do corpus ainda requerem auditoria.
 
 ## Resultado
 
-Conteúdo preservado e adaptado para revisão sobre o main corrente, sem substituir os artefactos de governança preexistentes.
+O histórico conserva tanto a recuperação integrada quanto a falha do gate que não impediu o merge.
 
 ## Próxima Ação
 
-Executar a validação documental, auditar o SHA-256 final, conferir links e referências cruzadas e rever o PR antes de qualquer integração.
+Concluir a migração controlada dos 114 documentos legados ou aprovar exceções explícitas; auditar os restantes hashes; manter a aprovação documental separada da validação de produção.
