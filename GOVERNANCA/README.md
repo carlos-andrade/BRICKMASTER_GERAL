@@ -16,7 +16,7 @@ rastreabilidade: "PR #3; branch feature/pr3-governanca-mainline-reconciliation"
 escopo: "Índice da Governança BRICKMASTER RAIZ"
 objetivo: "Documentar governança sem declarar aprovação ou testes não executados"
 dependencias: "GOVERNANCA/NORMA-CABECALHO-PADRAO.md; main base 3db0c88f27fec4c6ea2418749de09ebba8130fe7"
-sha256_canonico: "6b4c5236e30f90fb68dae35c3106a2a92ec5491a839314e2c4081945239b6399"
+sha256_canonico: "ebb01523602a171c04a4fd1ff98bb50d89ae9abc3fa60b622646842eed92d6c9"
 commit_referencia: "3db0c88f27fec4c6ea2418749de09ebba8130fe7"
 ---
 # BRICKMASTER RAIZ — Governança
@@ -44,6 +44,7 @@ Esta pasta centraliza os documentos de governança do BRICKMASTER RAIZ: autorida
 - [MODELO_CHECKPOINT.md](MODELO_CHECKPOINT.md) — modelo reutilizável de checkpoint.
 - [MODELO_DECISAO.md](MODELO_DECISAO.md) — modelo reutilizável de decisão.
 - [HISTORICO.md](HISTORICO.md) — histórico de alterações.
+- [ROADMAP_MESTRE.md](ROADMAP_MESTRE.md) — fases, dependências e gates do projeto.
 
 ## Estados controlados
 
