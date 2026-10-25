@@ -16,7 +16,7 @@ rastreabilidade: "PR #3; branch feature/pr3-governanca-mainline-reconciliation"
 escopo: "Carta de Governança BRICKMASTER RAIZ"
 objetivo: "Documentar governança sem declarar aprovação ou testes não executados"
 dependencias: "GOVERNANCA/NORMA-CABECALHO-PADRAO.md; main base 3db0c88f27fec4c6ea2418749de09ebba8130fe7"
-sha256_canonico: "c1d650a2b9c33cc1a03974aaa3e7a3b8b84d4c0d54779c1e618f38f909de3013"
+sha256_canonico: "6b800e74aa38b06126f96b49f3977b0d23d685ac7a223b031c31a84fab45fb39"
 commit_referencia: "3db0c88f27fec4c6ea2418749de09ebba8130fe7"
 ---
 # Carta de Governança — BRICKMASTER RAIZ
