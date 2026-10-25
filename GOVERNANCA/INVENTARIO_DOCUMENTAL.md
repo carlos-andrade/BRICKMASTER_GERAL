@@ -94,7 +94,7 @@ PROPOSTA PARA REVISÃO. Inventário semântico integral, reconciliação de todo
 
 ## Validação
 
-CI estrutural parcial PASS no workflow `40192045467`. O SHA-256 canónico desta versão foi recalculado excluindo apenas as linhas `sha256_canonico` e `commit_referencia`; o valor registado será verificado novamente após a gravação dos metadados.
+CI estrutural parcial PASS no workflow `40192045467`. O SHA-256 canónico desta versão foi recalculado e confirmado contra o conteúdo UTF-8/LF, excluindo apenas as linhas `sha256_canonico` e `commit_referencia`. A auditoria aqui abrange este inventário, o histórico e o checkpoint, não todo o corpus documental.
 
 ## Resultado
 
@@ -102,4 +102,4 @@ Inventário atualizado quanto à divergência da PR #3 e ao gate CI vermelho pó
 
 ## Próxima Ação
 
-Planear a migração controlada dos 114 documentos legados, verificar links e rever esta PR antes de qualquer promoção.
+Executar a migração controlada dos 114 documentos legados ou aprovar exceções explícitas; auditar os hashes dos restantes documentos e rever a PR antes de qualquer promoção.
