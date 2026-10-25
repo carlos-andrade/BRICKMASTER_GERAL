@@ -6,13 +6,13 @@ fase: "GOVERNANCA"
 id_documento: "BM-GOV-HIST-001"
 titulo: "Histórico da Governança"
 status: "PROPOSTA_PARA_REVISAO"
-versao: "1.0.2"
+versao: "1.0.3"
 data_criacao: "2026-10-11"
 data_atualizacao: "2026-10-25"
 origem: "Recuperação documental do PR #3 fechado sem merge"
 autoridade_documental: "GOVERNANCA"
 cadeia_autoridade: "PROMPT → CARTA → LAYOUT ÚNICO → CÓDIGO"
-rastreabilidade: "PR #41; correção pós-merge na branch fix/governanca-validator-include-frontmatter"
+rastreabilidade: "PR #41; PR #42; workflow 40191746933; branch fix/governanca-validator-include-frontmatter"
 escopo: "Histórico de propostas e eventos de governança"
 objetivo: "Preservar decisões, falhas, recuperações e supersessões"
 dependencias: "GOVERNANCA/README.md; INVENTARIO_DOCUMENTAL.md; checkpoints relacionados"
@@ -48,6 +48,14 @@ Este registo preserva a trilha histórica. Correções e supersessões são acre
 - O merge da PR #41 não é prova de aprovação semântica de governança, integridade independente de hashes, validação NTSL/Profit, backtest ou produção.
 - A integração com gate vermelho é preservada no histórico; não reescrever o resultado para PASS.
 
+## 2026-10-25 — Correção estrutural parcial verificada na PR #42
+
+- O workflow `40191746933` concluiu com sucesso no commit testado `1d3737423f48cd33d7fbf2c56c431916772c0b88`.
+- O log reportou 169 Markdown rastreados, 55 documentos com Front Matter YAML verificados, 32 cabeçalhos HTML legados e 82 outros formatos legados.
+- O PASS aplica-se somente à validação estrutural dos documentos YAML. Os 114 documentos sem YAML permanecem classificados como legados pendentes, não como conformes.
+- A PR #42 continua aberta; esta entrada não afirma merge, aprovação semântica, integridade de SHA-256, compilação NTSL/Profit, backtest ou produção.
+- Evidência: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40191746933
+
 ## Contexto Histórico
 
 Histórico recuperado da proposta original do PR #3 e atualizado para registar eventos posteriores sem apagar os registos anteriores.
@@ -72,4 +80,4 @@ O histórico conserva tanto a recuperação integrada quanto a falha do gate que
 
 ## Próxima Ação
 
-Executar o validador corrigido, obter log reproduzível e completar a auditoria de hashes antes de promover qualquer outra alteração.
+Auditar os SHA-256 canónicos e commits de referência; depois definir a migração controlada dos 114 documentos legados antes de qualquer promoção.
