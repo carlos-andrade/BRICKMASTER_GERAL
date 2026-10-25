@@ -12,7 +12,7 @@ data_atualizacao: "2026-10-25"
 origem: "PR #41 integrada; gate documental corrigido parcialmente na PR #42"
 autoridade_documental: "GOVERNANCA"
 cadeia_autoridade: "PROMPT → CARTA → LAYOUT ÚNICO → CÓDIGO"
-rastreabilidade: "PR #41; PR #42; workflow 40191704776; branch fix/governanca-validator-include-frontmatter"
+rastreabilidade: "PR #41; PR #42; workflow 40191746933; branch fix/governanca-validator-include-frontmatter"
 escopo: "Validação estrutural de cabeçalhos Markdown e integridade documental"
 objetivo: "Registar falhas históricas, correção do validador e limites do resultado observado"
 dependencias: "GitHub Actions; scripts/validar_cabecalhos_markdown.sh; INVENTARIO_DOCUMENTAL.md; HISTORICO.md"
@@ -24,7 +24,7 @@ commit_referencia: "PENDENTE_APOS_COMMIT"
 
 ## Sumário
 
-O PR #41 foi integrado em `main` pelo merge commit `6118e0b131e445723ab27018371af9ebb01cddaa`. O workflow de cabeçalhos da PR #41 falhou. A primeira iteração corretiva da PR #42 também falhou. Após nova alteração do validador e atualização deste checkpoint, o workflow `40191704776` concluiu com sucesso no commit `83e1c3f5e8f4341c83b384d839828f5cd26b9d5b`.
+O PR #41 foi integrado em `main` pelo merge commit `6118e0b131e445723ab27018371af9ebb01cddaa`. O workflow de cabeçalhos da PR #41 falhou. A primeira iteração corretiva da PR #42 também falhou. Após nova alteração do validador e atualização deste checkpoint, o workflow `40191746933` concluiu com sucesso no commit testado `1d3737423f48cd33d7fbf2c56c431916772c0b88`.
 
 O resultado é **PASS estrutural parcial**: valida a estrutura dos 55 documentos com Front Matter YAML, não os 114 documentos legados sem YAML nem os seus conteúdos semânticos ou hashes.
 
@@ -35,8 +35,8 @@ O resultado é **PASS estrutural parcial**: valida a estrutura dos 55 documentos
 - Workflow falhado da PR #41: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40190767144
 - PR #42, ainda aberta para revisão: https://github.com/carlos-andrade/BRICKMASTER_GERAL/pull/42
 - Primeira iteração falhada da PR #42: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40191285606
-- Última execução com sucesso estrutural: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40191704776
-- Job da última execução: `validar-markdown`, ID `121163880537`.
+- Última execução com sucesso estrutural: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40191746933
+- Job da última execução: `validar-markdown`, ID `121164002299`.
 
 ## Resultado medido
 
@@ -60,7 +60,7 @@ Esta alteração permite um resultado estrutural reproduzível para os 55 fichei
 
 1. A comparação Git consultada para a PR #3 em 2026-10-25 indicou estado `diverged`, 19 commits à frente e 337 atrás. A branch histórica não foi fundida diretamente.
 2. O PR #41 foi integrado apesar do workflow ter falhado. O histórico preserva esse facto.
-3. Os documentos alterados por esta correção têm campos de SHA-256 e commit de referência pendentes de auditoria independente. A presença de um campo não prova a integridade do hash.
+3. Os documentos alterados por esta correção têm campos de SHA-256 e commit de referência pendentes de auditoria independente. A presença de um campo não prova a integridade do hash. Regra canónica adotada nesta correção: normalizar o conteúdo para UTF-8/LF e excluir somente as linhas `sha256_canonico` e `commit_referencia` do cálculo, evitando autorreferência.
 4. A governança continua em proposta/revisão. Merge documental ou PASS estrutural parcial não prova aprovação semântica, validação de módulos, compilação NTSL, Profit, replay, backtest ou produção.
 
 ## Plano pendente
@@ -104,7 +104,7 @@ VALIDAÇÃO ESTRUTURAL PARCIAL. Os documentos YAML verificados passaram no workf
 - Workflow falhado da primeira iteração da PR #42: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40191285606
 - Workflow mais recente: https://github.com/carlos-andrade/BRICKMASTER_GERAL/actions/runs/40191704776
 - Merge commit da PR #41: `6118e0b131e445723ab27018371af9ebb01cddaa`
-- Commit verificado na última execução: `83e1c3f5e8f4341c83b384d839828f5cd26b9d5b`
+- Commit verificado na última execução: `1d3737423f48cd33d7fbf2c56c431916772c0b88`
 
 ## Validação
 
