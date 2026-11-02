@@ -21,6 +21,7 @@ Sistema modular de leitura de mercado, estado do gráfico, evidências, decisão
 - [Governança técnica](BRICKMASTER_ARQUITETURA/GOVERNANCA.md)
 - [Roadmap](BRICKMASTER_ARQUITETURA/ROADMAP.md)
 - [Catálogo de módulos](BRICKMASTER_ARQUITETURA/MAPA_MODULOS.md)
+- [BRICKMASTER IFNC ATLAS](MODULOS/20_IFNC_ATLAS/README.md)
 - [Contrato padrão de módulo](BRICKMASTER_ARQUITETURA/CONTRATO_MODULO.md)
 - [Template de módulo](TEMPLATES/README_MODULO.md)
 
