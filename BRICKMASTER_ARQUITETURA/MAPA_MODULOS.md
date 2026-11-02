@@ -38,5 +38,6 @@ FONTE DA VERDADE: documentação e código versionados neste repositório.
 | BM-017 | Watchdog / Observabilidade | `MODULOS/17_WATCHDOG` | Saúde, logs, alertas e kill switch | DOCUMENTADO |
 | BM-018 | Dados e Qualidade | `MODULOS/18_DADOS_QUALIDADE` | Integridade, sincronização e proveniência | DOCUMENTADO |
 | BM-019 | Marcação a Mercado | `MODULOS/19_MARK_TO_MARKET` | P&L, exposição e reconciliação | DOCUMENTADO |
+| BM-020 | IFNC ATLAS | `MODULOS/20_IFNC_ATLAS` | Inteligência setorial financeira para contexto IBOV/WIN | DOCUMENTADO — EXPERIMENTAL |
 
 Todos são especificações iniciais; não implicam implementação existente.
