@@ -6,7 +6,7 @@ VERSÃO: 0.1.0
 ESTADO: PLANEADO — EXPERIMENTAL
 CRIADO EM: 2026-11-02
 ÚLTIMA REVISÃO: 2026-11-02
-SHA-256: ver CHECKSUMS.sha256 (SHA-256 do conteúdo integral)
+SHA-256: PENDENTE — calcular no checkpoint de validação, antes do merge
 COMMIT DE REFERÊNCIA: 4f5b5ad608fd045e6b5d48d8603239264843e719
 RESPONSÁVEL: Carlos Andrade
 REPOSITÓRIO: https://github.com/carlos-andrade/BRICKMASTER_GERAL
